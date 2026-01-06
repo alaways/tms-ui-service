@@ -1,0 +1,134 @@
+image: node:18
+
+stages:
+  - deploy_admin
+  - deploy_bu
+  - deploy_shop
+  - deploy_customer
+
+# Variables for deployment paths and environment files
+variables:
+  DEV_ADMIN_APP_PATH: "/home/itmoneyc/domains/admin-dev.tplus.co.th/public_html"
+  DEV_BU_APP_PATH: "/home/itmoneyc/domains/business-dev.tplus.co.th/public_html"
+  DEV_SHOP_APP_PATH: "/home/itmoneyc/domains/shop-dev.tplus.co.th/public_html"
+  DEV_CUSTOMER_APP_PATH: "/home/itmoneyc/domains/customer-dev.tplus.co.th/public_html"
+
+cache:
+  paths:
+    - node_modules/
+
+# Deploy job for admin app
+deploy_admin:
+  stage: deploy_admin
+  only:
+    - dev  # Deploy only for dev branch
+  before_script:
+    - apt-get update -y
+    - apt-get install -y openssh-client rsync curl
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p 22 203.159.92.124 >> ~/.ssh/known_hosts  # Trust the server host key
+  script:
+    # Sync project files to the admin server
+    - rsync -az --delete $CI_PROJECT_DIR/ root@203.159.92.124:$DEV_ADMIN_APP_PATH
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-root root@203.159.92.124:$DEV_ADMIN_APP_PATH/.htaccess
+
+    # Run npm install and build for the admin app
+    - ssh -p 22 root@203.159.92.124 "
+        cd $DEV_ADMIN_APP_PATH &&
+        cp .env.dev-admin .env &&
+        npm install --silent &&
+        npm run build > /dev/null 2>&1
+      "
+
+    # Copy .htaccess-dist to the admin app's dist folder
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-dist root@203.159.92.124:$DEV_ADMIN_APP_PATH/dist/.htaccess
+
+# Deploy job for business app
+deploy_bu:
+  stage: deploy_bu
+  only:
+    - dev  # Deploy only for dev branch
+  before_script:
+    - apt-get update -y
+    - apt-get install -y openssh-client rsync curl
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p 22 203.159.92.124 >> ~/.ssh/known_hosts  # Trust the server host key
+  script:
+    # Sync project files to the business server
+    - rsync -az --delete $CI_PROJECT_DIR/ root@203.159.92.124:$DEV_BU_APP_PATH
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-root root@203.159.92.124:$DEV_BU_APP_PATH/.htaccess
+
+    # Run npm install and build for the business app
+    - ssh -p 22 root@203.159.92.124 "
+        cd $DEV_BU_APP_PATH &&
+        cp .env.dev-bu .env &&
+        npm install --silent &&
+        npm run build > /dev/null 2>&1
+      "
+
+    # Copy .htaccess-dist to the business app's dist folder
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-dist root@203.159.92.124:$DEV_BU_APP_PATH/dist/.htaccess
+
+# Deploy job for shop app
+deploy_shop:
+  stage: deploy_shop
+  only:
+    - dev  # Deploy only for dev branch
+  before_script:
+    - apt-get update -y
+    - apt-get install -y openssh-client rsync curl
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p 22 203.159.92.124 >> ~/.ssh/known_hosts  # Trust the server host key
+  script:
+    # Sync project files to the shop server
+    - rsync -az --delete $CI_PROJECT_DIR/ root@203.159.92.124:$DEV_SHOP_APP_PATH
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-root root@203.159.92.124:$DEV_SHOP_APP_PATH/.htaccess
+
+    # Run npm install and build for the shop app
+    - ssh -p 22 root@203.159.92.124 "
+        cd $DEV_SHOP_APP_PATH &&
+        cp .env.dev-shop .env &&
+        npm install --silent &&
+        npm run build > /dev/null 2>&1
+      "
+
+    # Copy .htaccess-dist to the shop app's dist folder
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-dist root@203.159.92.124:$DEV_SHOP_APP_PATH/dist/.htaccess
+
+# Deploy job for customer app
+deploy_customer:
+  stage: deploy_customer
+  only:
+    - dev  # Deploy only for dev branch
+  before_script:
+    - apt-get update -y
+    - apt-get install -y openssh-client rsync curl
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -p 22 203.159.92.124 >> ~/.ssh/known_hosts  # Trust the server host key
+  script:
+    # Sync project files to the customer server
+    - rsync -az --delete $CI_PROJECT_DIR/ root@203.159.92.124:$DEV_CUSTOMER_APP_PATH
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-root root@203.159.92.124:$DEV_CUSTOMER_APP_PATH/.htaccess
+
+    # Run npm install and build for the customer app
+    - ssh -p 22 root@203.159.92.124 "
+        cd $DEV_CUSTOMER_APP_PATH &&
+        cp .env.dev-customer .env &&
+        npm install --silent &&
+        npm run build > /dev/null 2>&1
+      "
+
+    # Copy .htaccess-dist to the customer app's dist folder
+    - rsync -az $CI_PROJECT_DIR/htaccess-deploy/.htaccess-dist root@203.159.92.124:$DEV_CUSTOMER_APP_PATH/dist/.htaccess
