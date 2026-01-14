@@ -1,0 +1,242 @@
+image: node:18
+
+pipelines:
+  branches:
+    dev:
+    - step:
+        name: Prepare code
+        caches:
+          - node
+        script:
+          - echo "Ready for deployment. Please approve to proceed."
+    - step:
+        name: Deploy to ADMIN-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_ADMIN_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_ADMIN_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_ADMIN_APP_PATH && cp .env.dev-admin .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_ADMIN_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to BU-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_BU_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_BU_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_BU_APP_PATH && cp .env.dev-bu .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_BU_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to SHOP-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_SHOP_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_SHOP_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_SHOP_APP_PATH && cp .env.dev-shop .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_SHOP_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to CUSTOMER-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_CUSTOMER_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_CUSTOMER_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_CUSTOMER_APP_PATH && cp .env.dev-customer .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_CUSTOMER_APP_PATH/dist/.htaccess
+    pre-dev:
+    - step:
+        name: Prepare code
+        caches:
+          - node
+        script:
+          - echo "Ready for deployment. Please approve to proceed."
+    - step:
+        name: Deploy to ADMIN-PRE-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_ADMIN_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_ADMIN_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_ADMIN_APP_PATH && cp .env.dev-admin .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_ADMIN_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to BU-PRE-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_BU_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_BU_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_BU_APP_PATH && cp .env.dev-bu .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_BU_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to SHOP-PRE-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_SHOP_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_SHOP_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_SHOP_APP_PATH && cp .env.dev-shop .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_SHOP_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to CUSTOMER-PRE-DEV
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$DEV_CUSTOMER_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$DEV_CUSTOMER_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $DEV_CUSTOMER_APP_PATH && cp .env.dev-customer .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$DEV_CUSTOMER_APP_PATH/dist/.htaccess
+    
+    main:
+    - step:
+        name: Prepare code
+        caches:
+          - node
+        script:
+          - echo "Ready for deployment. Please approve to proceed."
+    - step:
+        name: Deploy to ADMIN-PROD
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$PROD_ADMIN_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$PROD_ADMIN_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $PROD_ADMIN_APP_PATH && cp .env.prod-admin .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$PROD_ADMIN_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to BU-PROD
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$PROD_BU_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$PROD_BU_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $PROD_BU_APP_PATH && cp .env.prod-bu .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$PROD_BU_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to SHOP-PROD
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$PROD_SHOP_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$PROD_SHOP_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $PROD_SHOP_APP_PATH && cp .env.prod-shop .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$PROD_SHOP_APP_PATH/dist/.htaccess
+    - step:
+        name: Deploy to CUSTOMER-PROD
+        trigger: manual
+        script:
+          - apt-get update -y
+          - apt-get install -y openssh-client rsync curl
+          - mkdir -p ~/.ssh
+          - chmod 700 ~/.ssh
+          - echo "$BITBUCKET_SSH_KEY_FILE" | sed 's/\\n/\n/g' > ~/.ssh/id_rsa
+          - chmod 600 ~/.ssh/id_rsa
+          - ssh-keyscan -p 22 $HOSTING >> ~/.ssh/known_hosts
+          - eval $(ssh-agent -s)
+          - ssh-add ~/.ssh/id_rsa
+          - ssh -o StrictHostKeyChecking=no root@$HOSTING 'echo "SSH connection successful"'
+          - rsync -az --delete . root@$HOSTING:$PROD_CUSTOMER_APP_PATH
+          - rsync -az htaccess-deploy/.htaccess-root root@$HOSTING:$PROD_CUSTOMER_APP_PATH/.htaccess
+          - ssh -p 22 root@$HOSTING "cd $PROD_CUSTOMER_APP_PATH && cp .env.prod-customer .env &&npm install --silent &&npm run build > /dev/null 2>&1 && rm -rf node_modules"
+          - rsync -az htaccess-deploy/.htaccess-dist root@$HOSTING:$PROD_CUSTOMER_APP_PATH/dist/.htaccess

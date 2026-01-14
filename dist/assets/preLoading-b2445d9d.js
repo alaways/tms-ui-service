@@ -1,0 +1,1 @@
+import{j as d,f as s}from"./index-a90aa29c.js";const e=()=>d("div",{className:"preloading-backdrop",style:{zIndex:9999999},children:s("div",{className:"preloading-dots",children:[d("div",{}),d("div",{}),d("div",{})]})});export{e as P};

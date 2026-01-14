@@ -1,0 +1,3 @@
+RewriteEngine On
+
+RewriteRule .* dist/$0 [L]

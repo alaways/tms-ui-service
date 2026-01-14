@@ -1,0 +1,1 @@
+import{f as s,j as e}from"./index-a90aa29c.js";function o(){return s("div",{className:"text-center",children:[e("h1",{children:"Config Info"}),e("hr",{}),s("p",{children:[e("strong",{children:"API URL:"})," ","https://dev-tms-admin.gsrental.cn:7443/api/v1"]})]})}export{o as default};

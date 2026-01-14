@@ -1,0 +1,1 @@
+import{Y as s,Z as n,g as u}from"./index-a90aa29c.js";function o(i){return s(t=>n.post(u.district+t.id,t.data,{},"json").then(r=>r),i)}function e(i){return s(t=>n.post(u.subDistrict+t.id,t.data,{},"json").then(r=>r),i)}export{e as a,o as u};
