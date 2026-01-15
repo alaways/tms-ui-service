@@ -1,0 +1,7 @@
+.income .second th {
+    @apply border-x border-white;
+}
+
+.income tbody tr td{
+    @apply text-right;
+}
