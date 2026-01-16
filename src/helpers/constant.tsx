@@ -1,102 +1,106 @@
 import { displayName } from "react-quill"
 import themeInit from "../theme.init"
+// Bangkok地区中心坐标
 export const defaultCenter = {
-  lat: 13.7563, // กรุงเทพมหานคร
+  lat: 13.7563, // Bangkok
   lng: 100.5018,
 }
 
 export const googleApiKey = 'AIzaSyB0yi1E8Ssif3lcd77TgwUWTuRUU69cluM'
 
+// 泰国省份列表
 export const provinces = [
-  { value: 'กรุงเทพมหานคร', label: 'กรุงเทพมหานคร' },
-  { value: 'กระบี่', label: 'กระบี่' },
-  { value: 'กาญจนบุรี', label: 'กาญจนบุรี' },
-  { value: 'กาฬสินธุ์', label: 'กาฬสินธุ์' },
-  { value: 'กำแพงเพชร', label: 'กำแพงเพชร' },
-  { value: 'ขอนแก่น', label: 'ขอนแก่น' },
-  { value: 'จันทบุรี', label: 'จันทบุรี' },
-  { value: 'ฉะเชิงเทรา', label: 'ฉะเชิงเทรา' },
-  { value: 'ชลบุรี', label: 'ชลบุรี' },
-  { value: 'ชัยนาท', label: 'ชัยนาท' },
-  { value: 'ชัยภูมิ', label: 'ชัยภูมิ' },
-  { value: 'ชุมพร', label: 'ชุมพร' },
-  { value: 'เชียงใหม่', label: 'เชียงใหม่' },
-  { value: 'เชียงราย', label: 'เชียงราย' },
-  { value: 'ตรัง', label: 'ตรัง' },
-  { value: 'ตราด', label: 'ตราด' },
-  { value: 'ตาก', label: 'ตาก' },
-  { value: 'นครนายก', label: 'นครนายก' },
-  { value: 'นครปฐม', label: 'นครปฐม' },
-  { value: 'นครพนม', label: 'นครพนม' },
-  { value: 'นครราชสีมา', label: 'นครราชสีมา' },
-  { value: 'นครศรีธรรมราช', label: 'นครศรีธรรมราช' },
-  { value: 'นครสวรรค์', label: 'นครสวรรค์' },
-  { value: 'นนทบุรี', label: 'นนทบุรี' },
-  { value: 'นราธิวาส', label: 'นราธิวาส' },
-  { value: 'น่าน', label: 'น่าน' },
-  { value: 'บึงกาฬ', label: 'บึงกาฬ' },
-  { value: 'บุรีรัมย์', label: 'บุรีรัมย์' },
-  { value: 'ปทุมธานี', label: 'ปทุมธานี' },
-  { value: 'ประจวบคีรีขันธ์', label: 'ประจวบคีรีขันธ์' },
-  { value: 'ปราจีนบุรี', label: 'ปราจีนบุรี' },
-  { value: 'ปัตตานี', label: 'ปัตตานี' },
-  { value: 'พระนครศรีอยุธยา', label: 'พระนครศรีอยุธยา' },
-  { value: 'พังงา', label: 'พังงา' },
-  { value: 'พัทลุง', label: 'พัทลุง' },
-  { value: 'พิจิตร', label: 'พิจิตร' },
-  { value: 'พิษณุโลก', label: 'พิษณุโลก' },
-  { value: 'เพชรบุรี', label: 'เพชรบุรี' },
-  { value: 'เพชรบูรณ์', label: 'เพชรบูรณ์' },
-  { value: 'แพร่', label: 'แพร่' },
-  { value: 'พะเยา', label: 'พะเยา' },
-  { value: 'ภูเก็ต', label: 'ภูเก็ต' },
-  { value: 'มหาสารคาม', label: 'มหาสารคาม' },
-  { value: 'มุกดาหาร', label: 'มุกดาหาร' },
-  { value: 'แม่ฮ่องสอน', label: 'แม่ฮ่องสอน' },
-  { value: 'ยโสธร', label: 'ยโสธร' },
-  { value: 'ยะลา', label: 'ยะลา' },
-  { value: 'ร้อยเอ็ด', label: 'ร้อยเอ็ด' },
-  { value: 'ระนอง', label: 'ระนอง' },
-  { value: 'ระยอง', label: 'ระยอง' },
-  { value: 'ราชบุรี', label: 'ราชบุรี' },
-  { value: 'ลพบุรี', label: 'ลพบุรี' },
-  { value: 'ลำปาง', label: 'ลำปาง' },
-  { value: 'ลำพูน', label: 'ลำพูน' },
-  { value: 'เลย', label: 'เลย' },
-  { value: 'ศรีสะเกษ', label: 'ศรีสะเกษ' },
-  { value: 'สกลนคร', label: 'สกลนคร' },
-  { value: 'สงขลา', label: 'สงขลา' },
-  { value: 'สตูล', label: 'สตูล' },
-  { value: 'สมุทรปราการ', label: 'สมุทรปราการ' },
-  { value: 'สมุทรสงคราม', label: 'สมุทรสงคราม' },
-  { value: 'สมุทรสาคร', label: 'สมุทรสาคร' },
-  { value: 'สระแก้ว', label: 'สระแก้ว' },
-  { value: 'สระบุรี', label: 'สระบุรี' },
-  { value: 'สิงห์บุรี', label: 'สิงห์บุรี' },
-  { value: 'สุโขทัย', label: 'สุโขทัย' },
-  { value: 'สุพรรณบุรี', label: 'สุพรรณบุรี' },
-  { value: 'สุราษฎร์ธานี', label: 'สุราษฎร์ธานี' },
-  { value: 'สุรินทร์', label: 'สุรินทร์' },
-  { value: 'หนองคาย', label: 'หนองคาย' },
-  { value: 'หนองบัวลำภู', label: 'หนองบัวลำภู' },
-  { value: 'อ่างทอง', label: 'อ่างทอง' },
-  { value: 'อำนาจเจริญ', label: 'อำนาจเจริญ' },
-  { value: 'อุดรธานี', label: 'อุดรธานี' },
-  { value: 'อุตรดิตถ์', label: 'อุตรดิตถ์' },
-  { value: 'อุทัยธานี', label: 'อุทัยธานี' },
-  { value: 'อุบลราชธานี', label: 'อุบลราชธานี' },
+  { value: 'bangkok', label: 'provinces.bangkok' },
+  { value: 'krabi', label: 'provinces.krabi' },
+  { value: 'kanchanaburi', label: 'provinces.kanchanaburi' },
+  { value: 'kalasin', label: 'provinces.kalasin' },
+  { value: 'kamphaeng_phet', label: 'provinces.kamphaeng_phet' },
+  { value: 'khon_kaen', label: 'provinces.khon_kaen' },
+  { value: 'chanthaburi', label: 'provinces.chanthaburi' },
+  { value: 'chachoengsao', label: 'provinces.chachoengsao' },
+  { value: 'chon_buri', label: 'provinces.chon_buri' },
+  { value: 'chainat', label: 'provinces.chainat' },
+  { value: 'chaiyaphum', label: 'provinces.chaiyaphum' },
+  { value: 'chumphon', label: 'provinces.chumphon' },
+  { value: 'chiang_mai', label: 'provinces.chiang_mai' },
+  { value: 'chiang_rai', label: 'provinces.chiang_rai' },
+  { value: 'trang', label: 'provinces.trang' },
+  { value: 'trat', label: 'provinces.trat' },
+  { value: 'tak', label: 'provinces.tak' },
+  { value: 'nakhon_nayok', label: 'provinces.nakhon_nayok' },
+  { value: 'nakhon_pathom', label: 'provinces.nakhon_pathom' },
+  { value: 'nakhon_phanom', label: 'provinces.nakhon_phanom' },
+  { value: 'nakhon_ratchasima', label: 'provinces.nakhon_ratchasima' },
+  { value: 'nakhon_si_thammarat', label: 'provinces.nakhon_si_thammarat' },
+  { value: 'nakhon_sawan', label: 'provinces.nakhon_sawan' },
+  { value: 'nonthaburi', label: 'provinces.nonthaburi' },
+  { value: 'narathiwat', label: 'provinces.narathiwat' },
+  { value: 'nan', label: 'provinces.nan' },
+  { value: 'bueng_kan', label: 'provinces.bueng_kan' },
+  { value: 'buriram', label: 'provinces.buriram' },
+  { value: 'pathum_thani', label: 'provinces.pathum_thani' },
+  { value: 'prachuap_khiri_khan', label: 'provinces.prachuap_khiri_khan' },
+  { value: 'prachuap_khiri_khan', label: 'provinces.prachuap_khiri_khan' },
+  { value: 'pattani', label: 'provinces.pattani' },
+  { value: 'phra_nakhon_si_ayutthaya', label: 'provinces.phra_nakhon_si_ayutthaya' },
+  { value: 'phang_nga', label: 'provinces.phang_nga' },
+  { value: 'phatthalung', label: 'provinces.phatthalung' },
+  { value: 'phichit', label: 'provinces.phichit' },
+  { value: 'phitsanulok', label: 'provinces.phitsanulok' },
+  { value: 'phetchaburi', label: 'provinces.phetchaburi' },
+  { value: 'phetchabun', label: 'provinces.phetchabun' },
+  { value: 'phrae', label: 'provinces.phrae' },
+  { value: 'phayao', label: 'provinces.phayao' },
+  { value: 'phuket', label: 'provinces.phuket' },
+  { value: 'maha_sarakham', label: 'provinces.maha_sarakham' },
+  { value: 'mukdahan', label: 'provinces.mukdahan' },
+  { value: 'mae_hong_son', label: 'provinces.mae_hong_son' },
+  { value: 'yasothon', label: 'provinces.yasothon' },
+  { value: 'yala', label: 'provinces.yala' },
+  { value: 'roi_et', label: 'provinces.roi_et' },
+  { value: 'ranong', label: 'provinces.ranong' },
+  { value: 'rayong', label: 'provinces.rayong' },
+  { value: 'ratchaburi', label: 'provinces.ratchaburi' },
+  { value: 'lopburi', label: 'provinces.lopburi' },
+  { value: 'lampang', label: 'provinces.lampang' },
+  { value: 'lamphun', label: 'provinces.lamphun' },
+  { value: 'loei', label: 'provinces.loei' },
+  { value: 'sisaket', label: 'provinces.sisaket' },
+  { value: 'sakon_nakhon', label: 'provinces.sakon_nakhon' },
+  { value: 'songkhla', label: 'provinces.songkhla' },
+  { value: 'satun', label: 'provinces.satun' },
+  { value: 'samut_prakan', label: 'provinces.samut_prakan' },
+  { value: 'samut_songkhram', label: 'provinces.samut_songkhram' },
+  { value: 'samut_sakhon', label: 'provinces.samut_sakhon' },
+  { value: 'sa_kaew', label: 'provinces.sa_kaew' },
+  { value: 'saraburi', label: 'provinces.saraburi' },
+  { value: 'singburi', label: 'provinces.singburi' },
+  { value: 'sukhothai', label: 'provinces.sukhothai' },
+  { value: 'suphan_buri', label: 'provinces.suphan_buri' },
+  { value: 'surat_thani', label: 'provinces.surat_thani' },
+  { value: 'surin', label: 'provinces.surin' },
+  { value: 'nong_khai', label: 'provinces.nong_khai' },
+  { value: 'nong_bua_lam_phu', label: 'provinces.nong_bua_lam_phu' },
+  { value: 'ang_thong', label: 'provinces.ang_thong' },
+  { value: 'amnat_charoen', label: 'provinces.amnat_charoen' },
+  { value: 'udon_thani', label: 'provinces.udon_thani' },
+  { value: 'uttaradit', label: 'provinces.uttaradit' },
+  { value: 'uthai_thani', label: 'provinces.uthai_thani' },
+  { value: 'ubon_ratchathani', label: 'provinces.ubon_ratchathani' },
 ]
 
+// 店铺组别
 export const shopGroup = [
-  { value: 'TA', label: 'TA' },
-  { value: 'BA', label: 'BA' },
-  { value: 'SA', label: 'SA' },
+  { value: 'TA', label: 'shopGroup.TA' },
+  { value: 'BA', label: 'shopGroup.BA' },
+  { value: 'SA', label: 'shopGroup.SA' },
 ]
 
+// 泰国标题/敬语
 export const thaiTitles = [
-  { value: 'นาย', label: 'นาย' },
-  { value: 'นาง', label: 'นาง' },
-  { value: 'นางสาว', label: 'นางสาว' },
+  { value: 'mr', label: 'titles.mr' },
+  { value: 'mrs', label: 'titles.mrs' },
+  { value: 'ms', label: 'titles.ms' },
   // { value: 'เด็กชาย', label: 'เด็กชาย' },
   // { value: 'เด็กหญิง', label: 'เด็กหญิง' },
   // { value: 'ดร.', label: 'ดร.' },
@@ -111,31 +115,35 @@ export const thaiTitles = [
   // { value: 'พ.ต.', label: 'พ.ต.' },
 ]
 
+// 资产类型
 export const assetType = [
-  { value: 'Android', label: 'Android' },
-  { value: 'Ios', label: 'Ios' },
+  { value: 'Android', label: 'assetType.android' },
+  { value: 'Ios', label: 'assetType.ios' },
 ]
 
+// 保险类型
 export const insuranceType = [
-  { value: 'ไม่มีประกัน', label: 'ไม่มีประกัน' },
-  { value: '1ปี', label: '1 ปี' },
-  { value: '2ปี', label: '2 ปี' },
-  { value: '3ปี', label: '3 ปี' },
-  { value: 'อื่นๆ', label: 'อื่น ๆ' },
+  { value: 'none', label: 'insuranceType.none' },
+  { value: '1_year', label: 'insuranceType.1_year' },
+  { value: '2_years', label: 'insuranceType.2_years' },
+  { value: '3_years', label: 'insuranceType.3_years' },
+  { value: 'other', label: 'insuranceType.other' },
 ]
 
+// 职位类型 (泰国标准)
 export const roleTypes = [
-  { value: 'executive', label: 'ผู้บริหาร' },
-  { value: 'manager', label: 'ผู้จัดการ' },
-  { value: 'head_of_department', label: 'หัวหน้าฝ่าย' },
-  { value: 'employee', label: 'พนักงาน' },
+  { value: 'executive', label: 'roleTypes.executive' },
+  { value: 'manager', label: 'roleTypes.manager' },
+  { value: 'head_of_department', label: 'roleTypes.head_of_department' },
+  { value: 'employee', label: 'roleTypes.employee' },
 ]
 
+// 访问权限级别
 export const accessLevelTypes = [
-  { value: 'A', label: 'Super Admin' },
-  { value: 'B', label: 'Admin' },
-  { value: 'C', label: 'IT Support' },
-  { value: 'D', label: 'Standard User' },
+  { value: 'A', label: 'accessLevel.super_admin' },
+  { value: 'B', label: 'accessLevel.admin' },
+  { value: 'C', label: 'accessLevel.it_support' },
+  { value: 'D', label: 'accessLevel.standard_user' },
 ]
 
 // export const creditLevelTypes = [
@@ -146,33 +154,35 @@ export const accessLevelTypes = [
 //   { value: 'N', label: 'N - ลูกค้าใหม่' },
 // ]
 
+// 保险期数列表
 export const insPeriod = [
-  { value: 1, label: '1', ref: 'inr_1' },
-  { value: 2, label: '2', ref: 'inr_2' },
-  { value: 3, label: '3', ref: 'inr_3' },
-  { value: 4, label: '4', ref: 'inr_4' },
-  { value: 5, label: '5', ref: 'inr_5' },
-  { value: 6, label: '6', ref: 'inr_6' },
-  { value: 7, label: '7', ref: 'inr_7' },
-  { value: 8, label: '8', ref: 'inr_8' },
-  { value: 9, label: '9', ref: 'inr_9' },
-  { value: 10, label: '10', ref: 'inr_10' },
-  { value: 11, label: '11', ref: 'inr_11' },
-  { value: 12, label: '12', ref: 'inr_12' },
-  { value: 13, label: '13', ref: 'inr_13' },
-  { value: 14, label: '14', ref: 'inr_14' },
-  { value: 15, label: '15', ref: 'inr_15' },
-  { value: 16, label: '16', ref: 'inr_16' },
-  { value: 17, label: '17', ref: 'inr_17' },
-  { value: 18, label: '18', ref: 'inr_18' },
-  { value: 19, label: '19', ref: 'inr_19' },
-  { value: 20, label: '20', ref: 'inr_20' },
-  { value: 21, label: '21', ref: 'inr_21' },
-  { value: 22, label: '22', ref: 'inr_22' },
-  { value: 23, label: '23', ref: 'inr_23' },
-  { value: 24, label: '24', ref: 'inr_24' },
+  { value: 1, label: 'insPeriod.1', ref: 'inr_1' },
+  { value: 2, label: 'insPeriod.2', ref: 'inr_2' },
+  { value: 3, label: 'insPeriod.3', ref: 'inr_3' },
+  { value: 4, label: 'insPeriod.4', ref: 'inr_4' },
+  { value: 5, label: 'insPeriod.5', ref: 'inr_5' },
+  { value: 6, label: 'insPeriod.6', ref: 'inr_6' },
+  { value: 7, label: 'insPeriod.7', ref: 'inr_7' },
+  { value: 8, label: 'insPeriod.8', ref: 'inr_8' },
+  { value: 9, label: 'insPeriod.9', ref: 'inr_9' },
+  { value: 10, label: 'insPeriod.10', ref: 'inr_10' },
+  { value: 11, label: 'insPeriod.11', ref: 'inr_11' },
+  { value: 12, label: 'insPeriod.12', ref: 'inr_12' },
+  { value: 13, label: 'insPeriod.13', ref: 'inr_13' },
+  { value: 14, label: 'insPeriod.14', ref: 'inr_14' },
+  { value: 15, label: 'insPeriod.15', ref: 'inr_15' },
+  { value: 16, label: 'insPeriod.16', ref: 'inr_16' },
+  { value: 17, label: 'insPeriod.17', ref: 'inr_17' },
+  { value: 18, label: 'insPeriod.18', ref: 'inr_18' },
+  { value: 19, label: 'insPeriod.19', ref: 'inr_19' },
+  { value: 20, label: 'insPeriod.20', ref: 'inr_20' },
+  { value: 21, label: 'insPeriod.21', ref: 'inr_21' },
+  { value: 22, label: 'insPeriod.22', ref: 'inr_22' },
+  { value: 23, label: 'insPeriod.23', ref: 'inr_23' },
+  { value: 24, label: 'insPeriod.24', ref: 'inr_24' },
 ]
 
+// 保险支付天数列表
 export const insPayDay = Array.from({
   length: 30
 }, (_, index) => {
@@ -182,11 +192,12 @@ export const insPayDay = Array.from({
   }
 })
 
+// 交易状态类型
 export const statusTypes = [
-  { value: 'pending', label: 'pending' },
-  { value: 'processing', label: 'processing' },
-  { value: 'complete', label: 'complete' },
-  { value: 'cancel', label: 'cancel' },
+  { value: 'pending', label: 'statusTypes.pending' },
+  { value: 'processing', label: 'statusTypes.processing' },
+  { value: 'complete', label: 'statusTypes.complete' },
+  { value: 'cancel', label: 'statusTypes.cancel' },
 ]
 
 export const toastAlert: any = {
@@ -196,544 +207,576 @@ export const toastAlert: any = {
   timer: 3000,
 }
 
+// 客户 CSV 导出列配置
 export const customer_csv = [
   {
     id: 'created_at',
-    displayName: 'วันที่สร้าง',
+    displayName: 'customer_csv.created_at',
   },
   {
     id: 'shop_name',
-    displayName: 'ร้านค้า',
+    displayName: 'customer_csv.shop_name',
   },
   {
     id: 'name',
-    displayName: 'ชื่อ-นามสกุล',
+    displayName: 'customer_csv.name',
   },
   {
     id: 'phone_number',
-    displayName: 'เบอร์โทรศัพท์ลูกค้า',
+    displayName: 'customer_csv.phone_number',
   },
   {
     id: 'line_id',
-    displayName: 'Line ID',
+    displayName: 'customer_csv.line_id',
   },
   {
     id: 'citizen_id',
-    displayName: 'รหัสบัตรประชาชน',
+    displayName: 'customer_csv.citizen_id',
   },
   {
     id: 'credit_level',
-    displayName: 'ระดับเครดิต (BU)',
+    displayName: 'customer_csv.credit_level_bu',
   },
   {
     id: 'shop_credit_level',
-    displayName: 'ระดับเครดิต (ร้านค้า)',
+    displayName: 'customer_csv.credit_level_shop',
   },
   {
     id: 'approval_status',
-    displayName: 'อนุมัติ',
+    displayName: 'customer_csv.approval_status',
   },
 ]
 
+// 合同 CSV 导出列配置
 export const columns_csv = [
   {
     id: 'contract_id',
-    displayName: 'เลขที่สัญญา',
+    displayName: 'columns_csv.contract_id',
   },
   {
     id: 'contract_date',
-    displayName: 'วันที่ทำสัญญา',
+    displayName: 'columns_csv.contract_date',
   },
   {
     id: 'shop_name',
-    displayName: 'ชื่อร้านค้า',
+    displayName: 'columns_csv.shop_name',
   },
   {
     id: 'business_name',
-    displayName: 'ชื่อหน่วยธุรกิจ',
+    displayName: 'columns_csv.business_name',
   },
   {
     id: 'business_tax_id',
-    displayName: 'เลขประจำตัวผู้เสียภาษี',
+    displayName: 'columns_csv.business_tax_id',
   },
   {
     id: 'customer_name',
-    displayName: 'ชื่อลูกค้า',
+    displayName: 'columns_csv.customer_name',
   },
   {
     id: 'customer_citizen_id',
-    displayName: 'เลขประชาชนลูกค้า',
+    displayName: 'columns_csv.customer_citizen_id',
   },
   {
     id: 'customer_phone',
-    displayName: 'เบอร์โทรร้านค้า',
+    displayName: 'columns_csv.customer_phone',
   },
   {
     id: 'customer_phone_ref',
-    displayName: 'เบอร์โทรอ้างอิง',
+    displayName: 'columns_csv.customer_phone_ref',
   },
   {
     id: 'customer_facebook_id',
-    displayName: 'Facebook ลูกค้า',
+    displayName: 'columns_csv.customer_facebook_id',
   },
   {
     id: 'customer_line_id',
-    displayName: 'Line ลูกค้า',
+    displayName: 'columns_csv.customer_line_id',
   },
   {
     id: 'customer_current_address',
-    displayName: 'ที่อยู่ปัจจุบัน',
+    displayName: 'columns_csv.customer_current_address',
   },
   {
     id: 'customer_work_address',
-    displayName: 'ที่อยู่ที่ทำงาน',
+    displayName: 'columns_csv.customer_work_address',
   },
   {
     id: 'asset_name',
-    displayName: 'สินทรัพย์',
+    displayName: 'columns_csv.asset_name',
   },
   {
     id: 'asset_capacity',
-    displayName: 'ความจุ',
+    displayName: 'columns_csv.asset_capacity',
   },
   {
     id: 'asset_color',
-    displayName: 'สี',
+    displayName: 'columns_csv.asset_color',
   },
   {
     id: 'asset_imei',
-    displayName: 'IMEI',
+    displayName: 'columns_csv.asset_imei',
   },
   {
     id: 'asset_serial_number',
-    displayName: 'Serial Number',
+    displayName: 'columns_csv.asset_serial_number',
   },
   {
     id: 'price',
-    displayName: 'ราคาสินค้า',
+    displayName: 'columns_csv.price',
   },
   {
     id: 'down_payment',
-    displayName: 'เงินดาวน์',
+    displayName: 'columns_csv.down_payment',
   },
   {
     id: 'subtotal',
-    displayName: 'รวม',
+    displayName: 'columns_csv.subtotal',
   },
   {
     id: 'ins_period',
-    displayName: 'จำนวนงวด',
+    displayName: 'columns_csv.ins_period',
   },
   {
     id: 'interest_rate',
-    displayName: 'ผลตอบแทน',
+    displayName: 'columns_csv.interest_rate',
   },
   {
     id: 'principle',
-    displayName: 'เงินต้น',
+    displayName: 'columns_csv.principle',
   },
   {
     id: 'installment_start_at',
-    displayName: 'งวดแรกเริ่มเมื่อ',
+    displayName: 'columns_csv.installment_start_at',
   },
   {
     id: 'ins_amount',
-    displayName: 'ผ่อนงวดละ',
+    displayName: 'columns_csv.ins_amount',
   },
   {
     id: 'ins_pay_day',
-    displayName: 'ชำระทุกวันที่',
+    displayName: 'columns_csv.ins_pay_day',
   },
   {
     id: 'contract_type',
-    displayName: 'ประเภทสัญญา',
+    displayName: 'columns_csv.contract_type',
   },
 
   {
     id: 'memo',
-    displayName: 'หมายเหตุประกอบสัญญา',
+    displayName: 'columns_csv.memo',
   },
   {
     id: 'last_payed_ins_no',
-    displayName: 'งวดชำระล่าสุด',
+    displayName: 'columns_csv.last_payed_ins_no',
   },
   {
     id: 'last_payed_at',
-    displayName: 'วันที่ชำระล่าสุด',
+    displayName: 'columns_csv.last_payed_at',
   },
   {
     id: 'next_pay_ins_no',
-    displayName: 'งวดชำระถัดไป',
+    displayName: 'columns_csv.next_pay_ins_no',
   },
   {
     id: 'next_pay_at',
-    displayName: 'วันที่งวดถัดไป',
+    displayName: 'columns_csv.next_pay_at',
   },
   {
     id: 'price_total',
-    displayName: 'ราคาที่ทำสัญญา',
+    displayName: 'columns_csv.price_total',
   },
    {
     id: 'close_contract_at',
-    displayName: 'วันที่ปิดสัญญา',
+    displayName: 'columns_csv.close_contract_at',
   },
   {
     id: 'approve_by',
-    displayName: 'ผู้อนุมัติสัญญา',
+    displayName: 'columns_csv.approve_by',
   },
   {
     id:'preliminary_credit_assessment',
-    displayName: "ค่าพิจารณาสัญญา"
+    displayName: "columns_csv.preliminary_credit_assessment"
   }
-  
+
 ]
 
+// 报告 CSV 导出列配置
 export const report_csv = [
   {
     id: 'no',
-    displayName: 'ลำดับ',
+    displayName: 'report_csv.no',
   },
   {
     id: 'business_unit_name',
-    displayName: 'หน่วยธุรกิจ',
+    displayName: 'report_csv.business_unit_name',
   },
   {
     id: 'shop_name',
-    displayName: 'ร้านค้า',
+    displayName: 'report_csv.shop_name',
   },
   {
     id: 'count_contract',
-    displayName: 'จำนวนสัญญา',
+    displayName: 'report_csv.count_contract',
   },
   {
     id: 'price',
-    displayName: 'รวมราคาขาย',
+    displayName: 'report_csv.price',
   },
   {
     id: 'down_payment',
-    displayName: 'รวมเงินดาวน์',
+    displayName: 'report_csv.down_payment',
   },
   {
     id: 'principle',
-    displayName: 'รวมทุนเช่าซื้อ',
+    displayName: 'report_csv.principle',
   },
   {
     id: 'commission',
-    displayName: 'รวมค่านายหน้า',
+    displayName: 'report_csv.commission',
   },
   {
     id: 'benefit',
-    displayName: 'ผลตอบแทนพิเศษ',
+    displayName: 'report_csv.benefit',
   },
   {
     id: 'amount',
-    displayName: 'รวมเป็นเงิน',
+    displayName: 'report_csv.amount',
   },
   {
     id: 'fee',
-    displayName: 'ค่าทำสัญญา',
+    displayName: 'report_csv.fee',
   },
   {
     id: 'total',
-    displayName: 'รวมเป็นเงินทั้งสิ้น',
+    displayName: 'report_csv.total',
   },
   {
     id: 'bank_name',
-    displayName: 'ธนาคาร',
+    displayName: 'report_csv.bank_name',
   },
   {
     id: 'bank_account_name',
-    displayName: 'ชื่อบัญชีธนาคาร',
+    displayName: 'report_csv.bank_account_name',
   },
   {
     id: 'bank_account_number',
-    displayName: 'เลขที่บัญชีธนาคาร',
+    displayName: 'report_csv.bank_account_number',
   },
 ]
 
+// 付款 CSV 导出列配置
 export const payment_csv = [
   {
     id: 'no',
-    displayName: 'ลำดับ',
+    displayName: 'payment_csv.no',
   },
   {
     id: 'contract_id',
-    displayName: 'เลขที่สัญญา',
+    displayName: 'payment_csv.contract_id',
   },
   {
     id: 'business_unit_name',
-    displayName: 'หน่วยธุรกิจ',
+    displayName: 'payment_csv.business_unit_name',
   },
   {
     id: 'customer_name',
-    displayName: 'ชื่อลูกค้า',
+    displayName: 'payment_csv.customer_name',
   },
   {
     id: 'ins_no',
-    displayName: 'ชำระงวดที่',
+    displayName: 'payment_csv.ins_no',
   },
   {
     id: 'amount',
-    displayName: 'ค่างวด',
+    displayName: 'payment_csv.amount',
   },
   {
     id: 'status',
-    displayName: 'สถานะการชำระเงิน',
+    displayName: 'payment_csv.status',
   },
   {
     id: 'payed_at',
-    displayName: 'วันที่ชำระ',
+    displayName: 'payment_csv.payed_at',
   },
   {
     id: 'reference',
-    displayName: 'เลขที่อ้างอิง',
+    displayName: 'payment_csv.reference',
   },
   {
     id: 'payment_method',
-    displayName: 'ช่องทางการชำระเงิน',
+    displayName: 'payment_csv.payment_method',
   },
   {
     id: 'channel',
-    displayName: 'ช่องทาง',
+    displayName: 'payment_csv.channel',
   },
   {
     id: 'penalty_fee',
-    displayName: 'ค่าดำเนินการล่าช้า',
+    displayName: 'payment_csv.penalty_fee',
   },
   {
     id: 'tracking_fee',
-    displayName: 'ค่าติดตาม',
+    displayName: 'payment_csv.tracking_fee',
   },
   {
     id: 'unlock_fee',
-    displayName: 'ค่าปลดล็อค',
+    displayName: 'payment_csv.unlock_fee',
   },
   {
     id: 'discount',
-    displayName: 'ส่วนลด',
+    displayName: 'payment_csv.discount',
   },
   {
     id: 'total',
-    displayName: 'ยอดชำระ',
+    displayName: 'payment_csv.total',
   },
 ]
 
+// 商务单位付款 CSV 导出列配置
 export const payment_bu_csv = [
   {
     id: 'id',
-    displayName: 'ลำดับ',
+    displayName: 'payment_bu_csv.id',
   },
   {
     id: 'reference',
-    displayName: 'เลขที่อ้างอิง',
+    displayName: 'payment_bu_csv.reference',
   },
   {
     id: 'invoice_id',
-    displayName: 'เลขที่ใบแจ้งหนี้',
+    displayName: 'payment_bu_csv.invoice_id',
   },
   {
     id: 'payment_method',
-    displayName: 'ช่องทางชำระเงิน',
+    displayName: 'payment_bu_csv.payment_method',
   },
   {
     id: 'payed_at',
-    displayName: 'วันที่ชำระเงิน',
+    displayName: 'payment_bu_csv.payed_at',
   },
   {
     id: 'amount',
-    displayName: 'จำนวนเงิน',
+    displayName: 'payment_bu_csv.amount',
   },
   {
     id: 'status',
-    displayName: 'สถานะชำระเงิน',
+    displayName: 'payment_bu_csv.status',
   },
   {
     id: 'extra_note',
-    displayName: 'บันทึกเพิ่มเติม',
+    displayName: 'payment_bu_csv.extra_note',
   },
   {
     id: 'note',
-    displayName: 'หมายเหตุ',
+    displayName: 'payment_bu_csv.note',
   },
   {
     id: 'channel',
-    displayName: 'ช่องทาง',
+    displayName: 'payment_bu_csv.channel',
   }
 ]
 
+// 发票 CSV 导出列配置
 export const invoice_csv = [
   {
     id: 'index',
-    displayName: 'ลำดับ',
+    displayName: 'invoice_csv.index',
   },
   {
     id: 'id',
-    displayName: 'เลขที่',
+    displayName: 'invoice_csv.id',
   },
   {
     id: 'invoice_date',
-    displayName: 'วันที่',
+    displayName: 'invoice_csv.invoice_date',
   },
   {
     id: 'invoice_type',
-    displayName: 'ประเภทใบแจ้งหนี้',
+    displayName: 'invoice_csv.invoice_type',
   },
   {
     id: 'contract_reference',
-    displayName: 'สัญญาเลขที่',
+    displayName: 'invoice_csv.contract_reference',
   },
   {
     id: 'ins_no',
-    displayName: 'งวดที่',
+    displayName: 'invoice_csv.ins_no',
   },
   {
     id: 'amount',
-    displayName: 'จำนวนเงิน',
+    displayName: 'invoice_csv.amount',
   },
   {
     id: 'payment_method',
-    displayName: 'ช่องทางชำระเงิน',
+    displayName: 'invoice_csv.payment_method',
   },
   {
     id: 'payed_at',
-    displayName: 'วันที่ชำระเงิน',
+    displayName: 'invoice_csv.payed_at',
   },
   {
     id: 'payment_reference',
-    displayName: 'เลขที่อ้างอิง',
+    displayName: 'invoice_csv.payment_reference',
   },
   {
     id: 'status',
-    displayName: 'สถานะชำระเงิน',
+    displayName: 'invoice_csv.status',
   },
 ]
 
+// 店铺报告 CSV 导出列配置
 export const shop_report_csv = [
   {
     id: 'reference',
-    displayName: 'เลขที่สัญญา',
+    displayName: 'shop_report_csv.reference',
   },
   {
     id: 'contract_date',
-    displayName: 'วันที่ทำสัญญา',
+    displayName: 'shop_report_csv.contract_date',
   },
   {
     id: 'approved_at',
-    displayName: 'วันที่อนุมัติสัญญา',
+    displayName: 'shop_report_csv.approved_at',
   },
   {
     id: 'asset_name',
-    displayName: 'ชื่อทรัพย์สิน',
+    displayName: 'shop_report_csv.asset_name',
   },
   {
     id: 'asset_price',
-    displayName: 'ราคาขาย',
+    displayName: 'shop_report_csv.asset_price',
   },
   {
     id: 'down_payment',
-    displayName: 'เงินดาวน์',
+    displayName: 'shop_report_csv.down_payment',
   },
   {
     id: 'principle',
-    displayName: 'ทุนเช่าซื้อ',
+    displayName: 'shop_report_csv.principle',
   },
   {
     id: 'commission',
-    displayName: 'ค่านายหน้า',
+    displayName: 'shop_report_csv.commission',
   },
   {
     id: 'benefit',
-    displayName: 'ผลตอบแทนพิเศษ',
+    displayName: 'shop_report_csv.benefit',
   },
   {
     id: 'amount',
-    displayName: 'รวมเป็นเงิน',
+    displayName: 'shop_report_csv.amount',
   },
   {
     id: 'fee',
-    displayName: 'ค่าทำสัญญา',
+    displayName: 'shop_report_csv.fee',
   },
   {
     id: 'total',
-    displayName: 'คงเหลือให้ร้านค้า',
+    displayName: 'shop_report_csv.total',
   },
 ]
 
+// 账户报告 CSV 导出列配置
 export const report_account_csv = [
   {
     id: 'id',
-    displayName: 'ลำดับ',
+    displayName: 'report_account_csv.id',
   },
   {
     id: 'created_at',
-    displayName: 'วันที่',
+    displayName: 'report_account_csv.created_at',
   },
   {
     id: 'amount',
-    displayName: 'จำนวนรายการ',
+    displayName: 'report_account_csv.amount',
   },
   {
     id: 'description',
-    displayName: 'รายละเอียด',
+    displayName: 'report_account_csv.description',
   },
   {
     id: 'price',
-    displayName: 'ยอดเงิน',
+    displayName: 'report_account_csv.price',
   },
 ]
 
+// 店铺付款报告 CSV 导出列配置
 export const report_paid_shop_csv = [
   {
     id: 'id',
-    displayName: 'ลำดับ',
+    displayName: 'report_paid_shop_csv.id',
   },
   {
     id: 'created_at',
-    displayName: 'วันที่',
+    displayName: 'report_paid_shop_csv.created_at',
   },
   {
     id: 'description',
-    displayName: 'รายละเอียด',
+    displayName: 'report_paid_shop_csv.description',
   },
   {
     id: 'price',
-    displayName: 'ยอดเงิน',
+    displayName: 'report_paid_shop_csv.price',
   },
   {
     id: 'payment_type',
-    displayName: 'ช่องทางการชำระเงิน',
+    displayName: 'report_paid_shop_csv.payment_type',
   },
   {
     id: 'reference',
-    displayName: 'หมายเลขอ้างอิง'
+    displayName: 'report_paid_shop_csv.reference'
   },
   {
     id: 'admin_name',
-    displayName: 'ผู้ทำรายการ',
+    displayName: 'report_paid_shop_csv.admin_name',
   },
 ]
 
+// 百分比数组 (0%, 10%, 15%, 20%, ... 65%)
 export const percentageArray = Array.from({ length: 12 }, (_, index) => {
   const value = index === 0 ? 0 : 10 + (index - 1) * 5;
   return { label: `${value}%`, value: value / 100 };
 });
 
+// 增值税类型 (已登记/未登记)
 export const vatTypes = [
-  { value: true, label: 'จดภาษีมูลค่าเพิ่มแล้ว' },
-  { value: false, label: 'ยังไม่เข้าระบบภาษีมูลค่าเพิ่ม' },
+  { value: true, label: 'vatTypes.registered' },
+  { value: false, label: 'vatTypes.unregistered' },
 ]
 
+// 付款状态类型
 export const statusPaymentType = [
-  { value: 'complete', label: 'สำเร็จ' },
-  { value: 'cancel', label: 'ไม่สำเร็จ' },
-  { value: 'all', label: 'ทั้งหมด' },
+  { value: 'complete', label: 'statusPayment.complete' },
+  { value: 'cancel', label: 'statusPayment.cancel' },
+  { value: 'all', label: 'statusPayment.all' },
 ]
 
+// 支付方式 (现金/Pay Solution/Thai QR)
 export const paymentMethod = [
-  { value: 'cash', label: 'เงินสด' },
-  { value: 'ps', label: 'Pay Solution' },
+  { value: 'cash', label: 'paymentMethod.cash' },
+  { value: 'ps', label: 'paymentMethod.pay_solution' },
   ...(themeInit.paymentGateway.tqr
-    ? [{ value: 'tqr', label: 'Thai QR' }]
+    ? [{ value: 'tqr', label: 'paymentMethod.thai_qr' }]
     : []
   ),
 ]
+
+/**
+ * 在组件中使用此函数来翻译常量数组中的标签
+ * 用法: import { translateLabelArray } from './helpers/constant'
+ *       const translatedOptions = translateLabelArray(provinces, i18n)
+ *
+ * @param array - 包含 label 属性的数组 (例如: provinces, shopGroup 等)
+ * @param i18n - i18next 实例
+ * @returns 包含翻译后 label 的新数组
+ */
+export const translateLabelArray = (
+  array: Array<{ value: any; label: string; [key: string]: any }>,
+  i18n: any
+) => {
+  return array.map((item) => ({
+    ...item,
+    label: i18n.t(item.label),
+  }));
+};
