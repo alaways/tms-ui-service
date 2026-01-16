@@ -976,5 +976,13 @@
     "cookie_policy_title": "This website uses cookies",
     "cookie_policy_description": "We use cookies to improve performance, website experience, analytics, and marketing. Click \"Accept\" to allow us to use cookies for these purposes.",
     "cookie_policy_link": "Cookie Policy",
-    "cookie_policy_accept_all": "Accept All"
+    "cookie_policy_accept_all": "Accept All",
+    "select_date": "Select date",
+    "generate_link": "Generate link",
+    "copied_text": "Copied text",
+    "camera_permission_error": "Cannot access the camera, please enable camera permission in your browser",
+    "camera_back": "Back",
+    "camera_take": "Capture",
+    "camera_retake": "Retake",
+    "camera_confirm": "Confirm"
 }

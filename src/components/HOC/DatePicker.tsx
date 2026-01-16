@@ -4,6 +4,7 @@ import Flatpickr from 'react-flatpickr';
 import * as moment from 'moment-timezone'
 
 import { Field, ErrorMessage, useField, useFormikContext } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 import 'flatpickr/dist/flatpickr.css';
 
@@ -11,7 +12,8 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
 
   const [field, meta] = useField(name);
   const { setFieldValue, setFieldTouched, values } = useFormikContext();
-  
+  const { t } = useTranslation();
+
   const [date, setDate] = useState<Date | Date[] | null>(field.value || (isRange ? [] : null));
   const hasError = meta.touched && meta.error;
 
@@ -24,7 +26,7 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
       setFieldTouched(name, true);
     }
   }, [date, setFieldValue, setFieldTouched, name, isRange]);
-  
+
   useEffect(() => {
     if (
       (isRange && JSON.stringify(field.value) !== JSON.stringify(date)) ||
@@ -33,7 +35,7 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
       setDate(field.value || (isRange ? [] : null));
     }
   }, [field.value, isRange]);
-  
+
 
   return (
     <div className={`input-container ${rows ? 'flex flex-row gap-3 items-center' : ''}`}>
@@ -63,7 +65,7 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
         <Flatpickr
           value={date}
           onChange={(selectedDates) => setDate(isRange ? selectedDates : selectedDates[0] || null)}
-          placeholder={placeholder ?? 'เลือกวันที่'}
+          placeholder={placeholder ?? t('select_date')}
           className={props.disabled ? "form-input disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b]" : "form-input placeholder:text-white-dark"}
           options={{
             mode: isRange ? "range" : "single",

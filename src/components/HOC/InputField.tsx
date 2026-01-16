@@ -1,4 +1,5 @@
 import { Field, ErrorMessage, useField } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 interface InputFieldProps  {
   label: string;
@@ -11,6 +12,7 @@ interface InputFieldProps  {
 const withInputField = (Component: any) => ({ label, name, placeholder, require = false, hidden = false,row, ...props }: InputFieldProps) => {
 
   const [field, meta] = useField(name);
+  const { t } = useTranslation();
   const hasError = meta.touched && meta.error;
 
   return (
@@ -20,11 +22,11 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
         { require && (<span className="text-rose-600"> * </span>) }
       </label>
       <div className={hasError ? 'relative has-error' : 'relative text-white-dark'}>
-        <Component 
-          {...props} 
-          id={name} 
-          name={name} 
-          placeholder={!props.disabled ? placeholder ?? 'กรุณาใส่ข้อมูล' : '-'} 
+        <Component
+          {...props}
+          id={name}
+          name={name}
+          placeholder={!props.disabled ? placeholder ?? t('please_enter_info') : '-'}
           className={props.disabled ? "form-input disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b]" : "form-input placeholder:text-white-dark"}
           autoComplete="off"
         />

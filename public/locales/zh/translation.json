@@ -996,5 +996,13 @@
     "cookie_policy_title": "本网站使用 Cookie",
     "cookie_policy_description": "我们使用 Cookie 以提升性能、网站体验、数据分析和营销。点击“接受”以允许我们为上述目的使用 Cookie。",
     "cookie_policy_link": "Cookie 政策",
-    "cookie_policy_accept_all": "全部接受"
+    "cookie_policy_accept_all": "全部接受",
+    "select_date": "选择日期",
+    "generate_link": "生成链接",
+    "copied_text": "已复制文本",
+    "camera_permission_error": "无法访问摄像头，请在浏览器中开启摄像头权限",
+    "camera_back": "返回",
+    "camera_take": "拍摄",
+    "camera_retake": "重拍",
+    "camera_confirm": "确认"
 }

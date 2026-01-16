@@ -3,6 +3,7 @@ import Select from 'react-select';
 import { ErrorMessage, useField, useFormikContext } from 'formik';
 import { useMemo } from 'react';
 import { debounce, isNull } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 interface SelectFieldProps {
   id: string;
@@ -26,11 +27,12 @@ const withSelectField = (Component: any) => ({ id, label, name, options, isSearc
 
   const [field, meta] = useField(name);
   const { setFieldValue } = useFormikContext();
+  const { t } = useTranslation();
 
   const hasError = meta.touched && meta.error;
 
   const handleChange = (selectedOption: any) => {
-    const value = isMulti 
+    const value = isMulti
     ? selectedOption.map((option: any) => option.value)
     : selectedOption ? selectedOption.value : '';
     setFieldValue(name, value);
@@ -81,18 +83,18 @@ const withSelectField = (Component: any) => ({ id, label, name, options, isSearc
       onMenuOpen: handleOnMenuOpen,
       isSearchable,
       isMulti,
-      placeholder: <div className={hasError ? 'text-danger mt-1' : ''}>{placeholder ?? 'กรุณาเลือก'}</div>,
+      placeholder: <div className={hasError ? 'text-danger mt-1' : ''}>{placeholder ?? t('please_select')}</div>,
       className: disabled ? 'form-select bg-[#eee] dark:bg-[#1b2e4b] text-black' : 'form-select',
       isDisabled: disabled,
     };
     return temp;
-  }, [field.value, props, hasError]);
+  }, [field.value, props, hasError, options, isMulti, debouncedInputChange, t]);
 
   return (
     <div className={`input-container ` + zIndex + ` ${className}`}>
       {label && <label htmlFor={id}>
-        { label } 
-        { require && (<span className="text-rose-600"> * </span>) } 
+        { label }
+        { require && (<span className="text-rose-600"> * </span>) }
       </label>}
       <div className={hasError ? 'relative has-error' : 'relative text-white-dark'}>
         <Component {...componentProps} />
