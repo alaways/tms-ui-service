@@ -51,7 +51,7 @@ const List = () => {
     });
 
 
-    
+
     const { mutate: fetchAnnounce} = useGlobalMutation(url_api.announceFindAll, {
         onSuccess: (res: any) => {
             if (res.statusCode == 200 && res.code == 200) {
@@ -63,16 +63,16 @@ const List = () => {
           console.error('Failed to fetch asset type data')
         },
     })
-    
+
 
     const { mutate: createAnnounce} = useGlobalMutation(url_api.announceCreate, {
         onSuccess: (res: any) => {
             if (res.statusCode == 200 && res.code == 200) {
                 showNotification(t('announce_create_success'), 'success');
                 setTimeout(() => {
-                    location.reload(); 
+                    location.reload();
                 }, 500);
-                
+
             }
         },
         onError: () => {
@@ -80,13 +80,13 @@ const List = () => {
         },
     })
 
-    
+
     const { mutate: updateAnnounce} = useGlobalMutation(url_api.announceUpdate, {
         onSuccess: (res: any) => {
             if (res.statusCode == 200 && res.code == 200) {
                 showNotification(t('announce_update_success'), 'success');
                 setTimeout(() => {
-                    location.reload(); 
+                    location.reload();
                 }, 500);
             }
         },
@@ -100,7 +100,7 @@ const List = () => {
             if (res.statusCode == 200 && res.code == 200) {
                 showNotification(t('announce_delete_success'), 'success');
                 setTimeout(() => {
-                    location.reload(); 
+                    location.reload();
                 }, 500);
             }
         },
@@ -383,7 +383,7 @@ const List = () => {
                         setPage(1);
                         setPageSize(p);
                     }}
-                    paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                    paginationText={({ from, to, totalRecords }) => t('pagination_text', { from, to, totalRecords })}
                 />
             </div>
             <Transition appear show={actionModal} as={Fragment}>
@@ -437,7 +437,7 @@ const List = () => {
                                                             disabled={formData?.id ? true : false}
                                                         />
                                                     )}
-                                                    {/* 
+                                                    {/*
                                                     <SelectField
                                                         label="ร้านค้า"
                                                         isMulti={true}
@@ -497,7 +497,7 @@ const List = () => {
                                                     {!formData?.preview && (
                                                         <div className="flex justify-end items-center mt-8">
                                                             <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                                                                ยกเลิก
+                                                                {t('cancel')}
                                                             </button>
                                                             <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
                                                             {formData.id ? t('save') : t('add')}

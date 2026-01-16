@@ -18,7 +18,10 @@ import { url_api } from '../../../services/endpoints'
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { columns_csv, customer_csv } from '../../../helpers/constant'
 import DateRangeAntd from '../../../components/HOC/DateRangeAntd'
+import { useTranslation } from 'react-i18next'
+
 const List = () => {
+  const { t } = useTranslation()
   const mode = process.env.MODE || 'admin'
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -69,15 +72,15 @@ const List = () => {
   const [filter, setFilter] = useState<filterParams>({})
   const lineRegis = [
     {
-      label : "ทั้งหมด",
+      label : t('all_label'),
       value :"all"
     },
     {
-      label : "ลงทะเบียน",
+      label : t('registered'),
       value :"regis"
     },
     {
-      label : "ไม่ได้ลงทะเบียน",
+      label : t('not_registered'),
       value :"unregis"
     }
   ]
@@ -142,7 +145,7 @@ const List = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการลูกค้า'))
+    dispatch(setPageTitle(t('customer_list_title')))
     fetchShopData({})
     fetchCustomerData({data: {page:1, page_size: pageSize}})
   }, [])
@@ -156,25 +159,25 @@ const List = () => {
     if (!firstLoading) return
     fetchCustomerData({data: {page:page, page_size: pageSize,...filter}})
   }, [page])
-  
+
   return (
     <div>
       {isLoading && <PreLoading />}
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
         <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
           <h2 className="text-xl">
-            ลูกค้า
+            {t('customer_label')}
           </h2>
         </div>
 
-      
+
         <div className="flex flex-col items-start flex-wrap gap-4 mb-4.5 px-5 ">
         {acc && (
           <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
               <div className="flex gap-3">
                 <Link to="/apps/customer/add" className="btn btn-primary gap-2">
                   <IconPlus />
-                  เพิ่มลูกค้า
+                  {t('add_customer')}
                 </Link>
               </div>
         </div>)}
@@ -208,7 +211,7 @@ const List = () => {
                       id="credit_level"
                       name="credit_level"
                       value={values.credit_level}
-                      placeholder="เครดิต (bu)"
+                      placeholder={t('credit_bu')}
                       className="z-10 flex-1 dropdown-custom"
                       options={creditLevelTypes}
                       isSearchable={true}
@@ -220,7 +223,7 @@ const List = () => {
                       id="shop_credit_level"
                       name="shop_credit_level"
                       value={values.shop_credit_level}
-                      placeholder="เครดิต (ร้านค้า)"
+                      placeholder={t('credit_shop')}
                       className="z-10 flex-1 dropdown-custom"
                       options={creditLevelTypes}
                       isSearchable={true}
@@ -232,7 +235,7 @@ const List = () => {
                       id="id_shop"
                       name="id_shop"
                       value={values.id_shop}
-                      placeholder="ร้านค้า"
+                      placeholder={t('shop_label')}
                       className="z-10 flex-1 dropdown-custom"
                       options={shopList}
                       isSearchable={true}
@@ -244,7 +247,7 @@ const List = () => {
                       id="line_regis"
                       name="line_regis"
                       value={values.line_regis}
-                      placeholder="ลงทะเบียนแจ้งเตือน"
+                      placeholder={t('register_notification')}
                       className="z-10 flex-1 dropdown-custom"
                       options={lineRegis}
                       isSearchable={true}
@@ -254,13 +257,13 @@ const List = () => {
                     />
                   </div>
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
-                    <DateRangeAntd name="created_at" placeholder={['เริ่มวันที่สร้าง', 'ถึงวันที่']} />
-                    <DateRangeAntd name="updated_at" placeholder={['เริ่มวันที่แก้ไข', 'ถึงวันที่']} />
+                    <DateRangeAntd name="created_at" placeholder={[t('start_created_date'), t('to_date_label')]} />
+                    <DateRangeAntd name="updated_at" placeholder={[t('start_edit_date'), t('to_date_label')]} />
                     <div className="relative">
                         <input type="text"
                           id="query"
                           name="query"
-                          placeholder="ค้นหา"
+                          placeholder={t('search')}
                           className="form-input py-2 ltr:pr-11 rtl:pl-11 peer"
                           value={values.query}
                           onChange={(e) => {
@@ -269,7 +272,7 @@ const List = () => {
                         />
                       </div>
                     <div className="flex gap-4">
-                      <button type="submit" className="btn btn-primary w-[100px] gap-2">ค้นหา</button>
+                      <button type="submit" className="btn btn-primary w-[100px] gap-2">{t('search')}</button>
                       <button
                         type="reset"
                         className="btn btn-info gap-2 w-[100px]"
@@ -288,7 +291,7 @@ const List = () => {
                           fetchCustomerData({ data: { page: 1, page_size: pageSize, ...resetValues } })
                         }}
                       >
-                        ล้างค่า
+                        {t('clear_values')}
                       </button>
                       {(role === 'admin' || role === 'business_unit') && (
                         <button type="button" className="btn btn-success gap-2 w-[100px]" onClick={() => { handleExport(`customer_${new Date().toLocaleString()}`, values) }}>
@@ -303,11 +306,11 @@ const List = () => {
             )}
           </Formik>
 
-          
+
         </div>
         <div className="datatables pagination-padding">
           {customerLists.length === 0 ? (
-            <div className="my-10 text-center text-gray-500">ไม่พบข้อมูล</div>
+            <div className="my-10 text-center text-gray-500">{t('no_data')}</div>
           ) : (
             <DataTable
               className="whitespace-nowrap table-hover invoice-table"
@@ -315,7 +318,7 @@ const List = () => {
               columns={[
                 {
                   accessor: 'index',
-                  title: 'ลำดับ',
+                  title: t('order_number'),
                   textAlignment: 'center',
                   render: (row, index) => {
                     const i = index + 1 + (page - 1) * pageSize
@@ -324,7 +327,7 @@ const List = () => {
                 },
                 {
                   accessor: 'created_at',
-                  title: 'วันที่สร้าง',
+                  title: t('created_date'),
                   textAlignment: 'left',
                   sortable: false,
                   render: ({ created_at }) => (
@@ -338,7 +341,7 @@ const List = () => {
                   ? [
                     {
                       accessor: 'updated_at',
-                      title: 'วันที่แก้ไข',
+                      title: t('edited_date'),
                       //textAlignment: 'left',
                       sortable: false,
                       render: (item:any) => (
@@ -361,20 +364,20 @@ const List = () => {
 
                   ] :[]
                 ),
-                
+
                 {
                   accessor: 'name',
                   title: 'ชื่อ-นามสกุล',
                   textAlignment: 'left',
                   sortable: false,
-                  render: (item) => 
+                  render: (item) =>
                     {
-                      return (role == 'shop')  ?    
+                      return (role == 'shop')  ?
                       <div className="flex items-center font-normal">
                         <a className="flex">
                           <div>{item.title + ' ' + item.name}</div>
                         </a>
-                      </div> 
+                      </div>
                     :
                     <div className="flex items-center font-normal">
                       <a className="flex cursor-pointer active" onClick={() => goPreview(item)}>
@@ -383,13 +386,13 @@ const List = () => {
                     </div>
                     }
                 },
-                
+
 
                  ...(role !== 'shop'
                   ? [
                     {
                         accessor: 'phone_number',
-                        title: 'เบอร์โทรศัพท์ลูกค้า',
+                        title: t('customer_phone'),
                         //textAlignment: 'left',
                         sortable: false,
                         render: (item:any) => (
@@ -406,7 +409,7 @@ const List = () => {
                       },
                        {
                         accessor: 'citizen_id',
-                        title: 'รหัสบัตรประชาชน',
+                        title: t('citizen_id'),
                         //textAlignment: 'left',
                         sortable: false,
                         render: (item:any) => (
@@ -415,7 +418,7 @@ const List = () => {
                       },
                       {
                         accessor: 'credit_level',
-                        title: 'ระดับเครดิต (BU)',
+                        title: t('credit_level_bu'),
                         //textAlignment: 'left',
                         sortable: false,
                         render: (item:any) => (
@@ -426,7 +429,7 @@ const List = () => {
                       },
                       {
                         accessor: 'shop_credit_level',
-                        title: 'ระดับเครดิต (ร้านค้า)',
+                        title: t('credit_level_shop'),
                         //textAlignment: 'left',
                         sortable: false,
                         render: (item:any) => (
@@ -437,12 +440,12 @@ const List = () => {
                       },
                       {
                         accessor: 'approval_status',
-                        title: 'อนุมัติ',
+                        title: t('approval'),
                         //textAlignment: 'center',
                         sortable: false,
                         render: (item:any) => (
                           <span className={`badge ${item?.approval_status ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                            {item?.approval_status ? 'อนุมัติ' : 'ไม่อนุมัติ'}
+                            {item?.approval_status ? t('approved') : t('not_approved')}
                           </span>
                         ),
                       },
@@ -460,10 +463,10 @@ const List = () => {
                         ),
                       },
 
-                      
+
                     ]
                 : []),
-            
+
               ]}
               minHeight={200}
               highlightOnHover
@@ -477,7 +480,7 @@ const List = () => {
                 setPageSize(p)
               }}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                t('pagination_text', { from, to, totalRecords })
               )}
             />
           )}

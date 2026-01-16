@@ -18,6 +18,7 @@ import { showNotification } from '../../../helpers/showNotification'
 import { Formik, Form } from 'formik'
 import { DataTable } from 'mantine-datatable'
 import { Dialog, Transition } from '@headlessui/react'
+import { useTranslation } from 'react-i18next'
 
 import Tippy from '@tippyjs/react'
 import SelectField from '../../../components/HOC/SelectField'
@@ -41,11 +42,12 @@ const mode = process.env.MODE || 'admin'
 
 const List = () => {
 
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการกลุ่มร้าน'))
+    dispatch(setPageTitle(t('shop_group_list')))
     dispatch(setSidebarActive(['bu', '/apps/shop-group/list']))
   }, [dispatch])
 
@@ -94,7 +96,7 @@ const List = () => {
   const { mutate: shopGroupCreate } = useGlobalMutation(url_api.shopGroupCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('เพิ่มข้อมูลสำเร็จ', 'success')
+        showNotification(t('add_data_success'), 'success')
         setActionModal(false)
         fetchShopGroupData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -109,7 +111,7 @@ const List = () => {
   const { mutate: shopGroupUpdate } = useGlobalMutation(url_api.shopGroupUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_data_success'), 'success')
         setActionModal(false)
         fetchShopGroupData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -150,8 +152,8 @@ const List = () => {
   }
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_business_unit: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('required_field')),
+    id_business_unit: Yup.string().nullable().required(t('required_field')),
   })
 
   const submitForm = useCallback(
@@ -189,7 +191,7 @@ const List = () => {
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
         <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
           <h2 className="text-xl">
-            ประเภทกลุ่มร้าน
+            {t('shop_group_type')}
           </h2>
           <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
             {/* <div className="flex gap-3">
@@ -203,7 +205,7 @@ const List = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="ค้นหา"
+                placeholder={t('search')}
                 className="form-input py-2 ltr:pr-11 rtl:pl-11 peer"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -221,7 +223,7 @@ const List = () => {
             columns={[
               {
                 accessor: 'id',
-                title: 'ลำดับ',
+                title: t('order_number'),
                 sortable: false,
                 render: (row, index) => (
                   <div>{index + 1}</div>
@@ -229,7 +231,7 @@ const List = () => {
               },
               {
                 accessor: 'name',
-                title: 'ชื่อกลุ่มร้าน',
+                title: t('shop_group_name'),
                 sortable: false,
                 render: (item: any) => (
                   <div className="flex items-center font-normal">
@@ -241,11 +243,11 @@ const List = () => {
               },
               {
                 accessor: 'is_active',
-                title: 'เปิดปิดการใช้งาน',
+                title: t('active_status'),
                 sortable: false,
                 render: ({ is_active }) => (
                   <span className={`badge ${is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                    {is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+                    {is_active ? t('active') : t('inactive')}
                   </span>
                 ),
               },
@@ -257,13 +259,13 @@ const List = () => {
                 render: (item) => (
                   <div className="flex gap-4 items-center w-max mx-auto">
                     {
-                      role === 'admin' && (<Tippy content="รายการกลุ่มร้านค้า" theme="Primary">
+                      role === 'admin' && (<Tippy content={t('shop_group_list_bu')} theme="Primary">
                         <a className="flex hover:text-primary cursor-pointer active" onClick={() => { goShopGroupBu(item) }}>
                           <IconEye />
                         </a>
                       </Tippy>)
                     }
-                    <Tippy content="แก้ไข" theme="Primary">
+                    <Tippy content={t('edit')} theme="Primary">
                       <a className="flex hover:text-info cursor-pointer active" onClick={() => { addEditShopGroup(item) }}>
                         <IconEdit className="w-4.5 h-4.5" />
                       </a>
@@ -282,7 +284,7 @@ const List = () => {
               setPage(1)
               setPageSize(p)
             }}
-            paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+            paginationText={({ from, to, totalRecords }) => t('pagination_text', { from, to, totalRecords })}
           />
         </div>
         <Transition appear show={actionModal} as={Fragment}>
@@ -317,42 +319,42 @@ const List = () => {
                     >
                       <IconX />
                     </button>
-                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{formData.id ? 'แก้ไข' : 'เพิ่ม'}</div>
+                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{formData.id ? t('edit') : t('add')}</div>
                     <div className="p-5">
                       <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedForm}>
                         {(props) => (
                           <Form className="space-y-5 mb-7 dark:text-white custom-select">
                             <SelectField
-                              label="หน่วยธุรกิจ"
+                              label={t('business_unit')}
                               id="id_business_unit"
                               name="id_business_unit"
                               options={businessUnit}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => handleChangeSelect(props, e, 'id_business_unit')}
                               isSearchable={true}
                             />
                             <InputField
-                              label="ชื่อกลุ่มร้าน"
+                              label={t('shop_group_name')}
                               name="name"
                               type="text"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_data')}
                             />
                             <SelectField
                               require={true}
-                              label="สถานะ"
+                              label={t('status')}
                               id="is_active"
                               name="is_active"
                               options={[
                                 {
                                   value: true,
-                                  label: 'เปิด',
+                                  label: t('open'),
                                 },
                                 {
                                   value: false,
-                                  label: 'ปิด',
+                                  label: t('close'),
                                 },
                               ]}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => {
                                 props.setFieldValue('is_active', e.value)
                               }}
@@ -383,10 +385,10 @@ const List = () => {
                             */ }
                             <div className="flex justify-end items-center mt-8">
                               <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                                ยกเลิก
+                                {t('cancel')}
                               </button>
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {formData.id ? 'บันทึก' : 'เพิ่ม'}
+                                {formData.id ? t('save') : t('add')}
                               </button>
                             </div>
                           </Form>
