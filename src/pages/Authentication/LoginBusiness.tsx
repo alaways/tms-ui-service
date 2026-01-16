@@ -18,7 +18,7 @@ const LoginBusiness: React.FC = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setPageTitle('เข้าสู่ระบบ'))
+    dispatch(setPageTitle(t('auth_login_title')))
   }, [dispatch])
 
   const [formData, setFormData] = useState({
@@ -126,8 +126,8 @@ const LoginBusiness: React.FC = () => {
                   ล็อกอิน
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>อีเมล</span> 
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span> 
+                  ใช้ <span className={`text-themePrimary`}>อีเมล</span>
+                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span>
                   เพื่อเข้าสู่ระบบ
                 </p>
               </div>

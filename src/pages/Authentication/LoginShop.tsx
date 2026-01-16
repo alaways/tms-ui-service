@@ -10,16 +10,18 @@ import IconLockDots from '../../components/Icon/IconLockDots'
 import themeInit from '../../theme.init'
 import { useGlobalMutation } from '../../helpers/globalApi'
 import { url_api } from '../../services/endpoints'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'shop'
 
 const LoginShop: React.FC = () => {
 
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setPageTitle('เข้าสู่ระบบ'))
+    dispatch(setPageTitle(t('auth_login_title')))
   }, [dispatch])
 
   const [formData, setFormData] = useState({
@@ -66,20 +68,16 @@ const LoginShop: React.FC = () => {
           const toast = Swal.mixin(toastAlert)
           toast.fire({
             icon: 'error',
-            title: res?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง !',
-            padding: '10px 20px',
-          })
-        }
-      },
-      onError: (err: any) => {
-        const toast = Swal.mixin(toastAlert)
-        toast.fire({
-          icon: 'error',
-          title: err?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง',
-          padding: '10px 20px',
-        })
-      },
-  })
+              title: res?.message ?? t('auth_invalid_data'),
+              padding: '10px 20px',
+            })
+          }
+        },
+        onError: (err: any) => {
+          const toast = Swal.mixin(toastAlert)
+          toast.fire({
+            icon: 'error',
+            title: err?.message ?? t('auth_invalid_data'),
 
   const submitForm = useCallback(
     (event: any) => {
@@ -127,8 +125,8 @@ const LoginShop: React.FC = () => {
                   ล็อกอิน
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>ชื่อผู้ใช้</span> 
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span> 
+                  ใช้ <span className={`text-themePrimary`}>ชื่อผู้ใช้</span>
+                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span>
                   เพื่อเข้าสู่ระบบ
                 </p>
               </div>

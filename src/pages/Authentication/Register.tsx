@@ -44,15 +44,15 @@ const Register = () => {
     });
 
     const SubmittedForm = Yup.object().shape({
-        name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        id_shop_group: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        id_business_unit: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        id_province: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        email: Yup.string().email('กรุณาใส่อีเมลที่ถูกต้อง').required('กรุณาใส่ข้อมูลให้ครบ'),
-        password: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+        name: Yup.string().required(t('required_field')),
+        id_shop_group: Yup.string().required(t('required_field')),
+        id_business_unit: Yup.string().required(t('required_field')),
+        id_province: Yup.string().required(t('required_field')),
+        email: Yup.string().email(t('auth_invalid_email')).required(t('required_field')),
+        password: Yup.string().required(t('required_field')),
         password_repeat: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'รหัสผ่านไม่ตรงกัน')
-            .required('กรุณาใส่ข้อมูลให้ครบ'),
+            .oneOf([Yup.ref('password'), null], t('auth_password_not_match'))
+            .required(t('required_field')),
     });
 
 
@@ -98,7 +98,7 @@ const Register = () => {
         onError: (err: any) => {},
     });
 
-   
+
     useEffect(() => {
         fetchBusinessUnitData({
             page: 1,

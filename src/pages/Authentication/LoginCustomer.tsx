@@ -65,20 +65,16 @@ const LoginCustomer: React.FC = () => {
         const toast = Swal.mixin(toastAlert)
         toast.fire({
           icon: 'error',
-          title: res?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง !',
-          padding: '10px 20px',
-        })
-      }
-    },
-    onError: (err: any) => {
-      const toast = Swal.mixin(toastAlert)
-      toast.fire({
-        icon: 'error',
-        title: err?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง',
-        padding: '10px 20px',
-      })
-    },
-  })
+            title: res?.message ?? t('auth_invalid_data'),
+            padding: '10px 20px',
+          })
+        }
+      },
+      onError: (err: any) => {
+        const toast = Swal.mixin(toastAlert)
+        toast.fire({
+          icon: 'error',
+          title: err?.message ?? t('auth_invalid_data'),
 
 
   const submitForm = useCallback(
@@ -121,8 +117,8 @@ const LoginCustomer: React.FC = () => {
                   ล็อกอิน
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>เบอร์โทรศัพท์</span> 
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span> 
+                  ใช้ <span className={`text-themePrimary`}>เบอร์โทรศัพท์</span>
+                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span>
                   เพื่อเข้าสู่ระบบ
                 </p>
               </div>

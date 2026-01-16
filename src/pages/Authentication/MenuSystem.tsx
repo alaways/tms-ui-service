@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../store/themeConfigSlice'
 import themeConfig from '../../theme.config'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const MenuSystem: React.FC = () => {
 
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -30,7 +32,7 @@ const MenuSystem: React.FC = () => {
 
   useEffect(() => {
     if (role === null) { logout() }
-    dispatch(setPageTitle('เลือกระบบที่ต้องารใช้งาน'))
+    dispatch(setPageTitle(t('auth_select_system')))
   }, [dispatch])
 
   return (
@@ -47,7 +49,7 @@ const MenuSystem: React.FC = () => {
             <div className="w-full max-w-[440px] lg:mt-16">
               <div className="mb-10">
                 <h1 className="text-2xl font-extrabold uppercase !leading-snug text-[#002a41] md:text-3xl">
-                  กรุณาเลือก <span className={`text-themePrimary`}>ระบบ</span> ที่ต้องการใช้งาน
+                  {t('auth_please_select_system')} <span className={`text-themePrimary`}>{t('auth_system')}</span> {t('auth_to_login')}
                 </h1>
                 <p className="text-base text-lg font-normal leading-normal text-white-dark">
                   Please select the system you want to use
@@ -58,10 +60,10 @@ const MenuSystem: React.FC = () => {
                   TMS System
                 </button>
                 <button type="button" className="btn pt-5 pb-5 bg-[#e4e4e4] text-lg font-extrabold !mt-2 w-full border-0 uppercase" style={{ boxShadow: 'none' }} onClick={goPawn}>
-                  ระบบฝากขาย
+                  {t('auth_consignment_system')}
                 </button>
                 <button type="button" className="btn pt-5 pb-5 bg-[#ffffff] text-lg font-light !mt-2 w-full border-0 uppercase" style={{ boxShadow: 'none' }} onClick={logout}>
-                  ออกจากระบบ
+                  {t('auth_logout')}
                 </button>
               </div>
             </div>
