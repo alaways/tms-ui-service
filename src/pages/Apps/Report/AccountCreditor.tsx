@@ -22,19 +22,25 @@ import { useGlobalMutation } from '../../../helpers/globalApi';
 import { url_api } from '../../../services/endpoints';
 import IconEye from '../../../components/Icon/IconEye';
 import { useShopFindMutation } from '../../../services/mutations/useShopMutation';
+import { useTranslation } from 'react-i18next';
 
 const breadcrumbItems = [
     // { to: '/apps/report/pay-to-shop', label: 'จ่ายเงินให้ร้านค้า' },
-    { label: 'บัญชีเจ้าหนี้ร้านค้า', isCurrent: true },
+    // breadcrumb label will be set dynamically with i18n
 ];
 
 const apiUrl = process.env.BACKEND_URL;
 const mode = process.env.MODE || 'admin';
 
 const AccountCreditor = () => {
+    const { t } = useTranslation();
     const storedUser = localStorage.getItem(mode);
     const token = storedUser ? JSON.parse(storedUser).access_token : null;
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const breadcrumbItemsWithTranslation = [
+        { label: t('report_account_creditor_title'), isCurrent: true },
+    ];
 
     const role = storedUser ? JSON.parse(storedUser).role : null;
     const id_shopStored = storedUser ? JSON.parse(storedUser).id_shop : null;
@@ -148,7 +154,7 @@ const AccountCreditor = () => {
             setShopBuData((prev: any) => ({ ...prev, id_shop: res.data.id }));
         },
         onError: (err) => {
-   
+
         },
     });
 
@@ -310,9 +316,9 @@ const AccountCreditor = () => {
 
     return (
         <>
-            <Breadcrumbs items={breadcrumbItems} />
+            <Breadcrumbs items={breadcrumbItemsWithTranslation} />
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3 px-10">
-                <h5 className="my-3 text-xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">บัญชีเจ้าหนี้ร้านค้า</h5>
+                <h5 className="my-3 text-xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('report_account_creditor_title')}</h5>
                 <div className="invoice-table">
                     <div className="flex flex-col md:flex-row justify-between gap-6 mb-4">
                         <div className="flex items-center gap-4 w-full bg-gradient-to-r from-emerald-400 to-emerald-300 px-8 py-5 rounded-2xl text-white">
@@ -320,7 +326,7 @@ const AccountCreditor = () => {
                                 <IconMoney fill="#35d399" className="w-8" />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p className="text-lg">ยอดหนี้ทั้งหมด</p>
+                                <p className="text-lg">{t('report_total_debt')}</p>
                                 <h5 className="font-semibold text-2xl">{numberWithCommas(dashboardData?.total_shop)}</h5>
                             </div>
                         </div>
@@ -329,7 +335,7 @@ const AccountCreditor = () => {
                                 <IconMoney2 fill="#f87272" className="w-9" />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p className="text-lg">ชำระแล้วทั้งหมด</p>
+                                <p className="text-lg">{t('report_paid_total')}</p>
                                 <h5 className="font-semibold text-2xl">{numberWithCommas(dashboardData?.debt_balance)}</h5>
                             </div>
                         </div>
@@ -338,21 +344,21 @@ const AccountCreditor = () => {
                                 <IconMoneyReturn fill="#3b82f6" className="w-9" />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p className="text-lg">ยอดค้างชำระทั้งหมด</p>
+                                <p className="text-lg">{t('report_outstanding_debt')}</p>
                                 <h5 className="font-semibold text-2xl">{numberWithCommas(dashboardData?.os_balance)}</h5>
                             </div>
                         </div>
                     </div>
 
                     <div className="pt-4 custom-select">
-                        <h5 className="text-lg font-semibold">การทำรายการที่ผ่านมา</h5>
+                        <h5 className="text-lg font-semibold">{t('report_transaction_list')}</h5>
                         <Formik initialValues={shopBuData} onSubmit={onSearch} enableReinitialize>
                             {({ setFieldValue, handleReset }) => (
                                 <Form className="flex flex-col gap-4 py-4">
                                     <div className="flex gap-3">
                                         <div className="w-[296px]">
                                             <SelectField
-                                                label="หน่วยธุรกิจ"
+                                                label={t('report_business_unit_label')}
                                                 name="id_business_unit"
                                                 id="id_business_unit"
                                                 options={businessUnit}
@@ -367,7 +373,7 @@ const AccountCreditor = () => {
                                         </div>
                                         <div className="w-[296px]">
                                             <SelectField
-                                                label="ร้านค้า"
+                                                label={t('report_shop_label')}
                                                 name="id_shop"
                                                 id="id_shop"
                                                 isSearchable={true}
@@ -378,7 +384,7 @@ const AccountCreditor = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap items-center gap-3">
-                                        <label>การทำรายการที่ผ่านมา</label>
+                                        <label>{t('report_transaction_list')}</label>
                                         <div className="max-w-[200px]">
                                             <DatePicker
                                                 name="start_at"
@@ -400,7 +406,7 @@ const AccountCreditor = () => {
                                         <div className="flex gap-4">
                                             <button type="submit" className="btn btn-primary gap-2" disabled={isLoading}>
                                                 {isLoading ? <Spinner size="sm" /> : <IconSearch />}
-                                                ค้นหา
+                                                {t('report_search_button')}
                                             </button>
                                             <button
                                                 type="reset"
@@ -413,7 +419,7 @@ const AccountCreditor = () => {
                                                 }}
                                             >
                                                 {isLoading ? <Spinner size="sm" /> : <IconRefresh />}
-                                                ล้างค่า
+                                                {t('report_clear_button')}
                                             </button>
                                             {shopBuData?.id_shop && shopBuData?.id_business_unit && role !== 'shop' && (
                                                 <div className="flex flex-col">
@@ -421,7 +427,7 @@ const AccountCreditor = () => {
                                                         to={'/apps/report/form-payment/' + shopBuData?.id_shop + `?id_business_unit=${shopBuData.id_business_unit}&id_shop=${shopBuData?.id_shop}`}
                                                         className="btn btn-success gap-2 w-full h-[40px]"
                                                     >
-                                                        ชำระเงิน
+                                                        {t('report_payment_button')}
                                                     </NavLink>
                                                 </div>
                                             )}
@@ -442,7 +448,7 @@ const AccountCreditor = () => {
                                                 selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''
                                             } dark:hover:border-b-black -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}
                                         >
-                                            ชำระแล้ว
+                                            {t('report_paid_tab')}
                                         </button>
                                     )}
                                 </Tab>
@@ -453,7 +459,7 @@ const AccountCreditor = () => {
                                                 selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''
                                             } dark:hover:border-b-black -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}
                                         >
-                                            เจ้าหนี้ร้านค้า
+                                            {t('report_creditor_tab')}
                                         </button>
                                     )}
                                 </Tab>
@@ -462,7 +468,7 @@ const AccountCreditor = () => {
                                 <Tab.Panel>
                                     <div className="py-4 flex flex-col gap-4">
                                         <div className="flex justify-between items-center">
-                                            <h5 className="text-lg">รายการธุรกรรม {totalItemsPayment} รายการ</h5>
+                                            <h5 className="text-lg">{t('report_transactions')} {totalItemsPayment} {t('report_items')}</h5>
                                             <div className="flex flex-col">
                                                 <button
                                                     type="button"
@@ -480,56 +486,56 @@ const AccountCreditor = () => {
                                                 columns={[
                                                     {
                                                         accessor: 'index',
-                                                        title: 'ลำดับ',
+                                                        title: t('report_sequence_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any, index: number) => <p>{(pagePayment - 1) * pageSizePayment + (index + 1)}</p>,
                                                     },
                                                     {
                                                         accessor: 'created_at',
-                                                        title: 'วันที่',
+                                                        title: t('report_date_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{convertDateTimeToApiByBangkok(item?.payed_at)}</p>,
                                                     },
                                                     {
                                                         accessor: 'description',
-                                                        title: 'รายละเอียด',
+                                                        title: t('report_details_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
-                                                        render: (item: any) => <p>จ่ายเงิน</p>,
+                                                        render: (item: any) => <p>{t('report_payment_action')}</p>,
                                                     },
                                                     {
                                                         accessor: 'price',
-                                                        title: 'ยอดเงิน',
+                                                        title: t('report_amount_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{numberWithCommas(item?.amount)}</p>,
                                                     },
                                                     {
                                                         accessor: 'payment_type',
-                                                        title: 'ช่องทางการชำระเงิน',
+                                                        title: t('report_payment_channel_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{item?.bank_name}</p>,
                                                     },
                                                     {
                                                         accessor: 'id_reference',
-                                                        title: 'หมายเลขอ้างอิง',
+                                                        title: t('report_reference_number_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{item?.reference || '-'}</p>,
                                                     },
                                                     {
                                                         accessor: 'action_who',
-                                                        title: 'ผู้ทำรายการ',
+                                                        title: t('report_operator_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{item?.admin_name}</p>,
                                                     },
                                                     {
                                                         accessor: 'action',
-                                                        title: 'ดำเนินการ',
+                                                        title: t('report_actions_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item) => (
@@ -540,7 +546,7 @@ const AccountCreditor = () => {
                                                                 >
                                                                     <IconEye className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
                                                                     <p className="absolute left-[-10px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                                                                        ดูข้อมูล
+                                                                        {t('report_view_detail')}
                                                                     </p>
                                                                 </a>
                                                             </div>
@@ -561,8 +567,8 @@ const AccountCreditor = () => {
                                                 // paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
                                             />
                                             <div className="rounded-b-md mt-2 bg-blue-200 h-[50px] flex justify-between items-center px-5">
-                                                <p className="text-black font-semibold">จำนวนเงินทั้งสิ้น</p>
-                                                <p className="text-black font-semibold">{numberWithCommas(totalPaymentDone)} บาท</p>
+                                                <p className="text-black font-semibold">{t('report_total_amount')}</p>
+                                                <p className="text-black font-semibold">{numberWithCommas(totalPaymentDone)} {t('report_currency_baht')}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -570,7 +576,7 @@ const AccountCreditor = () => {
                                 <Tab.Panel>
                                     <div className="py-4 flex flex-col gap-4">
                                         <div className="flex justify-between items-center">
-                                            <h5 className="text-lg">รายการธุรกรรม {totalItems} รายการ</h5>
+                                            <h5 className="text-lg">{t('report_transactions')} {totalItems} {t('report_items')}</h5>
                                             <div className="flex flex-col">
                                                 <button
                                                     type="button"
@@ -588,47 +594,47 @@ const AccountCreditor = () => {
                                                 columns={[
                                                     {
                                                         accessor: 'index',
-                                                        title: 'ลำดับ',
+                                                        title: t('report_sequence_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any, index: number) => <p>{(page - 1) * pageSize + (index + 1)}</p>,
                                                     },
                                                     {
                                                         accessor: 'created_at',
-                                                        title: 'วันที่',
+                                                        title: t('report_date_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{item?.date}</p>,
                                                     },
                                                     {
                                                         accessor: 'amount',
-                                                        title: 'จำนวนรายการ',
+                                                        title: t('report_transaction_count'),
                                                         textAlignment: 'center',
                                                         sortable: false,
-                                                        render: (item: any) => <p>{item?.count} รายการ</p>,
+                                                        render: (item: any) => <p>{item?.count} {t('report_items')}</p>,
                                                     },
                                                     {
                                                         accessor: 'description',
-                                                        title: 'รายละเอียด',
+                                                        title: t('report_details_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{item?.details}</p>,
                                                     },
                                                     {
                                                         accessor: 'price',
-                                                        title: 'ยอดเงิน',
+                                                        title: t('report_amount_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item: any) => <p>{numberWithCommas(item?.total_shop)}</p>,
                                                     },
                                                     {
                                                         accessor: 'action',
-                                                        title: 'ดำเนินการ',
+                                                        title: t('report_actions_header'),
                                                         textAlignment: 'center',
                                                         sortable: false,
                                                         render: (item) => (
                                                             <div className="flex gap-4 items-center w-max mx-auto">
-                                                                {/* <Tippy content="ดูข้อมูล" theme="Primary">
+                                                                {/* <Tippy content={t('report_view_detail')} theme="Primary">
                                                                     <a href={`/apps/report/account-creditor/detail/${shopBuData.id_shop}?start_at=${shopBuData.start_at}&end_at=${shopBuData.end_at}`} target="_blank" className="flex cursor-pointer active">
                                                                         <IconEye  className="w-4.5 h-4.5 " />
                                                                     </a>
@@ -639,7 +645,7 @@ const AccountCreditor = () => {
                                                                 >
                                                                     <IconEye className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
                                                                     <p className="absolute left-[-10px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                                                                        ดูข้อมูล
+                                                                        {t('report_view_detail')}
                                                                     </p>
                                                                 </a>
                                                             </div>
@@ -657,7 +663,7 @@ const AccountCreditor = () => {
                                                     setPage(1);
                                                     setPageSize(p);
                                                 }}
-                                                paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                                                paginationText={({ from, to, totalRecords }) => t('report_pagination_text', { from, to, totalRecords })}
                                             />
                                         </div>
                                     </div>

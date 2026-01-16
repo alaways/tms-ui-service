@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import * as XLSX from 'xlsx';
 
@@ -40,17 +41,18 @@ import IconEdit from '../../../components/Icon/IconEdit';
 const toast = Swal.mixin(toastAlert);
 const mode = process.env.MODE || 'admin';
 
-const convertText = (text: string) => {
+const convertText = (text: string, t: any) => {
     if (text == 'approved') {
-        return 'อนุมัติ';
+        return t('report_status_approved');
     } else if (text == 'cancel') {
-        return 'ยกเลิก';
+        return t('report_status_cancelled');
     }
 };
 
 const ShopReportPV = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -58,8 +60,8 @@ const ShopReportPV = () => {
     const id_business_unit = searchParams.get('id_business_unit') || '';
 
     const breadcrumbItems = [
-        { to: '/apps/report/pay-to-shop-pv', label: 'จ่ายเงินให้ร้านค้า' },
-        { label: 'รายงานค่าตอบแทน', isCurrent: true },
+        { to: '/apps/report/pay-to-shop-pv', label: t('report_pay_to_shop_title') },
+        { label: t('report_shop_report_title'), isCurrent: true },
     ];
 
     const apiUrl = process.env.BACKEND_URL;
@@ -113,7 +115,7 @@ const ShopReportPV = () => {
     const column: any = [
         {
             accessor: 'id',
-            title: 'เลขที่สัญญา',
+            title: t('report_contract_number_header'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => (
@@ -126,21 +128,21 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'no_pv',
-            title: 'เลขที่ PV',
+            title: t('report_pv_number_header'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => <p>{item?.pv_no}</p>,
         },
         {
             accessor: 'date_pv',
-            title: 'วันที่สร้าง PV',
+            title: t('report_pv_date_header'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => convertDateDbToClient(item.pv_create),
         },
         {
             accessor: 'contract_date',
-            title: 'วันที่ทำสัญญา',
+            title: t('report_contract_date_header'),
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
@@ -149,7 +151,7 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'approved_at',
-            title: 'วันที่อนุมัติสัญญา',
+            title: t('report_approval_date_header'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => {
@@ -158,109 +160,109 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'contract_status',
-            title: 'สถานะ PV',
+            title: t('report_pv_status_header'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => {
-                return <p className={`${item.contract_status == 'cancel' ? 'text-red-500' : 'text-green-600'} !font-semibold`}>{convertText(item?.contract_status) || ''}</p>;
+                return <p className={`${item.contract_status == 'cancel' ? 'text-red-500' : 'text-green-600'} !font-semibold`}>{convertText(item?.contract_status, t) || ''}</p>;
             },
         },
         {
             accessor: 'asset.name',
-            title: 'ชื่อทรัพย์สิน',
+            title: t('report_asset_name_header'),
             textAlignment: 'left',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? "ผลรวม" : (item?.asset?.name || '');
+                return record.isTotal ? t('report_total_text') : (item?.asset?.name || '');
             },
         },
         {
             accessor: 'price',
-            title: 'ราคาขาย',
+            title: t('report_selling_price_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.price || '0')} บาท` : numberWithCommas(item?.price || '0');
+                return record.isTotal ? `${numberWithCommas(item?.price || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.price || '0');
             },
         },
         {
             accessor: 'down_payment',
-            title: 'เงินดาวน์',
+            title: t('report_down_payment_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.down_payment || '0')} บาท` : numberWithCommas(item?.down_payment || '0');
+                return record.isTotal ? `${numberWithCommas(item?.down_payment || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.down_payment || '0');
             },
         },
         {
             accessor: 'principle',
-            title: 'ทุนเช่าซื้อ',
+            title: t('report_lease_purchase_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.principle || '0')} บาท` : numberWithCommas(item?.principle || '0');
+                return record.isTotal ? `${numberWithCommas(item?.principle || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.principle || '0');
             },
         },
         {
             accessor: 'commission',
-            title: 'ค่านายหน้า',
+            title: t('report_brokerage_fee_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.commission || '0')} บาท` : numberWithCommas(item?.commission || '0');
+                return record.isTotal ? `${numberWithCommas(item?.commission || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.commission || '0');
             },
         },
         {
             accessor: 'benefit',
-            title: 'ผลตอบแทนพิเศษ',
+            title: t('report_special_return_header'),
             textAlignment: 'right',
             sortable: false,
             render: (item: any) => {
-                return item.isTotal ? `${numberWithCommas(item?.benefit || '0')} บาท` : numberWithCommas(item?.benefit || '0');
+                return item.isTotal ? `${numberWithCommas(item?.benefit || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.benefit || '0');
             },
         },
         {
             accessor: 'amount',
-            title: 'รวมเป็นเงิน',
+            title: t('report_total_money_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.amount || '0')} บาท` : numberWithCommas(item?.amount || '0');
+                return record.isTotal ? `${numberWithCommas(item?.amount || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.amount || '0');
             },
         },
         {
             accessor: 'fee',
-            title: 'ค่าทำสัญญา',
+            title: t('report_contract_fee_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.fee || '0')} บาท` : numberWithCommas(item?.fee || '0');
+                return record.isTotal ? `${numberWithCommas(item?.fee || '0')} ${t('report_currency_baht')}` : numberWithCommas(item?.fee || '0');
             },
         },
         {
             accessor: 'total',
-            title: 'คงเหลือให้ร้านค้า',
+            title: t('report_remaining_for_shop_header'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.total || '-')} บาท` : numberWithCommas(item?.total || '-') ;
+                return record.isTotal ? `${numberWithCommas(item?.total || '-')} ${t('report_currency_baht')}` : numberWithCommas(item?.total || '-') ;
             },
         },
         {
             accessor: 'total_ins_amount',
-            title: 'ราคารวมผ่อน',
+            title: t('report_total_installment_header'),
             textAlignment: 'right',
             sortable: false,
             render: (item: any) => {
-                return item.isTotal ? `${numberWithCommas(item?.total_ins_amount || '-')} บาท` : numberWithCommas(item?.total_ins_amount || '-');
+                return item.isTotal ? `${numberWithCommas(item?.total_ins_amount || '-')} ${t('report_currency_baht')}` : numberWithCommas(item?.total_ins_amount || '-');
             },
         },
         // {
@@ -276,7 +278,7 @@ const ShopReportPV = () => {
             ? [
                   {
                       accessor: 'action',
-                      title: 'Actions',
+                      title: t('report_actions_header'),
                       textAlignment: 'center',
                       sortable: false,
                       render: (item: any) => (
@@ -284,7 +286,7 @@ const ShopReportPV = () => {
                          {!item.isTotal && <div className="flex gap-4 items-center w-max mx-auto">
                               <a href={`/apps/report/pay-to-shop-pv/edit/${item.uuid}?id_business_unit=${id_business_unit}&id_shop=${id}`} className="flex cursor-pointer items-center relative group">
                                   <IconEdit className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
-                                  <p className="absolute left-[-5px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">แก้ไข</p>
+                                  <p className="absolute left-[-5px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">{t('report_edit_button')}</p>
                               </a>
                           </div>}
                         </>
@@ -334,7 +336,7 @@ const ShopReportPV = () => {
             console.error('Failed to fetch status data');
         },
     });
-    
+
     const { mutate: fetchCommissionData } = useGlobalMutation(url_api.getCommissionPV, {
          onSuccess: (res:any) => {
             if (res.data !== undefined) {
@@ -361,7 +363,7 @@ const ShopReportPV = () => {
             setIsLoading(false);
         },
     });
-    
+
 
     const fetchExportCsv = async () => {
         const myHeaders = new Headers();
@@ -461,8 +463,8 @@ const ShopReportPV = () => {
     }, [role, navigate]);
 
     useEffect(() => {
-        dispatch(setPageTitle('รายงานค่าตอบแทน'));
-    }, [dispatch]);
+        dispatch(setPageTitle(t('report_shop_report_title')));
+    }, [dispatch, t]);
 
     useEffect(() => {
         fetchShopData({
@@ -499,12 +501,12 @@ const ShopReportPV = () => {
             <Breadcrumbs items={breadcrumbItems} />
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3">
                 <div className="invoice-table">
-                    <div className="ml-10 mt-3 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">ร้านค้า {shopData?.name || '-'}</div>
+                    <div className="ml-10 mt-3 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('report_shop_label')} {shopData?.name || '-'}</div>
                     <div className="p-10">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-6 text-white">
                             <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ทุนเช่าซื้อ</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('report_lease_purchase_header')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_principle?.toLocaleString() || '0'}</div>
@@ -512,7 +514,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ค่านายหน้า</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('report_brokerage_fee_header')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_commission?.toLocaleString() || '0'}</div>
@@ -520,7 +522,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">รวมเป็นเงิน</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('report_total_money_header')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_amount?.toLocaleString() || '0'}</div>
@@ -528,7 +530,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ค่าทำสัญญา</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('report_contract_fee_header')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_fee?.toLocaleString() || '0'}</div>
@@ -536,7 +538,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-yellow-500 to-yellow-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">คงเหลือให้ร้านค้า</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('report_remaining_for_shop_header')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_amount_shop?.toLocaleString() || '0'}</div>
@@ -544,7 +546,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-red-500 to-orange-500">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ราคารวมผ่อน</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('report_total_installment_header')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_ins_amount?.toLocaleString() || '0'}</div>
@@ -559,7 +561,7 @@ const ShopReportPV = () => {
                                 if (_.isEmpty(values.start_at) || _.isEmpty(values.end_at) || values.start_at === '' || values.end_at === '') {
                                     toast.fire({
                                         icon: 'warning',
-                                        title: 'กรุณาเลือกข้อมูลวันที่ให้ครบเพื่อค้นหา',
+                                        title: t('report_validation_message'),
                                         padding: '10px 20px',
                                     });
                                 } else {
@@ -633,7 +635,7 @@ const ShopReportPV = () => {
                                     <div className="flex gap-2">
                                         {role === 'business_unit' ? (
                                             <div>
-                                                <label>หน่วยธุรกิจ</label>
+                                                <label>{t('report_business_unit_label')}</label>
                                                 <Select
                                                     defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
                                                     value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
@@ -647,7 +649,7 @@ const ShopReportPV = () => {
                                             <SelectField
                                                 id="id_business_unit"
                                                 name="id_business_unit"
-                                                label="หน่วยธุรกิจ"
+                                                label={t('report_business_unit_label')}
                                                 className="pr-1 z-10 w-[200px]"
                                                 options={businessUnit}
                                                 isSearchable={true}
@@ -659,12 +661,12 @@ const ShopReportPV = () => {
                                         <SelectField
                                             id="status"
                                             name="status"
-                                            label="สถานะ PV"
+                                            label={t('report_pv_status_label')}
                                             className="pr-1 w-[200px]"
                                             options={[
-                                                { value: '', label: 'ทั้งหมด' },
-                                                { value: 'approved', label: 'อนุมัติ' },
-                                                { value: 'cancel', label: 'ยกเลิก' },
+                                                { value: '', label: t('report_status_all') },
+                                                { value: 'approved', label: t('report_status_approved') },
+                                                { value: 'cancel', label: t('report_status_cancelled') },
                                             ]}
                                             isSearchable={false}
                                             onChange={(e: any) => {
@@ -673,28 +675,28 @@ const ShopReportPV = () => {
                                         />
                                     </div>
                                     <div className="flex gap-2 items-center">
-                                        <label htmlFor="">วันที่อนุมัติสัญญา</label>
+                                        <label htmlFor="">{t('report_approval_date_label')}</label>
                                         {/* <button type='button' onClick={() => onClickDate('all',setFieldValue)} className={`${typeDateSearch == 'all' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}>ทั้งหมด</button> */}
                                         <button
                                             type="button"
                                             onClick={() => onClickDate('today', setFieldValue)}
                                             className={`${typeDateSearch == 'today' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}
                                         >
-                                            วันนี้
+                                            {t('report_date_today')}
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => onClickDate('month', setFieldValue)}
                                             className={`${typeDateSearch == 'month' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}
                                         >
-                                            เดือนนี้
+                                            {t('report_date_this_month')}
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => onClickDate('custom', setFieldValue)}
                                             className={`${typeDateSearch == 'custom' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}
                                         >
-                                            กำหนดเอง
+                                            {t('report_date_custom')}
                                         </button>
                                         {typeDateSearch != 'custom' && (
                                             <>
@@ -745,22 +747,22 @@ const ShopReportPV = () => {
                     /> */}
                                         <button type="submit" className="btn btn-primary gap-2 mt-5" disabled={isLoading}>
                                             {isLoading ? <Spinner size="sm" /> : <IconSearch />}
-                                            ค้นหา
+                                            {t('report_search_button')}
                                         </button>
                                         <button type="reset" className="btn btn-info gap-2 mt-5" disabled={isLoading} onClick={handleReset}>
                                             {isLoading ? <Spinner size="sm" /> : <IconRefresh />}
-                                            ล้างค่า
+                                            {t('report_reset_button')}
                                         </button>
                                         <div className="flex flex-col pt-5">
                                             <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => handleExport(`shop_report_${new Date().toLocaleString()}`)}>
-                                                Export
+                                                {t('report_export_button')}
                                             </button>
                                         </div>
                                         <NavLink
                                             to={`/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id}&start_at=${defaultForm.start_at}&end_at=${defaultForm.end_at}`}
                                             className="btn bg-yellow-500 text-white shadow-lg gap-2 mt-5"
                                         >
-                                            ธุรกรรมร้านค้า
+                                            {t('report_shop_transaction_button')}
                                         </NavLink>
                                     </div>
                                 </Form>
@@ -769,7 +771,7 @@ const ShopReportPV = () => {
                     </div>
                     <div className="datatables pagination-padding">
                         {commissionLists.length === 0 ? (
-                            <div className="text-center text-gray-500">ไม่พบข้อมูล</div>
+                            <div className="text-center text-gray-500">{t('report_no_data')}</div>
                         ) : (
                             <DataTable
                                 className="whitespace-nowrap table-hover invoice-table"
@@ -787,7 +789,7 @@ const ShopReportPV = () => {
                                 rowClassName={(item:any) =>
                                     item.isTotal ? '!bg-white font-bold text-black' : ''
                                 }
-                                paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                                paginationText={({ from, to, totalRecords }) => t('report_pagination_text', { from, to, totalRecords })}
                             />
                         )}
                     </div>

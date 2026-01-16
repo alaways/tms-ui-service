@@ -38,7 +38,7 @@ const FormPayToShop = () => {
     const price = searchParams.get('price');
 
     const breadcrumbItems = [
-        { to: `/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id_shop}`, label: 'บัญชีเจ้าหนี้ร้านค้า' },
+        { to: `/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id_shop}`, label: t('report_account_creditor_breadcrumb') },
         { label: t('report_pay_to_shop_title'), isCurrent: true },
     ];
 
@@ -278,15 +278,15 @@ const FormPayToShop = () => {
                                 <SelectField
                                     name="payment_type"
                                     id="payment_type"
-                                    label="ช่องทางการชำระเงิน"
-                                    options={[{ value: 'cash', label: 'เงินสด' } /* ,{value:'promptpay',label:'พร้อมเพย์'} */]}
+                                    label={t('report_payment_method')}
+                                    options={[{ value: 'cash', label: t('report_payment_method_cash') }]}
                                 />
                             </div>
                             <div className="flex gap-4">
-                                <InputField name="reference" label="หมายเลขอ้างอิง" />
+                                <InputField name="reference" label={t('report_reference_number')} />
                                 <DatePickerTime
                                     require
-                                    label="วันที่และเวลาที่ชำระ"
+                                    label={t('report_payment_date_time')}
                                     name="payed_at"
                                     onChange={(value: any) => {
                                         // setFieldValue('payed_at', moment(value[0]).tz('Asia/Bangkok').format());
@@ -300,12 +300,12 @@ const FormPayToShop = () => {
                             </div>
                             <div className="w-full flex gap-4">
                                 <div className="w-full">
-                                    <InputField name="remark" label="หมายเหตุ" />
+                                    <InputField name="remark" label={t('report_remark')} />
                                 </div>
                                 <div className="w-full"></div>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p>หลักฐานการโอนเงิน</p>
+                                <p>{t('report_payment_proof')}</p>
                                 <ImageUploading multiple value={images} onChange={onImgChange} onError={onError} maxNumber={1}>
                                     {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                                         <div className="relative">
@@ -353,10 +353,10 @@ const FormPayToShop = () => {
                                     to={`/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id_shop}`}
                                     className="px-4 py-2 rounded-md border border-black/50 text-black"
                                 >
-                                    ยกเลิก
+                                    {t('report_cancel')}
                                 </NavLink>
                                 <button type="submit" className="px-4 py-2 rounded-md bg-violet-600 text-white ">
-                                    บันทึก
+                                    {t('report_save')}
                                 </button>
                             </div>
                         </Form>

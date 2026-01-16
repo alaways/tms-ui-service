@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import * as XLSX from 'xlsx'
 import { Formik, Form } from 'formik'
 import { DataTable, DataTableSortStatus } from 'mantine-datatable'
@@ -32,23 +33,24 @@ const PayToShopPv = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const apiUrl = process.env.BACKEND_URL
   const storedUser = localStorage.getItem(mode)
 
   const role = storedUser ? JSON.parse(storedUser).role : null
   const token = storedUser ? JSON.parse(storedUser).access_token : null
-  const userBuID = storedUser ? JSON.parse(storedUser).id_business_unit : null  
+  const userBuID = storedUser ? JSON.parse(storedUser).id_business_unit : null
 
   // if (role != 'admin' && role != 'business_unit') { navigate('/') }
 
   const breadcrumbItems = [
-    { to: '/', label: 'รายงาน' },
-    { label: 'จ่ายเงินให้ร้านค้า (PV)', isCurrent: true },
+    { to: '/', label: t('report_breadcrumb_home') },
+    { label: t('report_breadcrumb_pay_to_shop_pv'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('รายงานจ่ายเงินให้ร้านค้า (PV)'))
+    dispatch(setPageTitle(t('report_page_title_pv')))
     dispatch(setSidebarActive(['report', '/apps/report/pay-to-shop-pv']))
   })
   //
@@ -227,10 +229,10 @@ const PayToShopPv = () => {
     if(role != 'admin') {
       fetchShopData({})
     }
-    
+
   },[])
   useEffect(() => {
-    
+
     if (searchFilterValues.id_business_unit === '') {
       fetchBusinessUnit({})
       return
@@ -248,7 +250,7 @@ const PayToShopPv = () => {
       })
   }, [page, pageSize])
 
-      
+
    //   shop โดยดึง id_business มา
     const { mutate: buGetShop } = useGlobalMutation(url_api.buGetShop, {
         onSuccess: (res: any) => {
@@ -271,7 +273,7 @@ const PayToShopPv = () => {
             if (values.contract_date[0] === "" || values.contract_date[1] === "" || isBusiness) {
               toast.fire({
                 icon: 'warning',
-                title: 'กรุณาเลือกข้อมูลวันที่และหน่วยธุรกิจให้ครบเพื่อค้นหา',
+                title: t('report_validation_message'),
                 padding: '10px 20px',
               })
             } else {
@@ -292,17 +294,17 @@ const PayToShopPv = () => {
               <Form className="flex flex-col flex-auto gap-2">
                 <div className="flex flex-col sm:flex-row md:flex-row gap-5 mb-5 px-5">
                   <div className='flex-1'>
-                    <label>หน่วยธุรกิจ</label>
+                    <label>{t('report_business_unit_label')}</label>
                     {role === "business_unit" ? (<Select
                       defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
                       value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('report_select_business_unit')}
                       className="z-10 w-auto"
                       options={businessUnit.map((item: any) => ({ label: item.label, value: item.value.id }))}
-                    isDisabled={true}  
+                    isDisabled={true}
                     />) : (<Select
                       value={values.id_business_unit}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('report_select_business_unit')}
                       className="z-10 w-auto"
                       options={businessUnit}
                       isSearchable={true}
@@ -313,10 +315,10 @@ const PayToShopPv = () => {
                       }}
                     />)}
                   </div>
-                
-                  <SelectField isSearchable={true} label="ร้านค้า" id="id_shop" name="id_shop" placeholder="เลือกร้านค้า" options={shopList} zIndex='z-4'/>
-                
-                  <DateRangeAntd label="วันที่ทำสัญญา" name="contract_date" />
+
+                  <SelectField isSearchable={true} label={t('report_shop_label')} id="id_shop" name="id_shop" placeholder={t('report_select_shop')} options={shopList} zIndex='z-4'/>
+
+                  <DateRangeAntd label={t('report_contract_date_label')} name="contract_date" />
                   {/* <DatePicker
                     label="วันอนุมัติสัญญา" // วันที่เริ่ม
                     name="start_at"
@@ -330,23 +332,23 @@ const PayToShopPv = () => {
                     onChange={(date: any) => {
                       updateFilterValues(date, 'end_at')
                     }}
-                  /> */}  
-                                       
+                  /> */}
+
                   <div className='flex flex-col mt-1 pt-5'>
                     <button type="submit" className="btn btn-primary gap-2 w-full h-[40px]">
-                      ค้นหา
+                      {t('report_search_button')}
                     </button>
                   </div>
 
                    <div className='flex flex-col mt-1 pt-5'>
                     <button type="reset" className="btn btn-info gap-2 w-full h-[40px]" onClick={() => {location.reload()}}>
-                      ล้างค่า
+                      {t('report_clear_button')}
                     </button>
                   </div>
                   <div className='flex flex-col mt-1 pt-5'>
-                    
+
                     <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => { handleExport(`report_${new Date().toLocaleString()}`,values) }}>
-                      Export
+                      {t('report_export_button')}
                     </button>
                   </div>
                 </div>
@@ -363,7 +365,7 @@ const PayToShopPv = () => {
                 columns={[
                   {
                     accessor: 'id',
-                    title: 'ลำดับ',
+                    title: t('report_sequence_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (row, index) => (
@@ -372,7 +374,7 @@ const PayToShopPv = () => {
                   },
                   {
                     accessor: 'shop_name',
-                    title: 'ร้านค้า',
+                    title: t('report_shop_header'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item) => (
@@ -389,83 +391,83 @@ const PayToShopPv = () => {
                   },
                   {
                     accessor: 'count_contract',
-                    title: 'จำนวนสัญญา',
+                    title: t('report_contract_count_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? "ผลรวม" :item.count_contract}</p>
+                      <p>{item.isTotal ? t('total_sum') :item.count_contract}</p>
                     ),
                   },
                   {
                     accessor: 'price',
-                    title: 'รวมราคาขาย',
+                    title: t('report_total_price_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.price.toLocaleString('en-US')} บาท` : item.price.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.price.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.price.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'down_payment',
-                    title: 'รวมเงินดาวน์',
+                    title: t('report_down_payment_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <div>{item.isTotal ? `${item.down_payment.toLocaleString('en-US')} บาท` : item.down_payment.toLocaleString('en-US')}</div>
+                      <div>{item.isTotal ? `${item.down_payment.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.down_payment.toLocaleString('en-US')}</div>
                     ),
                   },
                   {
                     accessor: 'principle',
-                    title: 'รวมทุนเช่าซื้อ',
+                    title: t('report_lease_principal_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.principle.toLocaleString('en-US')} บาท` : item.principle.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.principle.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.principle.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'commission',
-                    title: 'รวมค่านายหน้า',
+                    title: t('report_commission_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.commission.toLocaleString('en-US')} บาท` : item.commission.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.commission.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.commission.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'benefit',
-                    title: 'ผลตอบแทนพิเศษ',
+                    title: t('report_special_benefit_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.benefit.toLocaleString('en-US')} บาท` : item.benefit.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.benefit.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.benefit.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'amount',
-                    title: 'รวมเป็นเงิน',
+                    title: t('report_total_amount_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.amount.toLocaleString('en-US')} บาท` : item.amount.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.amount.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.amount.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'fee',
-                    title: 'ค่าทำสัญญา',
+                    title: t('report_contract_fee_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.fee.toLocaleString('en-US')} บาท`: (item.fee.toLocaleString('en-US') || "")}</p>
+                      <p>{item.isTotal ? `${item.fee.toLocaleString('en-US')} ${t('report_currency_baht')}`: (item.fee.toLocaleString('en-US') || "")}</p>
                     ),
                   },
                   {
                     accessor: 'total',
-                    title: 'คงเหลือให้ร้านค้า',
+                    title: t('report_remaining_for_shop_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.total.toLocaleString('en-US')} บาท`: item.total.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.total.toLocaleString('en-US')} ${t('report_currency_baht')}`: item.total.toLocaleString('en-US')}</p>
                     ),
                   },
                 ]}
@@ -483,9 +485,9 @@ const PayToShopPv = () => {
                 }}
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}
-                paginationText={({ from, to, totalRecords }) => (
-                  `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
-                )}
+                paginationText={({ from, to, totalRecords }) =>
+                  t('report_pagination_text', { from, to, totalRecords })
+                }
               />
             )}
             { mode !== 'business_unit' && (
@@ -495,7 +497,7 @@ const PayToShopPv = () => {
                 columns={[
                   {
                     accessor: 'id',
-                    title: 'ลำดับ',
+                    title: t('report_sequence_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (row, index) => (
@@ -504,7 +506,7 @@ const PayToShopPv = () => {
                   },
                   {
                     accessor: 'business_unit_name',
-                    title: 'หน่วยธุรกิจ',
+                    title: t('report_business_unit_header'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item) => (
@@ -513,7 +515,7 @@ const PayToShopPv = () => {
                   },
                   {
                     accessor: 'shop_name',
-                    title: 'ร้านค้า',
+                    title: t('report_shop_header'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item) => (
@@ -530,83 +532,83 @@ const PayToShopPv = () => {
                   },
                   {
                     accessor: 'count_contract',
-                    title: 'จำนวนสัญญา',
+                    title: t('report_contract_count_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? "ผลรวม" :item.count_contract}</p>
+                      <p>{item.isTotal ? t('total_sum') :item.count_contract}</p>
                     ),
                   },
                   {
                     accessor: 'price',
-                    title: 'รวมราคาขาย',
+                    title: t('report_total_price_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.price.toLocaleString('en-US')} บาท` : item.price.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.price.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.price.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'down_payment',
-                    title: 'รวมเงินดาวน์',
+                    title: t('report_down_payment_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <div>{item.isTotal ? `${item.down_payment.toLocaleString('en-US')} บาท` : item.down_payment.toLocaleString('en-US')}</div>
+                      <div>{item.isTotal ? `${item.down_payment.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.down_payment.toLocaleString('en-US')}</div>
                     ),
                   },
                   {
                     accessor: 'principle',
-                    title: 'รวมทุนเช่าซื้อ',
+                    title: t('report_lease_principal_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.principle.toLocaleString('en-US')} บาท` : item.principle.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.principle.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.principle.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'commission',
-                    title: 'รวมค่านายหน้า',
+                    title: t('report_commission_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.commission.toLocaleString('en-US')} บาท` : item.commission.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.commission.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.commission.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'benefit',
-                    title: 'ผลตอบแทนพิเศษ',
+                    title: t('report_special_benefit_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.benefit.toLocaleString('en-US')} บาท` : item.benefit.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.benefit.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.benefit.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'amount',
-                    title: 'รวมเป็นเงิน',
+                    title: t('report_total_amount_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.amount.toLocaleString('en-US')} บาท` : item.amount.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.amount.toLocaleString('en-US')} ${t('report_currency_baht')}` : item.amount.toLocaleString('en-US')}</p>
                     ),
                   },
                   {
                     accessor: 'fee',
-                    title: 'ค่าทำสัญญา',
+                    title: t('report_contract_fee_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.fee.toLocaleString('en-US')} บาท`: (item.fee.toLocaleString('en-US') || "")}</p>
+                      <p>{item.isTotal ? `${item.fee.toLocaleString('en-US')} ${t('report_currency_baht')}`: (item.fee.toLocaleString('en-US') || "")}</p>
                     ),
                   },
                   {
                     accessor: 'total',
-                    title: 'คงเหลือให้ร้านค้า',
+                    title: t('report_remaining_for_shop_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
-                      <p>{item.isTotal ? `${item.total.toLocaleString('en-US')} บาท`: item.total.toLocaleString('en-US')}</p>
+                      <p>{item.isTotal ? `${item.total.toLocaleString('en-US')} ${t('report_currency_baht')}`: item.total.toLocaleString('en-US')}</p>
                     ),
                   },
                 ]}
@@ -624,9 +626,9 @@ const PayToShopPv = () => {
                 }
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}
-                paginationText={({ from, to, totalRecords }) => (
-                  `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
-                )}
+                paginationText={({ from, to, totalRecords }) =>
+                  t('report_pagination_text', { from, to, totalRecords })
+                }
               />
             )}
           </div>

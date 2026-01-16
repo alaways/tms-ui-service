@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import * as XLSX from 'xlsx'
 import { Formik, Form } from 'formik'
 import { DataTable, DataTableSortStatus } from 'mantine-datatable'
@@ -28,6 +29,7 @@ const PayToShop = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const apiUrl = process.env.BACKEND_URL
   const storedUser = localStorage.getItem(mode)
@@ -39,12 +41,12 @@ const PayToShop = () => {
   if (role != 'admin' && role != 'business_unit') { navigate('/') }
 
   const breadcrumbItems = [
-    { to: '/', label: 'รายงาน' },
-    { label: 'จ่ายเงินให้ร้านค้า', isCurrent: true },
+    { to: '/', label: t('report_breadcrumb_home') },
+    { label: t('report_breadcrumb_pay_to_shop'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('รายงานจ่ายเงินให้ร้านค้า'))
+    dispatch(setPageTitle(t('report_page_title')))
     dispatch(setSidebarActive(['report', '/apps/report/pay-to-shop']))
   })
 
@@ -76,7 +78,7 @@ const PayToShop = () => {
     start_at: '',
     end_at: '',
   })
-  
+
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: '',
     direction: 'asc',
@@ -207,7 +209,7 @@ const PayToShop = () => {
       },
     })
   }, [page, pageSize])
-  
+
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} />
@@ -219,7 +221,7 @@ const PayToShop = () => {
             if (searchFilterValues.start_at === "" || searchFilterValues.end_at === "" || isBusiness) {
               toast.fire({
                 icon: 'warning',
-                title: 'กรุณาเลือกข้อมูลวันที่และหน่วยธุรกิจให้ครบเพื่อค้นหา',
+                title: t('report_validation_message'),
                 padding: '10px 20px',
               })
             } else {
@@ -236,17 +238,17 @@ const PayToShop = () => {
               <Form className="flex flex-col flex-auto gap-2">
                 <div className="flex flex-col sm:flex-row md:flex-row gap-5 mb-5 px-5">
                   <div className='flex-1'>
-                    <label>หน่วยธุรกิจ</label>
+                    <label>{t('report_business_unit_label')}</label>
                     {role === "business_unit" ? (<Select
                       defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
                       value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('report_select_business_unit_placeholder')}
                       className="z-10 w-auto"
                       options={businessUnit.map((item: any) => ({ label: item.label, value: item.value.id }))}
                       isDisabled={true}
                     />) : (<Select
                       value={values.id_business_unit}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('report_select_business_unit_placeholder')}
                       className="z-10 w-auto"
                       options={businessUnit}
                       isSearchable={true}
@@ -257,14 +259,14 @@ const PayToShop = () => {
                     />)}
                   </div>
                   <DatePicker
-                    label="วันอนุมัติสัญญา" // วันที่เริ่ม
+                    label={t('report_approval_date_label')} // วันที่เริ่ม
                     name="start_at"
                     onChange={(date: any) => {
                       updateFilterValues(date, 'start_at')
                     }}
                   />
                   <DatePicker
-                    label="ถึงวันที่" // วันที่อนุมัติสัญญา
+                    label={t('report_to_date_label')} // วันที่อนุมัติสัญญา
                     name="end_at"
                     onChange={(date: any) => {
                       updateFilterValues(date, 'end_at')
@@ -272,12 +274,12 @@ const PayToShop = () => {
                   />
                   <div className='flex flex-col mt-1 pt-5'>
                     <button type="submit" className="btn btn-primary gap-2 w-full h-[40px]">
-                      ค้นหา
+                      {t('report_search_button')}
                     </button>
                   </div>
                   <div className='flex flex-col mt-1 pt-5'>
                     <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => { handleExport(`report_${new Date().toLocaleString()}`) }}>
-                      Export
+                      {t('report_export_button')}
                     </button>
                   </div>
                 </div>
@@ -294,7 +296,7 @@ const PayToShop = () => {
                 columns={[
                   {
                     accessor: 'id',
-                    title: 'ลำดับ',
+                    title: t('report_sequence_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (row, index) => (
@@ -303,7 +305,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'shop_name',
-                    title: 'ร้านค้า',
+                    title: t('report_shop_header'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item) => (
@@ -320,7 +322,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'count_contract',
-                    title: 'จำนวนสัญญา',
+                    title: t('report_contract_count_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item, index) => (
@@ -329,7 +331,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'price',
-                    title: 'รวมราคาขาย',
+                    title: t('report_total_sale_price_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -338,7 +340,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'down_payment',
-                    title: 'รวมเงินดาวน์',
+                    title: t('report_total_down_payment_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -347,7 +349,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'principle',
-                    title: 'รวมทุนเช่าซื้อ',
+                    title: t('report_total_principal_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -356,7 +358,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'commission',
-                    title: 'รวมค่านายหน้า',
+                    title: t('report_total_commission_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -365,7 +367,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'benefit',
-                    title: 'ผลตอบแทนพิเศษ',
+                    title: t('report_special_benefit_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -374,7 +376,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'amount',
-                    title: 'รวมเป็นเงิน',
+                    title: t('report_total_amount_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -383,7 +385,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'fee',
-                    title: 'ค่าทำสัญญา',
+                    title: t('report_contract_fee_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -392,7 +394,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'total',
-                    title: 'คงเหลือให้ร้านค้า',
+                    title: t('report_remaining_for_shop_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -413,7 +415,7 @@ const PayToShop = () => {
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}
                 paginationText={({ from, to, totalRecords }) => (
-                  `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                  t('report_pagination_text', { from, to, totalRecords })
                 )}
               />
             )}
@@ -424,7 +426,7 @@ const PayToShop = () => {
                 columns={[
                   {
                     accessor: 'id',
-                    title: 'ลำดับ',
+                    title: t('report_sequence_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (row, index) => (
@@ -433,7 +435,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'business_unit_name',
-                    title: 'หน่วยธุรกิจ',
+                    title: t('report_business_unit_header'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item) => (
@@ -442,7 +444,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'shop_name',
-                    title: 'ร้านค้า',
+                    title: t('report_shop_header'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item) => (
@@ -459,7 +461,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'count_contract',
-                    title: 'จำนวนสัญญา',
+                    title: t('report_contract_count_header'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item, index) => (
@@ -468,7 +470,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'price',
-                    title: 'รวมราคาขาย',
+                    title: t('report_total_sale_price_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -477,7 +479,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'down_payment',
-                    title: 'รวมเงินดาวน์',
+                    title: t('report_total_down_payment_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -486,7 +488,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'principle',
-                    title: 'รวมทุนเช่าซื้อ',
+                    title: t('report_total_principal_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -495,7 +497,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'commission',
-                    title: 'รวมค่านายหน้า',
+                    title: t('report_total_commission_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -504,7 +506,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'benefit',
-                    title: 'ผลตอบแทนพิเศษ',
+                    title: t('report_special_benefit_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -513,7 +515,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'amount',
-                    title: 'รวมเป็นเงิน',
+                    title: t('report_total_amount_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -522,7 +524,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'fee',
-                    title: 'ค่าทำสัญญา',
+                    title: t('report_contract_fee_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -531,7 +533,7 @@ const PayToShop = () => {
                   },
                   {
                     accessor: 'total',
-                    title: 'คงเหลือให้ร้านค้า',
+                    title: t('report_remaining_for_shop_header'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item, index) => (
@@ -552,7 +554,7 @@ const PayToShop = () => {
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}
                 paginationText={({ from, to, totalRecords }) => (
-                  `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                  t('report_pagination_text', { from, to, totalRecords })
                 )}
               />
             )}

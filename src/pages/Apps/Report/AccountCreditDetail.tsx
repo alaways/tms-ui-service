@@ -1,4 +1,5 @@
 import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import Breadcrumbs from '../../../helpers/breadcrumbs';
 
 import moment from 'moment';
@@ -18,14 +19,16 @@ import { shop_report_csv } from '../../../helpers/constant';
 import { url_api } from '../../../services/endpoints';
 import { useGlobalMutation } from '../../../helpers/globalApi';
 
-const breadcrumbItems = [
-    { to: '/apps/report/account-creditor', label: 'บัญชีเจ้าหนี้ร้านเค้า' },
-    { label: 'รายละเอียดเจ้าหนี้ร้านค้า', isCurrent: true },
+const useBreadcrumbItems = (t: any) => [
+    { to: '/apps/report/account-creditor', label: t('report_account_creditor_breadcrumb') },
+    { label: t('report_account_detail_breadcrumb'), isCurrent: true },
 ];
 
 const mode = process.env.MODE || 'admin';
 
 const AccountCreditDetail = () => {
+    const { t } = useTranslation();
+    const breadcrumbItems = useBreadcrumbItems(t);
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -149,13 +152,13 @@ const AccountCreditDetail = () => {
             <Breadcrumbs items={breadcrumbItems} />
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3 px-10">
                 <div className=''>
-                    <h5 className="mt-3 text-xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">รายละเอียดเจ้าหนี้ร้านค้า : {shopData?.name}</h5>
+                    <h5 className="mt-3 text-xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('report_account_detail_title')} : {shopData?.name}</h5>
                 </div>
                 <div className="pt-4 custom-select">
                     <Formik initialValues={shopBuData} onSubmit={() => {}}>
                         {({ setFieldValue, handleReset }) => (
                             <div className="flex flex-wrap items-center gap-3">
-                                <label>การทำรายการที่ผ่านมา</label>
+                                <label>{t('report_past_transactions')}</label>
                                 <div className="max-w-[200px]">
                                     <DatePicker
                                         name="start_at"
@@ -189,7 +192,7 @@ const AccountCreditDetail = () => {
                         columns={[
                             {
                                 accessor: 'index',
-                                title: 'เลขที่สัญญา',
+                                title: t('report_contract_number_header'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item) => (
@@ -200,20 +203,20 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'pv_no',
-                                title: 'เลขที่ PV',
+                                title: t('report_pv_number_header'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'created_at',
-                                title: 'วันที่ทำสัญญา',
+                                title: t('report_contract_date_header'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item: any) => <p>{convertDateDbToClient(item?.contract_date)}</p>,
                             },
                             {
                                 accessor: 'approved_at',
-                                title: 'วันที่อนุมัติสัญญา',
+                                title: t('report_approval_date_header'),
                                 textAlignment: 'left',
                                 sortable: false,
                                 render: (item) => {
@@ -222,7 +225,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'contract_status',
-                                title: 'สถานะสัญญา',
+                                title: t('report_contract_status_header'),
                                 textAlignment: 'left',
                                 sortable: false,
                                 render: (item) => {
@@ -231,7 +234,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'asset.name',
-                                title: 'ชื่อทรัพย์สิน',
+                                title: t('report_asset_name_header'),
                                 textAlignment: 'left',
                                 sortable: false,
                                 render: (item) => {
@@ -240,7 +243,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'price',
-                                title: 'ราคาขาย',
+                                title: t('report_selling_price_header'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -249,7 +252,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'down_payment',
-                                title: 'เงินดาวน์',
+                                title: t('report_down_payment_header_detail'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -258,7 +261,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'principle',
-                                title: 'ทุนเช่าซื้อ',
+                                title: t('report_lease_purchase_header'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -267,7 +270,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'commission',
-                                title: 'ค่านายหน้า',
+                                title: t('report_brokerage_fee_header'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -276,7 +279,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'benefit',
-                                title: 'ผลตอบแทนพิเศษ',
+                                title: t('report_special_return_header'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -285,7 +288,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'amount',
-                                title: 'รวมเป็นเงิน',
+                                title: t('report_total_money_header'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -294,7 +297,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'fee',
-                                title: 'ค่าทำสัญญา',
+                                title: t('report_contract_fee_header_detail'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -303,7 +306,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'total',
-                                title: 'คงเหลือให้ร้านค้า',
+                                title: t('report_remaining_for_shop_header_detail'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -322,7 +325,7 @@ const AccountCreditDetail = () => {
                             setPage(1);
                             setPageSize(p);
                         }}
-                        paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                        paginationText={({ from, to, totalRecords }) => t('report_pagination_text', { from, to, totalRecords })}
                     />
                 </div>
             </div>

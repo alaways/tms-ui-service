@@ -3,6 +3,7 @@ import InputField from '../../../components/HOC/InputField';
 import SelectField from '../../../components/HOC/SelectField';
 import Swal from 'sweetalert2';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import Select from 'react-select';
 import IconCaretDown from '../../../components/Icon/IconCaretDown';
@@ -19,13 +20,14 @@ import { useGlobalMutation } from '../../../helpers/globalApi';
 import { url_api } from '../../../services/endpoints';
 
 const breadcrumbItems = [
-    { to: '/apps/report/account-creditor', label: 'บัญชีเจ้าหนี้ร้านค้า' },
-    { label: 'ชำระเงินให้ร้านค้า', isCurrent: true },
+    { to: '/apps/report/account-creditor', label: 'report_account_creditor_breadcrumb' },
+    { label: 'report_pay_to_shop_breadcrumb', isCurrent: true },
 ];
 
 const mode = process.env.MODE || 'admin';
 
 const FormPayToShopPreview = () => {
+    const { t } = useTranslation();
     const toast = Swal.mixin(toastAlert);
     const { id } = useParams();
 
@@ -61,11 +63,11 @@ const FormPayToShopPreview = () => {
         bank_account_number: Yup.object()
             .nullable()
             .shape({
-                value: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+                value: Yup.string().required('report_validation_required'),
             })
-            .required('กรุณาใส่ข้อมูลให้ครบ'),
-        amount: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        payed_at: Yup.date().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+            .required('report_validation_required'),
+        amount: Yup.string().required('report_validation_required'),
+        payed_at: Yup.date().nullable().required('report_validation_required'),
     });
 
     const CustomSelect = ({ field, form, options, className, disabled }: any) => {
@@ -86,7 +88,7 @@ const FormPayToShopPreview = () => {
                     components={{
                         DropdownIndicator: disabled ? () => null : IconCaretDown,
                     }}
-                    placeholder="เลือกธนาคาร"
+                    placeholder={t('report_select_bank')}
                     isSearchable={false}
                     className={`w-full ${className} ${disabled ? 'form-select bg-[#eee] !text-black' : null}`}
                     classNames={{
@@ -109,7 +111,7 @@ const FormPayToShopPreview = () => {
         onError: () => {
         },
     });
-    
+
     const { mutate: fetchPaymentPayload } = useGlobalMutation(url_api.shopPaymentPayload, {
         onSuccess: (res:any) => {
             if (res.code == 200 && res.statusCode == 200) {
@@ -124,15 +126,15 @@ const FormPayToShopPreview = () => {
                         label: (
                             <div className="flex items-center gap-10">
                                 <div className="">
-                                    <p>ธนาคาร</p>
+                                    <p>{t('report_bank')}</p>
                                     <p className="text-gray-800 font-medium">{bank}</p>
                                 </div>
                                 <div>
-                                    <p>เลขที่บัญชี</p>
+                                    <p>{t('report_account_number')}</p>
                                     <p className="text-sm text-gray-800">{noBank}</p>
                                 </div>
                                 <div>
-                                    <p>ชื่อบัญชี</p>
+                                    <p>{t('report_account_name')}</p>
                                     <p className="text-sm text-gray-800">{nameBank}</p>
                                 </div>
                             </div>
@@ -154,7 +156,7 @@ const FormPayToShopPreview = () => {
     const onError = () => {
         toast.fire({
             icon: 'error',
-            title: 'รูปภาพเกิน 10 รูป',
+            title: t('report_image_limit_10'),
             padding: '10px 20px',
         });
     };
@@ -166,30 +168,30 @@ const FormPayToShopPreview = () => {
         fetchPaymentPayload({ data: { id_shop: id_shop } });
         fetchPaymentPreview({ data: { id_payment: id } });
     }, []);
-    
+
     return (
         <>
             <Breadcrumbs items={breadcrumbItems} />
             {(isLoading || isDownloading) && <PreLoading />}
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3 px-10">
-                <h5 className="my-3 text-2xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">แบบฟอร์มชำระเงินให้ร้านค้า</h5>
+                <h5 className="my-3 text-2xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('report_form_payment_title')}</h5>
                 <Formik initialValues={defaultForm} onSubmit={onSubmit} validationSchema={SubmittedForm} enableReinitialize>
                     {({ setFieldValue }) => (
                         <Form className="flex flex-col gap-4">
                             <div className="flex gap-4">
-                                <InputField name="shop_name" label="ร้านค้า" disabled={true} />
-                                {/* <InputField name="id_payment" label="เลขที่ชำระเงิน" disabled={true} /> */}
+                                <InputField name="shop_name" label={t('report_shop_name')} disabled={true} />
+                                {/* <InputField name="id_payment" label={t('report_payment_number')} disabled={true} /> */}
                             </div>
                             <div className="flex gap-4">
-                                <InputField name="admin_name" label="ผู้ดำเนินการ" disabled={true} />
-                                <InputField name="created_at" label="วันที่สร้าง" disabled={true} />
+                                <InputField name="admin_name" label={t('report_operator')} disabled={true} />
+                                <InputField name="created_at" label={t('report_created_date')} disabled={true} />
                             </div>
                             <hr />
-                            <h5 className="text-lg font-semibold">รับชำระเงิน</h5>
+                            <h5 className="text-lg font-semibold">{t('report_receive_payment')}</h5>
                             <div className="flex gap-4">
                                 <InputField
                                     name="amount"
-                                    label="ยอดชำระเงิน"
+                                    label={t('report_amount')}
                                     onKeyDown={(e: any) => {
                                         if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Tab') {
                                             e.preventDefault();
@@ -200,18 +202,18 @@ const FormPayToShopPreview = () => {
                                 <SelectField
                                     name="payment_method"
                                     id="payment_method"
-                                    label="ช่องทางการชำระเงิน"
+                                    label={t('report_payment_method')}
                                     options={[
-                                        { value: 'cash', label: 'เงินสด' },
-                                        { value: 'promptpay', label: 'พร้อมเพย์' },
+                                        { value: 'cash', label: t('report_payment_cash') },
+                                        { value: 'promptpay', label: t('report_payment_promptpay') },
                                     ]}
                                     disabled={true}
                                 />
                             </div>
                             <div className="flex gap-4">
-                                <InputField name="reference" label="หมายเลขอ้างอิง" disabled={true} />
+                                <InputField name="reference" label={t('report_reference_number')} disabled={true} />
                                 <DatePickerTime
-                                    label="วันที่และเวลาที่ชำระ"
+                                    label={t('report_payment_date_time')}
                                     name="payed_at"
                                     onChange={(value: any) => {
                                         setFieldValue('payed_at', moment(value[0]).tz('Asia/Bangkok').format());
@@ -225,12 +227,12 @@ const FormPayToShopPreview = () => {
                             </div>
                             <div className="w-full flex gap-4">
                                 <div className="w-full">
-                                    <InputField name="remark" label="หมายเหตุ" disabled={true} />
+                                    <InputField name="remark" label={t('report_remark')} disabled={true} />
                                 </div>
                                 <div className="w-full"></div>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p>หลักฐานการโอนเงิน</p>
+                                <p>{t('report_transfer_evidence')}</p>
                                 <ImageUploading multiple value={images} onChange={onImgChange} onError={onError} maxNumber={1}>
                                     {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                                         <div className="relative">
