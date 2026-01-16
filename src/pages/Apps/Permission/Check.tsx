@@ -16,6 +16,7 @@ import { Form, Formik } from 'formik'
 import Checkbox from '../../../components/HOC/CheckboxField'
 import Breadcrumbs from '../../../helpers/breadcrumbs'
 import IconPlus from '../../../components/Icon/IconPlus'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 const toast = Swal.mixin(toastAlert)
@@ -24,16 +25,17 @@ const PermissionCheck = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { label: 'จัดการสิทธิ์ผู้ใช้งาน', isCurrent: true }
+    { to: '/apps/employee/list', label: t('employee') },
+    { label: t('permission_management'), isCurrent: true }
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('จัดการสิทธิ์ผู้ใช้งาน'))
+    dispatch(setPageTitle(t('permission_management')))
     // dispatch(setSidebarActive(['employee', '/apps/permission/check']))
-  }, [])
+  }, [t])
 
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -109,22 +111,22 @@ const PermissionCheck = () => {
         <div className="panel px-6 flex-1 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
           <div className="space-y-5 dark:text-white">
             <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-              จัดการสิทธิ์ผู้ใช้งาน
+              {t('permission_management')}
             </div>
             <div className="flex items-center">
               <div className="flex justify-start gap-2">
                 <Link to="/apps/permission/user" className="btn btn-primary">
                   <IconPlus /> &nbsp;
-                  จัดการผู้ใช้งาน
+                  {t('manage_users')}
                 </Link>
                 <Link to="/apps/permission/role" className="btn btn-primary">
                   <IconPlus /> &nbsp;
-                  จัดการสิทธิ์ผู้ใช้งาน
+                  {t('manage_permissions')}
                 </Link>
               </div>
               <div className="flex flex-row ltr:ml-auto rtl:mr-auto gap-5">
                 <button type="submit" className="btn btn-success w-[150px]">
-                  บันทึกข้อมูล
+                  {t('save_data')}
                 </button>
               </div>
             </div>
@@ -134,16 +136,16 @@ const PermissionCheck = () => {
                   <table> 
                     <thead>
                       <tr>
-                        <th style={{ minWidth: '350px' }}>สิทธิ์ / ผู้ใช้งาน</th>
-                        <th className="text-center">Super Admin</th>
-                        <th className="text-center">Admin</th>
-                        <th className="text-center">IT Support</th>
-                        <th className="text-center">Standard User</th>
+                        <th style={{ minWidth: '350px' }}>{t('permission_user')}</th>
+                        <th className="text-center">{t('super_admin')}</th>
+                        <th className="text-center">{t('admin')}</th>
+                        <th className="text-center">{t('it_support')}</th>
+                        <th className="text-center">{t('standard_user')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>จำนวนเมนู (เมนูหลัก)</td>
+                        <td>{t('menu_count')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.menu_count"
@@ -170,7 +172,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ออกแบบภาพสไลด์หน้าแรก</td>
+                        <td>{t('design_slide')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.design_slide"
@@ -197,7 +199,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ออกแบบภาพนิ่งหน้าใน</td>
+                        <td>{t('design_cover')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.design_cover"
@@ -224,7 +226,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ปรับแก้แบบดีไซน์</td>
+                        <td>{t('limit_editor')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.limit_editor"
@@ -251,7 +253,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>รองรับ Desktop, Mobile, Tablet</td>
+                        <td>{t('support_mobile')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.support_mobile"
@@ -278,7 +280,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ลงข้อมูล</td>
+                        <td>{t('add_data')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.add_data"
@@ -305,7 +307,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ลงข้อมูลสินค้า/บทความ</td>
+                        <td>{t('add_product')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.add_product"
@@ -332,7 +334,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ฟอร์มติดต่อ (Contract Form)</td>
+                        <td>{t('contact_form')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.contact_form"
@@ -359,7 +361,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>รองรับภาษา</td>
+                        <td>{t('support_language')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.support_language"
@@ -386,7 +388,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ฟรี จดโดเมนเว็บไซต์ + โฮสติ้ง</td>
+                        <td>{t('free_domain')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.free_domain"
@@ -413,7 +415,7 @@ const PermissionCheck = () => {
                         </td>
                       </tr>
                       <tr>
-                        <td>ฟรี ตืดตั้ง SSL</td>
+                        <td>{t('free_ssl')}</td>
                         <td className="checkbox-center">
                           <Checkbox
                             name="superAdmin.free_ssl"

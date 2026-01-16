@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { setUser } from '../../store/dataStore'
 import { setPageTitle } from '../../store/themeConfigSlice'
 import { UserState } from '../../types/index'
@@ -19,11 +20,12 @@ const LoginCustomer: React.FC = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
-    dispatch(setPageTitle('เข้าสู่ระบบ'))
+    dispatch(setPageTitle(t('login')))
     localStorage.clear()
-  }, [dispatch])
+  }, [dispatch, t])
 
   const [formData, setFormData] = useState({
     phone_number: localStorage.getItem('phone_number') ?? '',
@@ -65,7 +67,7 @@ const LoginCustomer: React.FC = () => {
         const toast = Swal.mixin(toastAlert)
         toast.fire({
           icon: 'error',
-          title: res?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง !',
+          title: res?.message ?? t('incorrect_data_try_again'),
           padding: '10px 20px',
         })
       }
@@ -74,7 +76,7 @@ const LoginCustomer: React.FC = () => {
       const toast = Swal.mixin(toastAlert)
       toast.fire({
         icon: 'error',
-        title: err?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง',
+        title: err?.message ?? t('incorrect_data_try_again'),
         padding: '10px 20px',
       })
     },
@@ -87,14 +89,14 @@ const LoginCustomer: React.FC = () => {
       if (!formData.phone_number || !formData.password) {
         Swal.fire({
           icon: 'info',
-          title: 'กรุณากรอกเบอร์โทรศัพท์และเลข 4 ตัวท้ายบัตรประชาชน!',
+          title: t('please_enter_phone_and_id'),
           padding: '10px 20px',
         })
         return
       }
       handleLogIn({ data: { phone_number: formData.phone_number, password: formData.password } })
     },
-    [formData, handleLogIn]
+    [formData, handleLogIn, t]
   )
 
   if (isLoading) return <div>Loading...</div>
@@ -118,18 +120,16 @@ const LoginCustomer: React.FC = () => {
             <div className="w-full max-w-[440px] lg:mt-16">
               <div className="mb-10">
                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-[#002a41] md:text-4xl">
-                  ล็อกอิน
+                  {t('login')}
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>เบอร์โทรศัพท์</span> 
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span> 
-                  เพื่อเข้าสู่ระบบ
+                  {t('use_phone_password_login')}
                 </p>
               </div>
               <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                 <div>
                   <label htmlFor="phone_number">
-                    เบอร์โทรศัพท์
+                    {t('phone_number')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -138,7 +138,7 @@ const LoginCustomer: React.FC = () => {
                       type="text"
                       value={formData.phone_number}
                       onChange={handleChange}
-                      placeholder="กรอกเบอร์โทรศัพท์"
+                      placeholder={t('enter_phone_number')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -148,7 +148,7 @@ const LoginCustomer: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="password">
-                    รหัสผ่าน
+                    {t('password')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -157,7 +157,7 @@ const LoginCustomer: React.FC = () => {
                       type="text"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="กรอกเลข 4 ตัวท้ายบัตรประชาชน"
+                      placeholder={t('enter_last_4_digits_id')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -166,7 +166,7 @@ const LoginCustomer: React.FC = () => {
                   </div>
                 </div>
                 <button type="submit" className={`btn bg-themePrimary text-lg font-light text-white !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]`}>
-                  เข้าสู่ระบบ
+                  {t('login')}
                 </button>
               </form>
             </div>

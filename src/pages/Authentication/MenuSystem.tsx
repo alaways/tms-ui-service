@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../store/themeConfigSlice'
 import themeConfig from '../../theme.config'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
@@ -11,6 +12,7 @@ const MenuSystem: React.FC = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -30,7 +32,7 @@ const MenuSystem: React.FC = () => {
 
   useEffect(() => {
     if (role === null) { logout() }
-    dispatch(setPageTitle('เลือกระบบที่ต้องารใช้งาน'))
+    dispatch(setPageTitle(t('select_system_to_use')))
   }, [dispatch])
 
   return (
@@ -47,21 +49,21 @@ const MenuSystem: React.FC = () => {
             <div className="w-full max-w-[440px] lg:mt-16">
               <div className="mb-10">
                 <h1 className="text-2xl font-extrabold uppercase !leading-snug text-[#002a41] md:text-3xl">
-                  กรุณาเลือก <span className={`text-themePrimary`}>ระบบ</span> ที่ต้องการใช้งาน
+                  {t('select_system_to_use')}
                 </h1>
                 <p className="text-base text-lg font-normal leading-normal text-white-dark">
-                  Please select the system you want to use
+                  {t('please_select_system')}
                 </p>
               </div>
               <div className="p-5 pt-1 pb-3 bg-[#ffffff]">
                 <button type="button" className="btn pt-5 pb-5 bg-[#f15a01] text-lg font-extrabold text-white !mt-3 w-full border-0 uppercase" style={{ boxShadow: 'none' }} onClick={goDashboard}>
-                  TMS System
+                  {t('tms_system')}
                 </button>
                 <button type="button" className="btn pt-5 pb-5 bg-[#e4e4e4] text-lg font-extrabold !mt-2 w-full border-0 uppercase" style={{ boxShadow: 'none' }} onClick={goPawn}>
-                  ระบบฝากขาย
+                  {t('pawn_system')}
                 </button>
                 <button type="button" className="btn pt-5 pb-5 bg-[#ffffff] text-lg font-light !mt-2 w-full border-0 uppercase" style={{ boxShadow: 'none' }} onClick={logout}>
-                  ออกจากระบบ
+                  {t('logout_system')}
                 </button>
               </div>
             </div>

@@ -51,8 +51,8 @@ const List = () => {
 
   const { mutate: fetchAssetData } = useGlobalMutation(url_api.assetFindAll, {
     onSuccess: (res: any) => {
-      setItems(res.data.list)
-      setTotalItems(res.data.total)
+      setItems(res?.data?.list)
+      setTotalItems(res?.data?.total)
     },
     onError: () => {
         console.error('Failed to fetch asset type data');
@@ -62,7 +62,7 @@ const List = () => {
   const { mutate: fetchShopData } = useGlobalMutation(url_api.shopFindAll, {
     onSuccess: (res: any) => {
       setShopLists(
-        res.data.list.map((item: any) => ({
+        res?.data?.list?.map((item: any) => ({
           value: item.id,
           label: item.name,
         }))

@@ -96,7 +96,7 @@ const Edit = () => {
 
   const { mutate: fetchBusinessUnitsData, isLoading: isLoadingBusinessUnitsData } = useBusinessUnitFindMutation({
     async onSuccess(res: any) {
-      const setFormValue = { ...businessUnitFormData, ...res.data }
+      const setFormValue = { ...businessUnitFormData, ...res?.data }
       getDistrict({ id: setFormValue?.id_province, type: 'id_province' })
       getSubDistrict({ id: setFormValue?.id_district, type: 'id_district' })
       if (setFormValue?.logo_image_url) {
@@ -130,7 +130,7 @@ const Edit = () => {
 
   const { mutate: businessUnitUpdate, isLoading: isLoadingUpdate } = useBusinessUnitUpdateMutation({
     onSuccess: async (res: any, event: any) => {
-      if (res.statusCode === 200 || res.code === 200) {
+      if (res?.statusCode === 200 || res?.code === 200) {
         toast.fire({
           icon: 'success',
           title: t('save_success'),
@@ -139,7 +139,7 @@ const Edit = () => {
       } else {
         toast.fire({
           icon: 'error',
-          title: res.message,
+          title: res?.message,
           padding: '10px 20px',
         })
       }
@@ -149,7 +149,7 @@ const Edit = () => {
 
   const { mutate: getDistrict } = useDistrictMutation({
     onSuccess: (res: any, variables: any) => {
-      const mapList = res.data.map((item: any) => ({
+      const mapList = res?.data?.map((item: any) => ({
         value: item.id,
         label: item.name_th,
       }))
@@ -162,7 +162,7 @@ const Edit = () => {
 
   const { mutate: getSubDistrict } = useSubDistrictMutation({
     onSuccess: (res: any, variables: any) => {
-      const mapList = res.data.map((item: any) => ({
+      const mapList = res?.data?.map((item: any) => ({
         value: item.id,
         label: item.name_th,
         zipCode: item.zip_code,

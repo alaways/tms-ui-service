@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { setPageTitle, setSidebarActive } from '../../../store/themeConfigSlice'
 
 import { useUploadMutation, useOCRMutation } from '../../../services/mutations/useUploadMutation'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
@@ -14,6 +15,7 @@ const Camera = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -212,7 +214,7 @@ const Camera = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('ถ่ายภาพ'))
+    dispatch(setPageTitle(t('take_photo')))
     dispatch(setSidebarActive(['services', '/apps/services/camera']))
   })
 
@@ -235,7 +237,7 @@ const Camera = () => {
               <div ref={borderRef} style={{ zIndex: 2, position: "absolute", top: 0, left: 0, right: 0, width: '100%' }}>
                 <img ref={cropRef} src="/assets/images/frame-crop.png" style={{ width: '100%' }} />
                 <button className="btn btn-primary" style={{ zIndex: 3, position: "absolute", bottom: 10, left: viewImage ? 'calc(50% - 80px)' : 'calc(50% - 40px)', right: 0, display: 'block', width: '70px', height: '70px', borderRadius: '999px', fontSize: '14px', border: 'none', backgroundColor: 'rgba(0,0,0, 0.7)' }} onClick={capture}>
-                  ถ่าย
+                  {t('take_photo')}
                 </button>
               </div>
             </div>
@@ -246,10 +248,10 @@ const Camera = () => {
               takeRef.current.style.display = 'none' 
               setViewImage(null)
             }}>
-              ถ่ายใหม่
+              {t('retake')}
             </button>
             <button className="btn btn-primary" style={{ zIndex: 3, position: "absolute", bottom: 50, left: 'calc(50% + 10px)', right: 0, display: 'block', width: '70px', height: '70px', borderRadius: '999px', fontSize: '12px' }} onClick={checkData}>
-              ยืนยัน
+              {t('confirm')}
             </button>
           </div>
         </>

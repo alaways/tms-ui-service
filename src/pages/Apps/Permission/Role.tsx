@@ -21,6 +21,7 @@ import InputField from '../../../components/HOC/InputField'
 import IconX from '../../../components/Icon/IconX'
 import IconPlus from '../../../components/Icon/IconPlus'
 import IconEye from '../../../components/Icon/IconEye'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 const toast = Swal.mixin(toastAlert)
@@ -29,6 +30,7 @@ const PermissionRole = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
 
@@ -44,9 +46,9 @@ const PermissionRole = () => {
   const [actionModal, setActionModal] = useState(false)
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { to: '/apps/permission/check', label: 'จัดการสิทธิ์ผู้ใช้งาน' },
-    { label: 'สิทธิ์ผู้ใช้งาน', isCurrent: true }
+    { to: '/apps/employee/list', label: t('employee') },
+    { to: '/apps/permission/check', label: t('permission_management') },
+    { label: t('add_permission'), isCurrent: true }
   ]
 
   if (role != 'admin' && role != 'business_unit') {
@@ -114,8 +116,8 @@ const PermissionRole = () => {
   const [formData, setFormData] = useState<any>(defaultForm)
 
   const SubmittedForm = Yup.object().shape({
-    key: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    key: Yup.string().required(t('please_enter_data')),
+    title: Yup.string().required(t('please_enter_data')),
   })
 
   const submitForm = useCallback((event: any) => {
@@ -132,9 +134,9 @@ const PermissionRole = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มสิทธิ์ผู้ใช้งาน'))
+    dispatch(setPageTitle(t('add_permission')))
     dispatch(setSidebarActive(['employee', '/apps/permission/check']))
-  }, [])
+  }, [t])
 
   useEffect(() => {
     setTotalItems(roleLists.length)
@@ -149,7 +151,7 @@ const PermissionRole = () => {
             <div className="flex items-center gap-2">
               <a className="btn btn-primary gap-2" onClick={() => setActionModal(true)}>
                 <IconPlus />
-                เพิ่มสิทธิ์ผู้ใช้งาน
+                {t('add_permission')}
               </a>
             </div>
           </div>
@@ -160,7 +162,7 @@ const PermissionRole = () => {
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('sequence'),
                   sortable: false,
                   textAlignment: 'center',
                   render: (row, index) => (
@@ -169,7 +171,7 @@ const PermissionRole = () => {
                 },
                 {
                   accessor: 'title',
-                  title: 'หัวข้อ',
+                  title: t('topic'),
                   sortable: false,
                   render: (item) => (
                     <div className="flex items-center justify-start font-normal">
@@ -181,7 +183,7 @@ const PermissionRole = () => {
                 },
                 {
                   accessor: 'key',
-                  title: 'คีย์',
+                  title: t('key'),
                   sortable: false,
                   render: (item) => (
                     <div className="flex items-center justify-start font-normal">
@@ -191,7 +193,7 @@ const PermissionRole = () => {
                 },
                 {
                   accessor: 'action',
-                  title: 'Actions',
+                  title: t('actions'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item) => (
@@ -216,7 +218,7 @@ const PermissionRole = () => {
               sortStatus={sortStatus}
               onSortStatusChange={setSortStatus}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('entries')}`
               )}
             />
           </div>
@@ -254,7 +256,7 @@ const PermissionRole = () => {
                       <IconX />
                     </button>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                      {defaultForm.action == 'add' ? 'เพิ่ม' : 'แก้ไข'}สิทธิ์ผู้ใช้งาน
+                      {defaultForm.action == 'add' ? t('add') : t('edit')}{t('add_permission')}
                     </div>
                     <div className="p-5">
                       <Formik
@@ -267,9 +269,9 @@ const PermissionRole = () => {
                         {(props) => (
                           <Form className="space-y-5 mb-2 dark:text-white custom-select">
                             <InputField
-                              label="หัวข้อ"
+                              label={t('topic')}
                               name="title"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_data')}
                               value={props.values.title !== '' ? props.values.title : defaultForm.title}
                               onChange={(e: any) => {
                                 props.setFieldValue("title", e.target.value)
@@ -277,9 +279,9 @@ const PermissionRole = () => {
                               }}
                             />
                             <InputField
-                              label="คีย์"
+                              label={t('key')}
                               name="key"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_data')}
                               value={props.values.key !== '' ? props.values.key : defaultForm.key}
                               onChange={(e: any) => {
                                 props.setFieldValue("title", e.target.value)
@@ -294,7 +296,7 @@ const PermissionRole = () => {
                             />
                             <div className="flex justify-center items-center mt-5">
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {defaultForm.action == 'add' ? 'บันทึก' : 'อัพเดท'}
+                                {defaultForm.action == 'add' ? t('save') : t('update')}
                               </button>
                             </div>
                           </Form>

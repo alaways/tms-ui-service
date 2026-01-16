@@ -87,7 +87,7 @@ const Add = () => {
   const { mutate: fetchShopData } = useGlobalMutation(url_api.shopSearchContains, {
       onSuccess: (res: any) => {
         setShopListData(
-          res.data.map((item: any) => ({
+          res?.data?.map((item: any) => ({
             value: item.id,
             label: item.name,
           }))
@@ -118,7 +118,7 @@ const Add = () => {
   const { mutate: fetchAssetTypeData, isLoading: isLoadingAssetTypeData } = useGlobalMutation(url_api.assetTypeFindAllActive, {
     onSuccess: (res: any) => {
       setAssetTypeList(
-        res.data.map((item: any) => ({
+        res?.data?.map((item: any) => ({
           value: item.id,
           label: item.name,
         }))
@@ -129,7 +129,7 @@ const Add = () => {
 
   const { mutate: fetchAssetColorData } = useGlobalMutation(url_api.assetColorFindAll, {
     onSuccess: (res: any) => {
-      const data = res.data.map((item: any) => ({
+      const data = res?.data?.map((item: any) => ({
         value: item.name,
         label: item.name,
       }))
@@ -141,7 +141,7 @@ const Add = () => {
 
   const { mutate: fetchAssetModelData } = useGlobalMutation(url_api.assetModelFindAll, {
     onSuccess: (res: any) => {
-      const data = res.data.map((item: any) => ({
+      const data = res?.data?.map((item: any) => ({
         value: item.name,
         label: item.name,
       }))
@@ -153,7 +153,7 @@ const Add = () => {
 
   const { mutate: fetchAssetNameData } = useGlobalMutation(url_api.assetNameFindAll, {
     onSuccess: (res: any) => {
-      const data = res.data.map((item: any) => ({
+      const data = res?.data?.map((item: any) => ({
         value: item.id,
         label: item.name,
       }))
@@ -166,7 +166,7 @@ const Add = () => {
 
   const { mutate: fetchAssetCapacityData } = useGlobalMutation(url_api.assetCapacityFindAll, {
     onSuccess: (res: any) => {
-      const data = res.data.map((item: any) => ({
+      const data = res?.data?.map((item: any) => ({
         value: item.name,
         label: item.name,
       }))
@@ -178,7 +178,7 @@ const Add = () => {
 
   const { mutate: assetCreate, isLoading: isCreateLoading  } = useGlobalMutation(url_api.assetCreate, {
       onSuccess: async (res: any, event: any) => {
-      if (res.statusCode === 200 || res.code === 200) {
+      if (res?.statusCode === 200 || res?.code === 200) {
         const uploadPromises: any[] = []
         images.forEach((item: any) => {
           uploadPromises.push(uploadFile({ data: { file: item.file, type: 'asset' } }))
@@ -186,16 +186,16 @@ const Add = () => {
         if (uploadPromises.length > 0) {
           const results1 = await Promise.all(uploadPromises)
           const createAssetImg: any[] = []
-          results1.forEach((item: any) => {
+          results1?.forEach((item: any) => {
             if (item.code !== 'error') {
               createAssetImg.push(
                 assetImgCreate({
                   data: {
-                    id_asset: res.data.id,
-                    name: item.data.file_name,
-                    image_url: item.data.file_name,
+                    id_asset: res?.data?.id,
+                    name: item?.data?.file_name,
+                    image_url: item?.data?.file_name,
                     extension: 'extension',
-                    size: item.data.size,
+                    size: item?.data?.size,
                   },
                 })
               )
@@ -265,11 +265,11 @@ const Add = () => {
               resultsCreateAssetImg.push(
                 assetImgCreate({
                   data: {
-                    id_asset: res.data.id,
-                    name: item.data.file_name,
-                    image_url: item.data.file_name,
+                    id_asset: res?.data?.id,
+                    name: item?.data?.file_name,
+                    image_url: item?.data?.file_name,
                     extension: 'extension',
-                    size: item.data.size,
+                    size: item?.data?.size,
                   },
                 })
               );
@@ -320,7 +320,7 @@ const Add = () => {
         setFormData(defaultForm)
       } else {
         setIsSearchAsset(2)
-        fetchShopData({ data: { query: res.data.shop.name } })
+        fetchShopData({ data: { query: res?.data?.shop?.name } })
         if (res.data?.asset_images.length > 0) {
           setImages(
             res.data?.asset_images.map((item: AssetsImage) => {

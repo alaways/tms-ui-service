@@ -17,17 +17,12 @@ import { Shop } from '../../../types';
 import { shop_report_csv } from '../../../helpers/constant';
 import { url_api } from '../../../services/endpoints';
 import { useGlobalMutation } from '../../../helpers/globalApi';
-
-const breadcrumbItems = [
-    { to: '/apps/report/account-creditor', label: 'บัญชีเจ้าหนี้ร้านเค้า' },
-    { label: 'รายละเอียดเจ้าหนี้ร้านค้า', isCurrent: true },
-];
-
-const mode = process.env.MODE || 'admin';
-
+import { useTranslation } from 'react-i18next';
+const mode = process.env.MODE || 'admin'
 const AccountCreditDetail = () => {
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
+    const { t } = useTranslation();
 
     const id_business_unit = searchParams.get('id_business_unit');
 
@@ -50,10 +45,15 @@ const AccountCreditDetail = () => {
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [totalItems, setTotalItems] = useState<number>(0);
 
+    const breadcrumbItems = [
+        { to: '/apps/report/account-creditor', label: t('account_creditor') },
+        { label: t('shop_creditor_detail'), isCurrent: true },
+    ];
+
     const { mutate: fetchCommissionFindAll } = useGlobalMutation(url_api.getCommissionDetailPV, {
         onSuccess: (res:any) => {
-            setItems(res.data.list);
-            setTotalItems(res.data.total);
+            setItems(res?.data?.list);
+            setTotalItems(res?.data?.total);
         },
         onError: () => {
             console.error('Failed to fetch data comission');
@@ -62,7 +62,7 @@ const AccountCreditDetail = () => {
 
     const { mutate: fetchShopFindOne } = useShopFindMutation({
         onSuccess: (res) => {
-            setShopdata(res.data);
+            setShopdata(res?.data);
         },
         onError: () => {
             console.error('Failed to fetch data comission');
@@ -149,13 +149,13 @@ const AccountCreditDetail = () => {
             <Breadcrumbs items={breadcrumbItems} />
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3 px-10">
                 <div className=''>
-                    <h5 className="mt-3 text-xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">รายละเอียดเจ้าหนี้ร้านค้า : {shopData?.name}</h5>
+                    <h5 className="mt-3 text-xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('shop_creditor_detail')} : {shopData?.name}</h5>
                 </div>
                 <div className="pt-4 custom-select">
                     <Formik initialValues={shopBuData} onSubmit={() => {}}>
                         {({ setFieldValue, handleReset }) => (
                             <div className="flex flex-wrap items-center gap-3">
-                                <label>การทำรายการที่ผ่านมา</label>
+                                <label>{t('past_transactions')}</label>
                                 <div className="max-w-[200px]">
                                     <DatePicker
                                         name="start_at"
@@ -175,7 +175,7 @@ const AccountCreditDetail = () => {
                                     />
                                 </div>
                                 <button type="submit" className="btn btn-primary gap-2" onClick={() => handleExport(`shop_report_${new Date().toLocaleString()}`)}>
-                                    Export
+                                    {t('export')}
                                 </button>
                             </div>
                         )}
@@ -189,7 +189,7 @@ const AccountCreditDetail = () => {
                         columns={[
                             {
                                 accessor: 'index',
-                                title: 'เลขที่สัญญา',
+                                title: t('contract_number'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item) => (
@@ -200,20 +200,20 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'pv_no',
-                                title: 'เลขที่ PV',
+                                title: t('pv_number'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'created_at',
-                                title: 'วันที่ทำสัญญา',
+                                title: t('contract_date'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item: any) => <p>{convertDateDbToClient(item?.contract_date)}</p>,
                             },
                             {
                                 accessor: 'approved_at',
-                                title: 'วันที่อนุมัติสัญญา',
+                                title: t('contract_approval_date'),
                                 textAlignment: 'left',
                                 sortable: false,
                                 render: (item) => {
@@ -222,7 +222,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'contract_status',
-                                title: 'สถานะสัญญา',
+                                title: t('contract_status'),
                                 textAlignment: 'left',
                                 sortable: false,
                                 render: (item) => {
@@ -231,7 +231,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'asset.name',
-                                title: 'ชื่อทรัพย์สิน',
+                                title: t('asset_name'),
                                 textAlignment: 'left',
                                 sortable: false,
                                 render: (item) => {
@@ -240,7 +240,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'price',
-                                title: 'ราคาขาย',
+                                title: t('selling_price'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -249,7 +249,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'down_payment',
-                                title: 'เงินดาวน์',
+                                title: t('down_payment'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -258,7 +258,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'principle',
-                                title: 'ทุนเช่าซื้อ',
+                                title: t('lease_principal'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -267,7 +267,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'commission',
-                                title: 'ค่านายหน้า',
+                                title: t('commission'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -276,7 +276,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'benefit',
-                                title: 'ผลตอบแทนพิเศษ',
+                                title: t('special_benefit'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -285,7 +285,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'amount',
-                                title: 'รวมเป็นเงิน',
+                                title: t('total_amount'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -294,7 +294,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'fee',
-                                title: 'ค่าทำสัญญา',
+                                title: t('contract_fee'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -303,7 +303,7 @@ const AccountCreditDetail = () => {
                             },
                             {
                                 accessor: 'total',
-                                title: 'คงเหลือให้ร้านค้า',
+                                title: t('remaining_for_shop'),
                                 textAlignment: 'right',
                                 sortable: false,
                                 render: (item) => {
@@ -322,7 +322,7 @@ const AccountCreditDetail = () => {
                             setPage(1);
                             setPageSize(p);
                         }}
-                        paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                        paginationText={({ from, to, totalRecords }) => `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('entries')}`}
                     />
                 </div>
             </div>

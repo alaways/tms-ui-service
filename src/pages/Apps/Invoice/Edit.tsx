@@ -7,13 +7,15 @@ import IconSend from '../../../components/Icon/IconSend';
 import IconSave from '../../../components/Icon/IconSave';
 import IconEye from '../../../components/Icon/IconEye';
 import IconDownload from '../../../components/Icon/IconDownload';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin'
 
 const Edit = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     useEffect(() => {
-        dispatch(setPageTitle('Invoice Edit'));
+        dispatch(setPageTitle(t('invoice_edit')));
     });
     const currencyList = ['USD - US Dollar', 'GBP - British Pound', 'IDR - Indonesian Rupiah', 'INR - Indian Rupee', 'BRL - Brazilian Real', 'EUR - Germany (Euro)', 'TRY - Turkish Lira'];
     const [tax, setTax] = useState<any>(0);
@@ -112,25 +114,25 @@ const Edit = () => {
                     <div className="lg:w-1/2 w-full lg:max-w-fit">
                         <div className="flex items-center">
                             <label htmlFor="number" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Invoice Number
+                                {t('invoice_number')}
                             </label>
                             <input id="number" type="text" name="inv-num" className="form-input lg:w-[250px] w-2/3" placeholder="#8801" defaultValue={params.invoiceNo} />
                         </div>
                         <div className="flex items-center mt-4">
                             <label htmlFor="invoiceLabel" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Invoice Label
+                                {t('invoice_label')}
                             </label>
-                            <input id="invoiceLabel" type="text" name="inv-label" className="form-input lg:w-[250px] w-2/3" placeholder="Enter Invoice Label" defaultValue={params.title} />
+                            <input id="invoiceLabel" type="text" name="inv-label" className="form-input lg:w-[250px] w-2/3" placeholder={t('invoice_label')} defaultValue={params.title} />
                         </div>
                         <div className="flex items-center mt-4">
                             <label htmlFor="startDate" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Invoice Date
+                                {t('invoice_date')}
                             </label>
                             <input id="startDate" type="date" name="inv-date" className="form-input lg:w-[250px] w-2/3" defaultValue={params.invoiceDate} />
                         </div>
                         <div className="flex items-center mt-4">
                             <label htmlFor="dueDate" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Due Date
+                                {t('due_date')}
                             </label>
                             <input id="dueDate" type="date" name="due-date" className="form-input lg:w-[250px] w-2/3" defaultValue={params.dueDate} />
                         </div>
@@ -140,64 +142,64 @@ const Edit = () => {
                 <div className="mt-8 px-4">
                     <div className="flex justify-between lg:flex-row flex-col">
                         <div className="lg:w-1/2 w-full ltr:lg:mr-6 rtl:lg:ml-6 mb-6">
-                            <div className="text-lg">Bill To :-</div>
+                            <div className="text-lg">{t('bill_to')} :-</div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Name
+                                    {t('name')}
                                 </label>
-                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" defaultValue={params.to.name} placeholder="Enter Name" />
+                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" defaultValue={params.to.name} placeholder={t('name')} />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-email" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Email
+                                    {t('email')}
                                 </label>
-                                <input id="reciever-email" type="email" name="reciever-email" className="form-input flex-1" defaultValue={params.to.email} placeholder="Enter Email" />
+                                <input id="reciever-email" type="email" name="reciever-email" className="form-input flex-1" defaultValue={params.to.email} placeholder={t('email')} />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-address" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Address
+                                    {t('address')}
                                 </label>
-                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" defaultValue={params.to.address} placeholder="Enter Address" />
+                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" defaultValue={params.to.address} placeholder={t('address')} />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-number" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Phone Number
+                                    {t('phone_number')}
                                 </label>
-                                <input id="reciever-number" type="text" name="reciever-number" className="form-input flex-1" defaultValue={params.to.phone} placeholder="Enter Phone number" />
+                                <input id="reciever-number" type="text" name="reciever-number" className="form-input flex-1" defaultValue={params.to.phone} placeholder={t('phone_number')} />
                             </div>
                         </div>
                         <div className="lg:w-1/2 w-full">
-                            <div className="text-lg">Payment Details:</div>
+                            <div className="text-lg">{t('payment_details')}:</div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="acno" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Account Number
+                                    {t('account_number')}
                                 </label>
-                                <input id="acno" type="text" name="acno" className="form-input flex-1" defaultValue={params.bankInfo.no} placeholder="Enter Account Number" />
+                                <input id="acno" type="text" name="acno" className="form-input flex-1" defaultValue={params.bankInfo.no} placeholder={t('account_number')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="bank-name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Bank Name
+                                    {t('bank_name')}
                                 </label>
-                                <input id="bank-name" type="text" name="bank-name" className="form-input flex-1" defaultValue={params.bankInfo.name} placeholder="Enter Bank Name" />
+                                <input id="bank-name" type="text" name="bank-name" className="form-input flex-1" defaultValue={params.bankInfo.name} placeholder={t('bank_name')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="swift-code" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    SWIFT Number
+                                    {t('swift_number')}
                                 </label>
-                                <input id="swift-code" type="text" name="swift-code" className="form-input flex-1" defaultValue={params.bankInfo.swiftCode} placeholder="Enter SWIFT Number" />
+                                <input id="swift-code" type="text" name="swift-code" className="form-input flex-1" defaultValue={params.bankInfo.swiftCode} placeholder={t('swift_number')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="iban-code" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    IBAN Number
+                                    {t('iban_number')}
                                 </label>
-                                <input id="iban-code" type="text" name="iban-code" className="form-input flex-1" defaultValue={params.bankInfo.ibanNo} placeholder="Enter IBAN Number" />
+                                <input id="iban-code" type="text" name="iban-code" className="form-input flex-1" defaultValue={params.bankInfo.ibanNo} placeholder={t('iban_number')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="country" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Country
+                                    {t('country')}
                                 </label>
                                 <select id="country" name="country" className="form-select flex-1" defaultValue={params.bankInfo.country}>
-                                    <option value="">Choose Country</option>
+                                    <option value="">{t('choose_country')}</option>
                                     <option value="United States">United States</option>
                                     <option value="United Kingdom">United Kingdom</option>
                                     <option value="Canada">Canada</option>
@@ -398,10 +400,10 @@ const Edit = () => {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Item</th>
-                                    <th className="w-1">Quantity</th>
-                                    <th className="w-1">Price</th>
-                                    <th>Total</th>
+                                    <th>{t('item')}</th>
+                                    <th className="w-1">{t('quantity')}</th>
+                                    <th className="w-1">{t('price')}</th>
+                                    <th>{t('total')}</th>
                                     <th className="w-1"></th>
                                 </tr>
                             </thead>
@@ -409,7 +411,7 @@ const Edit = () => {
                                 {items.length <= 0 && (
                                     <tr>
                                         <td colSpan={5} className="!text-center font-semibold">
-                                            No Item Available
+                                            {t('no_item_available')}
                                         </td>
                                     </tr>
                                 )}
@@ -417,14 +419,14 @@ const Edit = () => {
                                     return (
                                         <tr className="align-top" key={item.id}>
                                             <td>
-                                                <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item.title} />
-                                                <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea>
+                                                <input type="text" className="form-input min-w-[200px]" placeholder={t('enter_item_name')} defaultValue={item.title} />
+                                                <textarea className="form-textarea mt-4" placeholder={t('enter_description')} defaultValue={item.description}></textarea>
                                             </td>
                                             <td>
                                                 <input
                                                     type="number"
                                                     className="form-input w-32"
-                                                    placeholder="Quantity"
+                                                    placeholder={t('quantity')}
                                                     min={0}
                                                     defaultValue={item.quantity}
                                                     onChange={(e) => changeQuantityPrice('quantity', e.target.value, item.id)}
@@ -434,7 +436,7 @@ const Edit = () => {
                                                 <input
                                                     type="number"
                                                     className="form-input w-32"
-                                                    placeholder="Price"
+                                                    placeholder={t('price')}
                                                     min={0}
                                                     defaultValue={item.amount}
                                                     onChange={(e) => changeQuantityPrice('price', e.target.value, item.id)}
@@ -455,36 +457,36 @@ const Edit = () => {
                     <div className="flex justify-between sm:flex-row flex-col mt-6 px-4">
                         <div className="sm:mb-0 mb-6">
                             <button type="button" className="btn btn-primary" onClick={() => addItem()}>
-                                Add Item
+                                {t('add_item')}
                             </button>
                         </div>
                         <div className="sm:w-2/5">
                             <div className="flex items-center justify-between">
-                                <div>Subtotal</div>
+                                <div>{t('subtotal')}</div>
                                 <div>$265.00</div>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <div>Tax(%)</div>
+                                <div>{t('tax')}(%)</div>
                                 <div>0%</div>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <div>Shipping Rate($)</div>
+                                <div>{t('shipping_rate')}($)</div>
                                 <div>$0.00</div>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <div>Discount(%)</div>
+                                <div>{t('discount')}(%)</div>
                                 <div>0%</div>
                             </div>
                             <div className="flex items-center justify-between mt-4 font-semibold">
-                                <div>Total</div>
+                                <div>{t('total')}</div>
                                 <div>$265.00</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="mt-8 px-4">
-                    <label htmlFor="notes">Notes</label>
-                    <textarea id="notes" name="notes" className="form-textarea min-h-[130px]" placeholder="Notes...." defaultValue={params.notes}></textarea>
+                    <label htmlFor="notes">{t('notes')}</label>
+                    <textarea id="notes" name="notes" className="form-textarea min-h-[130px]" placeholder={t('notes')} defaultValue={params.notes}></textarea>
                 </div>
             </div>
             <div className="xl:w-96 w-full xl:mt-0 mt-6">

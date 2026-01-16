@@ -129,7 +129,7 @@ const Preview = () => {
   
   const { mutate: fetchBusinessUnitsData, isLoading: isLoadingBusinessUnitsData } = useBusinessUnitFindMutation({
     async onSuccess(res: any) {
-      const setFormValue = res.data
+      const setFormValue = res?.data
       setBusinessUnitFormData(setFormValue)
       dispatch(setBusinessUnits(setFormValue))
 
@@ -156,7 +156,7 @@ const Preview = () => {
 
   const { mutate: buGetShopGroup,isLoading: isShopGroupBuLoading } = useGlobalMutation(url_api.buGetShopGroup, {
     onSuccess: (res: any) => {
-      const uniqueRecords = res.data.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => t.id === item.id)).map((item: any) => item)
+      const uniqueRecords = res?.data?.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => t.id === item.id)).map((item: any) => item)
       
       setShopGroupRecords(uniqueRecords)
       setShopGroupList(
@@ -176,7 +176,7 @@ const Preview = () => {
 
    const { mutate: buGetShopV2 } = useGlobalMutation(url_api.buGetShopV2, {
     onSuccess: (res: any) => {
-      const uniqueRecords = res.data
+      const uniqueRecords = res?.data
       setListData(uniqueRecords)
       setListDataFiltered(uniqueRecords)
     },
@@ -206,7 +206,7 @@ const Preview = () => {
   }
   const { mutate: buCheckList } = useGlobalMutation(url_api.buCheckList, {
     onSuccess: (res: any) => {
-      setStatusAction(res.data)
+      setStatusAction(res?.data)
     },
     onError: (err: any) => {
       showNotification(err.message, 'error')
@@ -337,7 +337,7 @@ const Preview = () => {
   const { mutate: fetchShopData,isLoading:isShopLoading } = useGlobalMutation(url_api.shopReadyToAddBu, {
     onSuccess: (res: any) => {
       setshopList(
-        res.data.map((relation: any) => ({
+        res?.data?.map((relation: any) => ({
           value: relation.id,
           label: relation.name,
         }))

@@ -389,50 +389,50 @@ const AddEdit = () => {
     onSuccess(res: any) {
       switch (tab) {
         case 'contract':
-          setStatusAction(res.data.status_id)
-          setFormData({ ...res.data })
-          setBuDetail(res.data.business_unit)
-          setCustomerDetail(res.data.customer)
-          setAssetDetail(res.data.asset)
-          setShopDetail(res.data.shop)
-          setRefinanceAction(res.data.refinance)
-          setIsContractRefinance(res.data.is_refinance)
+          setStatusAction(res?.data?.status_id)
+          setFormData({ ...res?.data })
+          setBuDetail(res?.data?.business_unit)
+          setCustomerDetail(res?.data?.customer)
+          setAssetDetail(res?.data?.asset)
+          setShopDetail(res?.data?.shop)
+          setRefinanceAction(res?.data?.refinance)
+          setIsContractRefinance(res?.data?.is_refinance)
           set_c_ref_link(res?.data?.refinance_ref_link ?? null)
-          if (!res.data.is_refinance && ['complete', 'on_process'].includes(res.data.refinance)) {
+          if (!res?.data?.is_refinance && ['complete', 'on_process'].includes(res?.data?.refinance)) {
             setLockUpdate(true)
           }
           const shopDetail: any = [
             {
-              value: res.data.shop.id,
-              label: res.data.shop.name,
-              data: res.data.shop,
+              value: res?.data?.shop?.id,
+              label: res?.data?.shop?.name,
+              data: res?.data?.shop,
             },
           ]
           setShopListData(shopDetail)
           const buDetail: any = [
             {
-              value: res.data.business_unit.id,
-              label: res.data.business_unit.name,
-              data: res.data.business_unit,
+              value: res?.data?.business_unit.id,
+              label: res?.data?.business_unit.name,
+              data: res?.data?.business_unit,
             },
           ]
           setBuListData(buDetail)
           const customerDetail: any = [
             {
-              value: res.data.customer.id,
-              label: res.data.customer.name,
-              data: res.data.customer,
+              value: res?.data?.customer.id,
+              label: res?.dat?.customer.name,
+              data: res?.data?.customer,
             },
           ]
           setCustomerListData(customerDetail)
           const assetDetail: any = [
             {
-              value: res.data.asset.id,
-              label: res.data.asset.name,
-              data: res.data.asset,
+              value: res?.data?.asset.id,
+              label: res?.data?.asset.name,
+              data: res?.data?.asset,
             },
           ]
-          const data1 = res.data?.shop_groups?.map((item: any) => ({
+          const data1 = res?.data?.shop_groups?.map((item: any) => ({
             value: item.id,
             label: item.name,
             data: item,
@@ -440,14 +440,14 @@ const AddEdit = () => {
           setShopGroupListData(data1)
           setTempAssetListData(assetDetail)
           setAssetListData(assetDetail)
-          setContractRate(res.data.rate_per_month)
+          setContractRate(res?.data?.rate_per_month)
           setIsSelectRate(true)
           // console.log("fetchContractRate4")
           fetchContractRate({
             data: {
-              id_shop: res.data.shop.id,
-              id_business_unit: res.data.business_unit.id,
-              id_shop_group: res.data.id_shop_group,
+              id_shop: res?.data?.shop.id,
+              id_business_unit: res?.data?.business_unit.id,
+              id_shop_group: res?.data?.id_shop_group,
               ...(contract_uuid && {
                 id_contract: contract_uuid
               })
@@ -457,18 +457,18 @@ const AddEdit = () => {
         case 'additional':
           setFormData((prev: any) => ({
             ...prev,
-            contract_images: res.data.contract_images,
-            contract_pdf_url: res.data.contract_pdf_url,
-            e_contract_status: res.data.e_contract_status,
-            e_contract_link: res.data.e_contract_link,
-            contract_key: res.data.contract_key
+            contract_images: res?.data?.contract_images,
+            contract_pdf_url: res?.data?.contract_pdf_url,
+            e_contract_status: res?.data?.e_contract_status,
+            e_contract_link: res?.data?.e_contract_link,
+            contract_key: res?.data?.contract_key
           }))
-          if (res.data?.contract_pdf_url) {
-            setContractFile(res.data?.contract_pdf_url)
+          if (res?.data?.contract_pdf_url) {
+            setContractFile(res?.data?.contract_pdf_url)
           }
-          if (res.data?.contract_images.length > 0) {
+          if (res?.data?.contract_images.length > 0) {
             const imageArray: any = []
-            res.data?.contract_images.forEach(async (item: any) => {
+            res?.data?.contract_images?.forEach(async (item: any) => {
               if (item.type === 'image') {
                 imageArray.push({ dataURL: item.image_url, name: item.name, id: item.id })
               } else {
@@ -479,28 +479,28 @@ const AddEdit = () => {
           }
           break
         case 'history':
-          setHistoryLogData(res.data || [])
+          setHistoryLogData(res?.data || [])
           // fetchHistoryLogData({ data: { id_contract: contract_uuid } })
           break
         case 'installment':
-          setInstallmentsData(res.data)
+          setInstallmentsData(res?.data)
         case 'credit':
           setFormDataContractStatus({
-            contentStatus: res.data?.credit?.code ? res.data?.credit?.code : null,
-            note: res.data?.credit?.note ? res.data?.credit?.note : null,
+            contentStatus: res?.data?.credit?.code ? res?.data?.credit?.code : null,
+            note: res?.data?.credit?.note ? res?.data?.credit?.note : null,
           })
-          setStatusCreditHistoryList(res.data?.credit_histories)
+          setStatusCreditHistoryList(res?.data?.credit_histories)
           break
         case 'note-event':
-          setContractMessage(res.data)
+          setContractMessage(res?.data)
           break
         case 'device-lock':
           setFormDataLockedDeviceStatus({
-            isLockedStatus: !res.data?.is_locked,
-            history: res.data?.history,
-            provider_applock_id: res.data?.provider_applock_id
+            isLockedStatus: !res?.data?.is_locked,
+            history: res?.data?.history,
+            provider_applock_id: res?.data?.provider_applock_id
           })
-          setProviderList(res.data?.provider_applock.map((item: any) => ({
+          setProviderList(res?.data?.provider_applock.map((item: any) => ({
             value: item.id,
             label: item.title || item.service_provider,
           })) || [])
@@ -770,7 +770,7 @@ const AddEdit = () => {
   const { mutate: fetchPayload } = useGlobalMutation(url_api.contractPayload, {
     onSuccess: (res: any) => {
       setContractTypeList(
-        res.data.contract_type?.map((item: any) => ({
+        res?.data?.contract_type?.map((item: any) => ({
           value: item.id,
           label: item.name,
           data: item,
@@ -778,7 +778,7 @@ const AddEdit = () => {
       )
       //
       setContractStatusList(
-        res.data.contract_status?.map((item: any) => ({
+        res?.data?.contract_status?.map((item: any) => ({
           value: item.id,
           label: item.name,
           data: item,
@@ -786,7 +786,7 @@ const AddEdit = () => {
       )
       //
       setInsuranceTypeList(
-        res.data.insurance_type?.map((item: any) => ({
+        res?.data?.insurance_type?.map((item: any) => ({
           value: item.id,
           label: item.name,
           data: item,
@@ -794,7 +794,7 @@ const AddEdit = () => {
       )
 
       setStatusCreditList(
-        res.data.credit_status?.map((item: any) => ({
+        res?.data?.credit_status?.map((item: any) => ({
           value: item.code,
           label: item.code + ' - ' + item.name,
           data: item,
@@ -802,7 +802,7 @@ const AddEdit = () => {
       )
 
       setStatusCreditListV2(
-        res.data.credit_status
+        res?.data?.credit_status
           ?.filter((item: any) => item.code != 40)
           .map((item: any) => ({
             value: item.code,
@@ -817,7 +817,7 @@ const AddEdit = () => {
   const { mutate: shopSearchContains } = useGlobalMutation(url_api.contractGetShop, {
     onSuccess: (res: any) => {
       if (id_shop) {
-        const find = res.data.find((a: any) => a.id === id_shop)
+        const find = res?.data?.find((a: any) => a.id === id_shop)
         setShopDetail(find)
         const shopDetail: any = [
           {
@@ -839,7 +839,7 @@ const AddEdit = () => {
         assetSearchContains({ data: { query: '', id_shop: find.id, page: 1, pageSize: 10 } })
       } else {
         setShopListData(
-          res.data.map((item: any) => ({
+          res?.data?.map((item: any) => ({
             value: item.id,
             label: item.name,
             data: item,
@@ -854,7 +854,7 @@ const AddEdit = () => {
 
   const { mutate: shopSearchContainsBu } = useGlobalMutation(url_api.contractGetShop, {
     onSuccess: (res: any) => {
-      const find = id_shop ? res.data.find((a: any) => a.id === id_shop) : res.data.find((a: any) => a.id === shopDetail?.id)
+      const find = id_shop ? res?.data?.find((a: any) => a.id === id_shop) : res?.data?.find((a: any) => a.id === shopDetail?.id)
       // setBuListData(
       //   find.business_unit.map((item: any) => ({
       //     value: item.id,
@@ -875,7 +875,7 @@ const AddEdit = () => {
           processRefinance(res?.data?.reference, shopDetail?.id)
         } else {
           setCloneData(true)
-          const { id, uuid, asset, customer, insurance_type, shop, credit, is_closed, ...filteredParam } = res.data
+          const { id, uuid, asset, customer, insurance_type, shop, credit, is_closed, ...filteredParam } = res?.data?
           setFormData({
             ...filteredParam,
             ins_pay_day: moment().date() != 31 ? moment().date() : 30,
@@ -887,7 +887,7 @@ const AddEdit = () => {
             contract_type_id: tmpData?.contract_type_id,
             insurance_type_id: tmpData?.insurance_type_id,
             is_refinance: true,
-            refinance_ref: res.data.reference,
+            refinance_ref: res?.data?.reference,
             down_payment_type: 'percent',
             has_advance_installments: false,
             // down_payment_rate:0,
@@ -896,35 +896,35 @@ const AddEdit = () => {
             //
           })
           //condition_contract
-          setBuDetail(res.data.business_unit)
+          setBuDetail(res?.data?.business_unit)
 
-          setCustomerDetail(res.data.customer)
-          setAssetDetail(res.data.asset)
+          setCustomerDetail(res?.data?.customer)
+          setAssetDetail(res?.data?.asset)
           const buDetail: any = [
             {
-              value: res.data.business_unit.id,
-              label: res.data.business_unit.name,
-              data: res.data.business_unit,
+              value: res?.data?.business_unit.id,
+              label: res?.data?.business_unit.name,
+              data: res?.data?.business_unit,
             },
           ]
           setBuListData(buDetail)
           const customerDetail: any = [
             {
-              value: res.data.customer.id,
-              label: res.data.customer.name,
-              data: res.data.customer,
+              value: res?.data?.customer.id,
+              label: res?.data?.customer.name,
+              data: res?.data?.customer,
             },
           ]
           setCustomerListData(customerDetail)
           const assetDetail: any = [
             {
-              value: res.data.asset.id,
-              label: res.data.asset.name,
-              data: res.data.asset,
+              value: res?.data?.asset.id,
+              label: res?.data?.asset.name,
+              data: res?.data?.asset,
             },
           ]
           setShopGroupListData(
-            res.data?.shop_groups?.map((item: any) => ({
+            res?.data?.shop_groups?.map((item: any) => ({
               value: item.id,
               label: item.name,
               data: item,
@@ -937,9 +937,9 @@ const AddEdit = () => {
           setIsSelectRate(true)
           fetchContractRate({
             data: {
-              id_shop: res.data.id_shop,
-              id_business_unit: res.data.business_unit.id,
-              id_contract: res.data.uuid
+              id_shop: res?.data?.id_shop,
+              id_business_unit: res?.data?.business_unit.id,
+              id_contract: res?.data?.uuid
             }
           })
           setLoadingClose(false)
@@ -968,7 +968,7 @@ const AddEdit = () => {
 
   const { mutate: fetchShopData } = useGlobalMutation(url_api.shopFind, {
     onSuccess: (res: any) => {
-      shopSearchContains({ data: { query: res.data.name, page: 1, pageSize: 1 } })
+      shopSearchContains({ data: { query: res?.data?.name, page: 1, pageSize: 1 } })
     },
     onError: () => {
       console.error('Failed to fetch dashboard data')
@@ -977,7 +977,7 @@ const AddEdit = () => {
 
   // const { mutate: fetchHistoryLogData } = useGlobalMutation(url_api.contractGetLogHistory, {
   //   onSuccess: (res: any) => {
-  //     setHistoryLogData(res.data || [])
+  //     setHistoryLogData(res?.data?  || [])
   //   },
   //   onError: () => {
   //     console.error('Failed to fetch historyLog data')
@@ -987,7 +987,7 @@ const AddEdit = () => {
   const { mutate: customerSearchContains } = useGlobalMutation(url_api.customerSearchContains, {
     onSuccess: (res: any) => {
       setCustomerListData(
-        res.data.map((item: any) => ({
+        res?.data?.map((item: any) => ({
           value: item.id,
           label: item.name,
           data: item,
@@ -1000,7 +1000,7 @@ const AddEdit = () => {
     onSuccess: (res: any) => {
       setAssetListData([
         ...tempAssetListData,
-        ...res.data.map((item: any) => ({
+        ...res?.data?.map((item: any) => ({
           value: item.id,
           label: item.name,
           data: item,
@@ -1013,14 +1013,14 @@ const AddEdit = () => {
     onSuccess: (res: any, variables: { props: FormikProps<Contract> }) => {
       setIsSelectRate(true)
       if (res.statusCode === 200 || res.code === 200) {
-        setContractRate(res.data)
+        setContractRate(res?.data)
         if (variables.props) {
-          variables.props.setFieldValue('id_shop_group', res.data.id_shop_group)
+          variables.props.setFieldValue('id_shop_group', res?.data?.id_shop_group)
           if (variables.props?.values?.is_refinance == true) {
             variables.props.setFieldValue('ins_period', 6)
-            variables.props.setFieldValue('rate_per_month', res.data.inr_6)
+            variables.props.setFieldValue('rate_per_month', res?.data?.inr_6)
           } else {
-            variables.props.setFieldValue('rate_per_month', res.data.inr_3)
+            variables.props.setFieldValue('rate_per_month', res?.data?.inr_3)
           }
 
         }
@@ -1043,7 +1043,7 @@ const AddEdit = () => {
           title: t('save_success'),
           padding: '10px 20px',
         })
-        navigate('/apps/contract/' + res.data.id + '/' + res.data.uuid)
+        navigate('/apps/contract/' + res?.data?.id + '/' + res?.data?.uuid)
         location.reload()
       } else {
         toast.fire({
@@ -3801,7 +3801,7 @@ const AddEdit = () => {
                                             }
                                           }).then(result => {
                                             if (result.isConfirmed) {
-                                              const params = { id_contract: formData.uuid }
+                                              const params = { id_contract: formData?.uuid }
                                               contractComplete({ data: params })
                                             }
                                           })

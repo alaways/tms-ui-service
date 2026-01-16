@@ -36,21 +36,15 @@ import IconRefresh from '../../../components/Icon/IconRefresh';
 import Breadcrumbs from '../../../helpers/breadcrumbs';
 import Tippy from '@tippyjs/react';
 import IconEdit from '../../../components/Icon/IconEdit';
+import { useTranslation } from 'react-i18next';
 
 const toast = Swal.mixin(toastAlert);
 const mode = process.env.MODE || 'admin';
 
-const convertText = (text: string) => {
-    if (text == 'approved') {
-        return 'อนุมัติ';
-    } else if (text == 'cancel') {
-        return 'ยกเลิก';
-    }
-};
-
 const ShopReportPV = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -58,8 +52,8 @@ const ShopReportPV = () => {
     const id_business_unit = searchParams.get('id_business_unit') || '';
 
     const breadcrumbItems = [
-        { to: '/apps/report/pay-to-shop-pv', label: 'จ่ายเงินให้ร้านค้า' },
-        { label: 'รายงานค่าตอบแทน', isCurrent: true },
+        { to: '/apps/report/pay-to-shop-pv', label: t('pay_to_shop') },
+        { label: t('compensation_report'), isCurrent: true },
     ];
 
     const apiUrl = process.env.BACKEND_URL;
@@ -110,10 +104,18 @@ const ShopReportPV = () => {
     const [typeDateSearch, setTypeDateSearch] = useState<string>('');
     const [dateSearch, setDateSearch] = useState<any>({ start_at: null, end_at: null });
 
+    const convertText = (text: string) => {
+        if (text == 'approved') {
+            return t('approved');
+        } else if (text == 'cancel') {
+            return t('cancelled');
+        }
+    };
+
     const column: any = [
         {
             accessor: 'id',
-            title: 'เลขที่สัญญา',
+            title: t('contract_number'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => (
@@ -126,21 +128,21 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'no_pv',
-            title: 'เลขที่ PV',
+            title: t('pv_number'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => <p>{item?.pv_no}</p>,
         },
         {
             accessor: 'date_pv',
-            title: 'วันที่สร้าง PV',
+            title: t('pv_created_date'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => convertDateDbToClient(item.pv_create),
         },
         {
             accessor: 'contract_date',
-            title: 'วันที่ทำสัญญา',
+            title: t('contract_date'),
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
@@ -149,7 +151,7 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'approved_at',
-            title: 'วันที่อนุมัติสัญญา',
+            title: t('contract_approval_date'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => {
@@ -158,7 +160,7 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'contract_status',
-            title: 'สถานะ PV',
+            title: t('pv_status'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => {
@@ -167,100 +169,100 @@ const ShopReportPV = () => {
         },
         {
             accessor: 'asset.name',
-            title: 'ชื่อทรัพย์สิน',
+            title: t('asset_name'),
             textAlignment: 'left',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? "ผลรวม" : (item?.asset?.name || '');
+                return record.isTotal ? t('total_sum') : (item?.asset?.name || '');
             },
         },
         {
             accessor: 'price',
-            title: 'ราคาขาย',
+            title: t('selling_price'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.price || '0')} บาท` : numberWithCommas(item?.price || '0');
+                return record.isTotal ? `${numberWithCommas(item?.price || '0')} ${t('baht')}` : numberWithCommas(item?.price || '0');
             },
         },
         {
             accessor: 'down_payment',
-            title: 'เงินดาวน์',
+            title: t('down_payment'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.down_payment || '0')} บาท` : numberWithCommas(item?.down_payment || '0');
+                return record.isTotal ? `${numberWithCommas(item?.down_payment || '0')} ${t('baht')}` : numberWithCommas(item?.down_payment || '0');
             },
         },
         {
             accessor: 'principle',
-            title: 'ทุนเช่าซื้อ',
+            title: t('lease_principal'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.principle || '0')} บาท` : numberWithCommas(item?.principle || '0');
+                return record.isTotal ? `${numberWithCommas(item?.principle || '0')} ${t('baht')}` : numberWithCommas(item?.principle || '0');
             },
         },
         {
             accessor: 'commission',
-            title: 'ค่านายหน้า',
+            title: t('commission'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.commission || '0')} บาท` : numberWithCommas(item?.commission || '0');
+                return record.isTotal ? `${numberWithCommas(item?.commission || '0')} ${t('baht')}` : numberWithCommas(item?.commission || '0');
             },
         },
         {
             accessor: 'benefit',
-            title: 'ผลตอบแทนพิเศษ',
+            title: t('special_benefit'),
             textAlignment: 'right',
             sortable: false,
             render: (item: any) => {
-                return item.isTotal ? `${numberWithCommas(item?.benefit || '0')} บาท` : numberWithCommas(item?.benefit || '0');
+                return item.isTotal ? `${numberWithCommas(item?.benefit || '0')} ${t('baht')}` : numberWithCommas(item?.benefit || '0');
             },
         },
         {
             accessor: 'amount',
-            title: 'รวมเป็นเงิน',
+            title: t('total_amount'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.amount || '0')} บาท` : numberWithCommas(item?.amount || '0');
+                return record.isTotal ? `${numberWithCommas(item?.amount || '0')} ${t('baht')}` : numberWithCommas(item?.amount || '0');
             },
         },
         {
             accessor: 'fee',
-            title: 'ค่าทำสัญญา',
+            title: t('contract_fee'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.fee || '0')} บาท` : numberWithCommas(item?.fee || '0');
+                return record.isTotal ? `${numberWithCommas(item?.fee || '0')} ${t('baht')}` : numberWithCommas(item?.fee || '0');
             },
         },
         {
             accessor: 'total',
-            title: 'คงเหลือให้ร้านค้า',
+            title: t('remaining_for_shop'),
             textAlignment: 'right',
             sortable: false,
             render: (record: any) => {
                 const item = commissionLists.find((item) => item.id === record.id);
-                return record.isTotal ? `${numberWithCommas(item?.total || '-')} บาท` : numberWithCommas(item?.total || '-') ;
+                return record.isTotal ? `${numberWithCommas(item?.total || '-')} ${t('baht')}` : numberWithCommas(item?.total || '-') ;
             },
         },
         {
             accessor: 'total_ins_amount',
-            title: 'ราคารวมผ่อน',
+            title: t('total_installment_price'),
             textAlignment: 'right',
             sortable: false,
             render: (item: any) => {
-                return item.isTotal ? `${numberWithCommas(item?.total_ins_amount || '-')} บาท` : numberWithCommas(item?.total_ins_amount || '-');
+                return item.isTotal ? `${numberWithCommas(item?.total_ins_amount || '-')} ${t('baht')}` : numberWithCommas(item?.total_ins_amount || '-');
             },
         },
         // {
@@ -276,7 +278,7 @@ const ShopReportPV = () => {
             ? [
                   {
                       accessor: 'action',
-                      title: 'Actions',
+                      title: t('actions'),
                       textAlignment: 'center',
                       sortable: false,
                       render: (item: any) => (
@@ -284,7 +286,7 @@ const ShopReportPV = () => {
                          {!item.isTotal && <div className="flex gap-4 items-center w-max mx-auto">
                               <a href={`/apps/report/pay-to-shop-pv/edit/${item.uuid}?id_business_unit=${id_business_unit}&id_shop=${id}`} className="flex cursor-pointer items-center relative group">
                                   <IconEdit className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
-                                  <p className="absolute left-[-5px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">แก้ไข</p>
+                                  <p className="absolute left-[-5px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">{t('edit')}</p>
                               </a>
                           </div>}
                         </>
@@ -300,7 +302,7 @@ const ShopReportPV = () => {
         isError,
     } = useShopFindMutation({
         onSuccess: (res: any) => {
-            const setFormValue = res.data;
+            const setFormValue = res?.data;
             setShopData({
                 ...setFormValue,
                 id: id || dataStoredShop.id,
@@ -324,7 +326,7 @@ const ShopReportPV = () => {
     const { mutate: fetchContractGetBuList } = useGlobalMutation(url_api.contractFilter, {
         onSuccess: (res: any) => {
             setBusinessUnit(
-                res.data.business_unit.map((item: any) => ({
+                res?.data?.business_unit?.map((item: any) => ({
                     value: item.id,
                     label: item.name,
                 }))
@@ -337,8 +339,8 @@ const ShopReportPV = () => {
     
     const { mutate: fetchCommissionData } = useGlobalMutation(url_api.getCommissionPV, {
          onSuccess: (res:any) => {
-            if (res.data !== undefined) {
-                const totalInclude = res.data.list.reduce((acc:any,cur:any) => {
+            if (res?.data !== undefined) {
+                const totalInclude = res?.data?.list?.reduce((acc:any,cur:any) => {
                     acc.amount += cur.amount || 0
                     acc.commission += cur.commission || 0
                     acc.down_payment += cur.down_payment || 0
@@ -350,10 +352,10 @@ const ShopReportPV = () => {
                     acc.benefit += cur.benefit || 0
                     return acc
                 },{amount:0,commission:0,down_payment:0,fee:0,price:0,principle:0,total:0,total_ins_amount:0,benefit:0})
-                const newList = res.data.list.concat({...totalInclude,isTotal:true})
+                const newList = res?.data?.list?.concat({...totalInclude,isTotal:true})
                 setCommissionLists(newList);
-                setCommissionTotalLists(res.data.summary);
-                setTotalItems(res.data.total);
+                setCommissionTotalLists(res?.data?.summary);
+                setTotalItems(res?.data?.total);
             }
             setIsLoading(false);
         },
@@ -461,7 +463,7 @@ const ShopReportPV = () => {
     }, [role, navigate]);
 
     useEffect(() => {
-        dispatch(setPageTitle('รายงานค่าตอบแทน'));
+        dispatch(setPageTitle(t('compensation_report')));
     }, [dispatch]);
 
     useEffect(() => {
@@ -499,12 +501,12 @@ const ShopReportPV = () => {
             <Breadcrumbs items={breadcrumbItems} />
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3">
                 <div className="invoice-table">
-                    <div className="ml-10 mt-3 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">ร้านค้า {shopData?.name || '-'}</div>
+                    <div className="ml-10 mt-3 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('shop')} {shopData?.name || '-'}</div>
                     <div className="p-10">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-6 text-white">
                             <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ทุนเช่าซื้อ</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('lease_principal')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_principle?.toLocaleString() || '0'}</div>
@@ -512,7 +514,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ค่านายหน้า</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('commission')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_commission?.toLocaleString() || '0'}</div>
@@ -520,7 +522,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">รวมเป็นเงิน</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('total_amount')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_amount?.toLocaleString() || '0'}</div>
@@ -528,7 +530,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ค่าทำสัญญา</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('contract_fee')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_fee?.toLocaleString() || '0'}</div>
@@ -536,7 +538,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-yellow-500 to-yellow-400">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">คงเหลือให้ร้านค้า</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('remaining_for_shop')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_amount_shop?.toLocaleString() || '0'}</div>
@@ -544,7 +546,7 @@ const ShopReportPV = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-red-500 to-orange-500">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">ราคารวมผ่อน</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-xl">{t('total_installment_price')}</div>
                                 </div>
                                 <div className="flex items-center mt-5">
                                     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">{commissionTotalLists.total_ins_amount?.toLocaleString() || '0'}</div>
@@ -559,7 +561,7 @@ const ShopReportPV = () => {
                                 if (_.isEmpty(values.start_at) || _.isEmpty(values.end_at) || values.start_at === '' || values.end_at === '') {
                                     toast.fire({
                                         icon: 'warning',
-                                        title: 'กรุณาเลือกข้อมูลวันที่ให้ครบเพื่อค้นหา',
+                                        title: t('please_select_date_search'),
                                         padding: '10px 20px',
                                     });
                                 } else {
@@ -633,11 +635,11 @@ const ShopReportPV = () => {
                                     <div className="flex gap-2">
                                         {role === 'business_unit' ? (
                                             <div>
-                                                <label>หน่วยธุรกิจ</label>
+                                                <label>{t('business_unit')}</label>
                                                 <Select
                                                     defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
                                                     value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
-                                                    placeholder="เลือก หน่วยธุรกิจ"
+                                                    placeholder={t('select_business_unit')}
                                                     className="pr-1 z-10 w-[200px]"
                                                     options={businessUnit.map((item: any) => ({ label: item.label, value: item.value.id }))}
                                                     isDisabled={true}
@@ -647,7 +649,7 @@ const ShopReportPV = () => {
                                             <SelectField
                                                 id="id_business_unit"
                                                 name="id_business_unit"
-                                                label="หน่วยธุรกิจ"
+                                                label={t('business_unit')}
                                                 className="pr-1 z-10 w-[200px]"
                                                 options={businessUnit}
                                                 isSearchable={true}
@@ -659,12 +661,12 @@ const ShopReportPV = () => {
                                         <SelectField
                                             id="status"
                                             name="status"
-                                            label="สถานะ PV"
+                                            label={t('pv_status')}
                                             className="pr-1 w-[200px]"
                                             options={[
-                                                { value: '', label: 'ทั้งหมด' },
-                                                { value: 'approved', label: 'อนุมัติ' },
-                                                { value: 'cancel', label: 'ยกเลิก' },
+                                                { value: '', label: t('all') },
+                                                { value: 'approved', label: t('approved') },
+                                                { value: 'cancel', label: t('cancelled') },
                                             ]}
                                             isSearchable={false}
                                             onChange={(e: any) => {
@@ -673,28 +675,28 @@ const ShopReportPV = () => {
                                         />
                                     </div>
                                     <div className="flex gap-2 items-center">
-                                        <label htmlFor="">วันที่อนุมัติสัญญา</label>
+                                        <label htmlFor="">{t('contract_approval_date')}</label>
                                         {/* <button type='button' onClick={() => onClickDate('all',setFieldValue)} className={`${typeDateSearch == 'all' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}>ทั้งหมด</button> */}
                                         <button
                                             type="button"
                                             onClick={() => onClickDate('today', setFieldValue)}
                                             className={`${typeDateSearch == 'today' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}
                                         >
-                                            วันนี้
+                                            {t('today')}
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => onClickDate('month', setFieldValue)}
                                             className={`${typeDateSearch == 'month' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}
                                         >
-                                            เดือนนี้
+                                            {t('this_month')}
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => onClickDate('custom', setFieldValue)}
                                             className={`${typeDateSearch == 'custom' ? 'bg-blue-500 text-white font-semibold' : null} border rounded-[5px] px-4 py-2`}
                                         >
-                                            กำหนดเอง
+                                            {t('custom')}
                                         </button>
                                         {typeDateSearch != 'custom' && (
                                             <>
@@ -745,22 +747,22 @@ const ShopReportPV = () => {
                     /> */}
                                         <button type="submit" className="btn btn-primary gap-2 mt-5" disabled={isLoading}>
                                             {isLoading ? <Spinner size="sm" /> : <IconSearch />}
-                                            ค้นหา
+                                            {t('search')}
                                         </button>
                                         <button type="reset" className="btn btn-info gap-2 mt-5" disabled={isLoading} onClick={handleReset}>
                                             {isLoading ? <Spinner size="sm" /> : <IconRefresh />}
-                                            ล้างค่า
+                                            {t('clear_values')}
                                         </button>
                                         <div className="flex flex-col pt-5">
                                             <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => handleExport(`shop_report_${new Date().toLocaleString()}`)}>
-                                                Export
+                                                {t('export')}
                                             </button>
                                         </div>
                                         <NavLink
                                             to={`/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id}&start_at=${defaultForm.start_at}&end_at=${defaultForm.end_at}`}
                                             className="btn bg-yellow-500 text-white shadow-lg gap-2 mt-5"
                                         >
-                                            ธุรกรรมร้านค้า
+                                            {t('shop_transactions')}
                                         </NavLink>
                                     </div>
                                 </Form>
@@ -769,7 +771,7 @@ const ShopReportPV = () => {
                     </div>
                     <div className="datatables pagination-padding">
                         {commissionLists.length === 0 ? (
-                            <div className="text-center text-gray-500">ไม่พบข้อมูล</div>
+                            <div className="text-center text-gray-500">{t('no_data_found')}</div>
                         ) : (
                             <DataTable
                                 className="whitespace-nowrap table-hover invoice-table"
@@ -787,7 +789,7 @@ const ShopReportPV = () => {
                                 rowClassName={(item:any) =>
                                     item.isTotal ? '!bg-white font-bold text-black' : ''
                                 }
-                                paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                                paginationText={({ from, to, totalRecords }) => `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total')}`}
                             />
                         )}
                     </div>

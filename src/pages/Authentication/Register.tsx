@@ -12,12 +12,15 @@ import { Shop } from '../../types/index';
 import * as Yup from 'yup';
 import { useGlobalMutation } from '../../helpers/globalApi';
 import { url_api } from '../../services/endpoints';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+    
     useEffect(() => {
-        dispatch(setPageTitle('ลงทะเบียนร้านค้า'));
+        dispatch(setPageTitle(t('shop_registration')));
     });
 
     const [shopGroup, setShopGroup] = useState<any>([]);
@@ -44,15 +47,15 @@ const Register = () => {
     });
 
     const SubmittedForm = Yup.object().shape({
-        name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        id_shop_group: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        id_business_unit: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        id_province: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        email: Yup.string().email('กรุณาใส่อีเมลที่ถูกต้อง').required('กรุณาใส่ข้อมูลให้ครบ'),
-        password: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+        name: Yup.string().required(t('please_enter_data')),
+        id_shop_group: Yup.string().required(t('please_enter_data')),
+        id_business_unit: Yup.string().required(t('please_enter_data')),
+        id_province: Yup.string().required(t('please_enter_data')),
+        email: Yup.string().email(t('please_enter_valid_email')).required(t('please_enter_data')),
+        password: Yup.string().required(t('please_enter_data')),
         password_repeat: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'รหัสผ่านไม่ตรงกัน')
-            .required('กรุณาใส่ข้อมูลให้ครบ'),
+            .oneOf([Yup.ref('password'), null], t('password_not_match'))
+            .required(t('please_enter_data')),
     });
 
 
@@ -90,7 +93,7 @@ const Register = () => {
             const toast = Swal.mixin(toastAlert);
             toast.fire({
                 icon: 'success',
-                title: 'ลงทะเบียนร้านค้าสำเร็จ โปรดรออนุมัติจากเจ้าหน้าที่',
+                title: t('shop_registration_success'),
                 padding: '10px 20px',
             });
             navigate('/apps/shop/list');
@@ -158,8 +161,8 @@ const Register = () => {
                     <div className="relative flex flex-col justify-center rounded-md bg-white/60 backdrop-blur-lg dark:bg-black/50 px-6 lg:min-h-[758px] py-10">
                         <div className="mx-auto w-full max-w-[1080px]">
                             <div className="mb-5">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">ลงทะเบียนร้านค้า</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">กรอกข้อมูลให้ครบถ้วน</p>
+                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">{t('shop_registration')}</h1>
+                                <p className="text-base font-bold leading-normal text-white-dark">{t('fill_in_complete_information')}</p>
                             </div>
                             <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off">
                                 {(props) => (
@@ -167,69 +170,69 @@ const Register = () => {
                                         {(props) => (
                                             <Form className="space-y-5 dark:text-white ">
                                                 <div className="input-flex-row">
-                                                    <InputField label="ชื่อร้าน" name="name" type="text" />
+                                                    <InputField label={t('shop_name')} name="name" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
                                                     <SelectField
-                                                        label="กลุ่มร้าน"
+                                                        label={t('shop_group')}
                                                         id="id_shop_group"
                                                         name="id_shop_group"
                                                         options={shopGroup}
-                                                        placeholder="กรุณาเลือก"
+                                                        placeholder={t('please_select')}
                                                         onChange={(e: any) => handleChangeSelect(props, e, 'id_shop_group')}
                                                         isSearchable={false}
                                                     />
                                                     <SelectField
-                                                        label="หน่วยธุรกิจ"
+                                                        label={t('business_unit')}
                                                         id="id_business_unit"
                                                         name="id_business_unit"
                                                         options={businessUnit}
-                                                        placeholder="กรุณาเลือก"
+                                                        placeholder={t('please_select')}
                                                         onChange={(e: any) => handleChangeSelect(props, e, 'id_business_unit')}
                                                         isSearchable={false}
                                                     />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="รหัสผ่าน" name="password" type="password" />
-                                                    <InputField label="ยืนยันรหัสผ่าน" name="password_repeat" type="password" />
+                                                    <InputField label={t('password')} name="password" type="password" />
+                                                    <InputField label={t('confirm_password')} name="password_repeat" type="password" />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="ชื่อผู้ติดต่อหลัก" name="contact_name" type="text" />
-                                                    <InputField label="เบอร์โทรศัพท์ร้าน" name="phone_number" type="text" />
+                                                    <InputField label={t('main_contact_name')} name="contact_name" type="text" />
+                                                    <InputField label={t('shop_phone_number')} name="phone_number" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="Line ID" name="line_id" type="text" />
-                                                    <InputField label="Facebook ID" name="facebook_id" type="text" />
+                                                    <InputField label={t('line_id')} name="line_id" type="text" />
+                                                    <InputField label={t('facebook_id')} name="facebook_id" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="เว็บไซต์" name="website" type="text" />
-                                                    <InputField label="อีเมล" name="email" type="text" />
+                                                    <InputField label={t('website')} name="website" type="text" />
+                                                    <InputField label={t('email')} name="email" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
                                                     <InputField
-                                                        label="ที่อยู่"
+                                                        label={t('address')}
                                                         name="address"
                                                         as="textarea"
                                                         rows="1"
-                                                        placeholder="กรุณาใส่ข้อมูล"
+                                                        placeholder={t('please_enter_data')}
                                                         className="form-textarea ltr:rounded-l-none rtl:rounded-r-none resize-none"
                                                     />
                                                     <SelectField
-                                                        label="จังหวัด"
+                                                        label={t('province')}
                                                         id="id_province"
                                                         name="id_province"
                                                         options={provinces}
-                                                        placeholder="กรุณาเลือก"
+                                                        placeholder={t('please_select')}
                                                         onChange={(e: any) => handleChangeSelect(props, e, 'id_province')}
                                                         isSearchable={false}
                                                     />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="บช. ร้านค้า" name="bank_no" type="text" />
+                                                    <InputField label={t('shop_bank_account')} name="bank_no" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="Latitude" name="latitude" type="text" />
-                                                    <InputField label="Longitude" name="longitude" type="text" />
+                                                    <InputField label={t('latitude')} name="latitude" type="text" />
+                                                    <InputField label={t('longitude')} name="longitude" type="text" />
                                                 </div>
                                                 <div className="input-flex-row mb-3">
                                                     <GoogleMap
@@ -243,7 +246,7 @@ const Register = () => {
                                                     />
                                                 </div>
                                                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                                                    เพิ่ม
+                                                    {t('add')}
                                                 </button>
                                             </Form>
                                         )}
@@ -251,9 +254,9 @@ const Register = () => {
                                 )}
                             </Formik>
                             <div className="mt-7 text-center dark:text-white">
-                                มีบัญชีร้านค้าแล้วต้องการเข้าสู่ระบบ?&nbsp;
+                                {t('have_shop_account_login')}&nbsp;
                                 <Link to="/apps/login" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
-                                    ล็อกอิน
+                                    {t('login')}
                                 </Link>
                             </div>
                         </div>

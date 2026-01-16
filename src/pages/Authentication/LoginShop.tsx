@@ -10,6 +10,7 @@ import IconLockDots from '../../components/Icon/IconLockDots'
 import themeInit from '../../theme.init'
 import { useGlobalMutation } from '../../helpers/globalApi'
 import { url_api } from '../../services/endpoints'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'shop'
 
@@ -17,9 +18,10 @@ const LoginShop: React.FC = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
-    dispatch(setPageTitle('เข้าสู่ระบบ'))
+    dispatch(setPageTitle(t('login')))
   }, [dispatch])
 
   const [formData, setFormData] = useState({
@@ -66,7 +68,7 @@ const LoginShop: React.FC = () => {
           const toast = Swal.mixin(toastAlert)
           toast.fire({
             icon: 'error',
-            title: res?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง !',
+            title: res?.message ?? t('incorrect_data_try_again'),
             padding: '10px 20px',
           })
         }
@@ -75,7 +77,7 @@ const LoginShop: React.FC = () => {
         const toast = Swal.mixin(toastAlert)
         toast.fire({
           icon: 'error',
-          title: err?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง',
+          title: err?.message ?? t('incorrect_data_try_again'),
           padding: '10px 20px',
         })
       },
@@ -87,7 +89,7 @@ const LoginShop: React.FC = () => {
       if (!formData.username || !formData.password) {
         Swal.fire({
           icon: 'info',
-          title: 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน!',
+          title: t('please_enter_username_password'),
           padding: '10px 20px',
         })
         return
@@ -124,18 +126,16 @@ const LoginShop: React.FC = () => {
             <div className="w-full max-w-[440px] lg:mt-16">
               <div className="mb-10">
                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-[#002a41] md:text-4xl">
-                  ล็อกอิน
+                  {t('login')}
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>ชื่อผู้ใช้</span> 
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span> 
-                  เพื่อเข้าสู่ระบบ
+                  {t('use_username_password_login')}
                 </p>
               </div>
               <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                 <div>
                   <label htmlFor="Username">
-                    ชื่อผู้ใช้
+                    {t('username')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -144,7 +144,7 @@ const LoginShop: React.FC = () => {
                       type="text"
                       value={formData.username}
                       onChange={handleChange}
-                      placeholder="Username"
+                      placeholder={t('username')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -154,7 +154,7 @@ const LoginShop: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="Password">
-                    รหัสผ่าน
+                    {t('password')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -163,7 +163,7 @@ const LoginShop: React.FC = () => {
                       type="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="กรอกรหัสผ่าน"
+                      placeholder={t('enter_password')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -181,12 +181,12 @@ const LoginShop: React.FC = () => {
                       className={`form-checkbox checked:bg-themePrimary focus:checked:bg-themePrimary checked:hover:bg-themePrimary bg-white dark:bg-black`}
                     />
                     <span className="text-white-dark">
-                      จำรหัสผ่าน
+                      {t('remember_password')}
                     </span>
                   </label>
                 </div>
                 <button type="submit" className={`btn bg-themePrimary text-lg font-light text-white !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]`}>
-                  เข้าสู่ระบบ
+                  {t('login')}
                 </button>
               </form>
               {/* <div className="mt-7 text-center dark:text-white">

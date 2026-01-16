@@ -113,17 +113,17 @@ const CloseContract = () => {
     const { mutate: fetchContranctPaymentData ,isLoading:isFetchData} = useGlobalMutation(url_api.contractClosePreview, {
         onSuccess: (res: any) => {
             setInfo({
-                reference: res.data?.reference,
-                status:res.data?.status,
-                ins_no:res.data?.ins_no,
+                reference: res?.data?.reference,
+                status:res?.data?.status,
+                ins_no:res?.data?.ins_no,
             })
 
             if (res.data?.payment?.reference) {
                 setFormData({
                     ...formData,
-                    due_at:res.data?.due_at,
-                    ...(res.data?.payment_method == 'cash' && {
-                        bank_account_number:res.data.bank_account_number,
+                    due_at:res?.data?.due_at,
+                    ...(res?.data?.payment_method == 'cash' && {
+                        bank_account_number:res.data?.bank_account_number,
                     }),
                     id_invoice:res.data?.id_invoice,
                     id_payment:res.data?.id_payment,
@@ -148,14 +148,14 @@ const CloseContract = () => {
                     isReferenceExists: true,
                     payment_slip:res.data?.payment_slip
                 });
-                if(res.data?.payment_qr) {
-                    setPaymentQr(res.data.payment_qr)
-                    setQrCodeImage(res.data.payment_qr?.image)
-                    setExpiredate(res.data.payment_qr?.expiredate)
+                if(res?.data?.payment_qr) {
+                    setPaymentQr(res?.data.payment_qr)
+                    setQrCodeImage(res?.data.payment_qr?.image)
+                    setExpiredate(res?.data.payment_qr?.expiredate)
 
                 }
-                if(res.data?.payment?.payment_method != 'cash') {
-                     if(res.data.payment?.payment_gateway == 'tqr') {
+                if(res?.data?.payment?.payment_method != 'cash') {
+                     if(res?.data.payment?.payment_gateway == 'tqr') {
                         setMasterDataBankList([{ value: 'promptpay', label: 'Thai Qr' }]);
                     } else {
                         setMasterDataBankList([{ value: 'promptpay', label: 'Pay Solution' }]);

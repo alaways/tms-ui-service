@@ -7,11 +7,14 @@ import Dropdown from '../../components/Dropdown';
 import i18next from 'i18next';
 import IconCaretDown from '../../components/Icon/IconCaretDown';
 import IconMail from '../../components/Icon/IconMail';
+import { useTranslation } from 'react-i18next';
 
 const RecoverIdBox = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+    
     useEffect(() => {
-        dispatch(setPageTitle('Recover Id Box'));
+        dispatch(setPageTitle(t('recover_id_boxed')));
     });
     const navigate = useNavigate();
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
@@ -86,23 +89,23 @@ const RecoverIdBox = () => {
                         </div>
                         <div className="mx-auto w-full max-w-[440px]">
                             <div className="mb-7">
-                                <h1 className="mb-3 text-2xl font-bold !leading-snug dark:text-white">Password Reset</h1>
-                                <p>Enter your email to recover your ID</p>
+                                <h1 className="mb-3 text-2xl font-bold !leading-snug dark:text-white">{t('password_reset')}</h1>
+                                <p>{t('enter_email_recover_id')}</p>
                             </div>
                             <form className="space-y-5" onSubmit={submitForm}>
                                 <div>
                                     <label htmlFor="Email" className="dark:text-white">
-                                        Email
+                                        {t('email')}
                                     </label>
                                     <div className="relative text-white-dark">
-                                        <input id="Email" type="email" placeholder="Enter Email" className="form-input ps-10 placeholder:text-white-dark" />
+                                        <input id="Email" type="email" placeholder={t('enter_email')} className="form-input ps-10 placeholder:text-white-dark" />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                             <IconMail fill={true} />
                                         </span>
                                     </div>
                                 </div>
                                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                                    RECOVER
+                                    {t('recover')}
                                 </button>
                             </form>
                         </div>

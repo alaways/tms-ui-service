@@ -21,6 +21,7 @@ import InputField from '../../../components/HOC/InputField'
 import IconX from '../../../components/Icon/IconX'
 import IconPlus from '../../../components/Icon/IconPlus'
 import IconEye from '../../../components/Icon/IconEye'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 const toast = Swal.mixin(toastAlert)
@@ -29,6 +30,7 @@ const PermissionUser = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
 
@@ -44,9 +46,9 @@ const PermissionUser = () => {
   const [actionModal, setActionModal] = useState(false)
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { to: '/apps/permission/check', label: 'จัดการสิทธิ์ผู้ใช้งาน' },
-    { label: 'ผู้ใช้งาน', isCurrent: true }
+    { to: '/apps/employee/list', label: t('employee') },
+    { to: '/apps/permission/check', label: t('permission_management') },
+    { label: t('user'), isCurrent: true }
   ]
 
   if (role != 'admin' && role != 'business_unit') {
@@ -86,8 +88,8 @@ const PermissionUser = () => {
   const [formData, setFormData] = useState<any>(defaultForm)
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    price: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('please_enter_data')),
+    price: Yup.string().required(t('please_enter_data')),
   })
 
   const submitForm = useCallback((event: any) => {
@@ -104,9 +106,9 @@ const PermissionUser = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มผู้ใช้งาน'))
+    dispatch(setPageTitle(t('add_user')))
     dispatch(setSidebarActive(['employee', '/apps/permission/check']))
-  }, [])
+  }, [t])
 
   useEffect(() => {
     setTotalItems(userLists.length)
@@ -121,7 +123,7 @@ const PermissionUser = () => {
             <div className="flex items-center gap-2">
               <a className="btn btn-primary gap-2" onClick={() => setActionModal(true)}>
                 <IconPlus />
-                เพิ่มสิทธิ์ผู้ใช้งาน
+                {t('add_permission')}
               </a>
             </div>
           </div>
@@ -132,7 +134,7 @@ const PermissionUser = () => {
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('sequence'),
                   sortable: false,
                   textAlignment: 'center',
                   render: (row, index) => (
@@ -141,7 +143,7 @@ const PermissionUser = () => {
                 },
                 {
                   accessor: 'name',
-                  title: 'ผู้ใช้งาน',
+                  title: t('user'),
                   sortable: false,
                   render: (item) => (
                     <div className="flex items-center justify-start font-normal">
@@ -153,7 +155,7 @@ const PermissionUser = () => {
                 },
                 {
                   accessor: 'action',
-                  title: 'Actions',
+                  title: t('actions'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item) => (
@@ -178,7 +180,7 @@ const PermissionUser = () => {
               sortStatus={sortStatus}
               onSortStatusChange={setSortStatus}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('entries')}`
               )}
             />
           </div>
@@ -216,7 +218,7 @@ const PermissionUser = () => {
                       <IconX />
                     </button>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                      {defaultForm.action == 'add' ? 'เพิ่ม' : 'แก้ไข'}ผู้ใช้งาน
+                      {defaultForm.action == 'add' ? t('add') : t('edit')}{t('user')}
                     </div>
                     <div className="p-5">
                       <Formik
@@ -229,9 +231,9 @@ const PermissionUser = () => {
                         {(props) => (
                           <Form className="space-y-5 mb-2 dark:text-white custom-select">
                             <InputField
-                              label="ชื่อผู้ใช้งาน"
+                              label={t('username')}
                               name="name"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_data')}
                               value={defaultForm.name}
                               onChange={(e: any) => {
                                 props.setFieldValue("name", e.target.value)
@@ -239,9 +241,9 @@ const PermissionUser = () => {
                               }}
                             />
                             <InputField
-                              label="ราคา"
+                              label={t('price')}
                               name="price"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_data')}
                               value={defaultForm.price}
                               onChange={(e: any) => {
                                 let cleanedValue = e.target.value.replace(/\D/g, "");
@@ -260,7 +262,7 @@ const PermissionUser = () => {
                             />
                             <div className="flex justify-center items-center mt-5">
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {defaultForm.action == 'add' ? 'บันทึก' : 'อัพเดท'}
+                                {defaultForm.action == 'add' ? t('save') : t('update')}
                               </button>
                             </div>
                           </Form>

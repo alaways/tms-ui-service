@@ -106,7 +106,7 @@ const SettingBU = () => {
   const { mutate: fetchModelData, isLoading: isLoading } = useGlobalMutation(url_api.businessUnitGetRate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        setFormData(res.data)
+        setFormData(res?.data)
       }
     },
     onError: () => {
@@ -116,7 +116,7 @@ const SettingBU = () => {
 
   const { mutate: fetchShopData } = useGlobalMutation(url_api.shopReadyToAddBu, {
     onSuccess: (res: any) => {
-      const shopOptions = res.data.map((item: any) => ({
+      const shopOptions = res?.data?.map((item: any) => ({
         value: item.id,
         label: item.name,
       }))
@@ -126,7 +126,7 @@ const SettingBU = () => {
 
   const { mutate: buGetShop } = useGlobalMutation(url_api.buGetShop, {
     onSuccess: (res: any) => {
-      const uniqueRecords = res.data.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => t.id === item.id)).map((item: any) => item)
+      const uniqueRecords = res?.data?.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => t.id === item.id)).map((item: any) => item)
       setShopGroupShopRecords(uniqueRecords)
       setOriginalShopGroupShopRecords(uniqueRecords)
     },

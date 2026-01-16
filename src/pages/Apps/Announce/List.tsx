@@ -54,9 +54,9 @@ const List = () => {
     
     const { mutate: fetchAnnounce} = useGlobalMutation(url_api.announceFindAll, {
         onSuccess: (res: any) => {
-            if (res.statusCode == 200 && res.code == 200) {
-                setAnnouceList(res.data.list);
-                setTotalItems(res.data.total);
+            if (res?.statusCode == 200 && res?.code == 200) {
+                setAnnouceList(res?.data?.list);
+                setTotalItems(res?.data?.total);
             }
         },
         onError: () => {
@@ -67,7 +67,7 @@ const List = () => {
 
     const { mutate: createAnnounce} = useGlobalMutation(url_api.announceCreate, {
         onSuccess: (res: any) => {
-            if (res.statusCode == 200 && res.code == 200) {
+            if (res?.statusCode == 200 && res?.code == 200) {
                 showNotification(t('announce_create_success'), 'success');
                 setTimeout(() => {
                     location.reload(); 
@@ -83,7 +83,7 @@ const List = () => {
     
     const { mutate: updateAnnounce} = useGlobalMutation(url_api.announceUpdate, {
         onSuccess: (res: any) => {
-            if (res.statusCode == 200 && res.code == 200) {
+            if (res?.statusCode == 200 && res?.code == 200) {
                 showNotification(t('announce_update_success'), 'success');
                 setTimeout(() => {
                     location.reload(); 
@@ -97,7 +97,7 @@ const List = () => {
 
     const { mutate: deleteAnnounce} = useGlobalMutation(url_api.announceDelete, {
         onSuccess: (res: any) => {
-            if (res.statusCode == 200 && res.code == 200) {
+            if (res?.statusCode == 200 && res?.code == 200) {
                 showNotification(t('announce_delete_success'), 'success');
                 setTimeout(() => {
                     location.reload(); 
@@ -112,7 +112,7 @@ const List = () => {
     const { mutate: fetchBusinessUnit } = useGlobalMutation(url_api.contractFilter, {
         onSuccess: (res: any) => {
             setBusinessUnitList(
-                res.data.business_unit.map((item: any) => ({
+                res?.data?.business_unit.map((item: any) => ({
                     value: item.id,
                     label: item.name,
                 }))
@@ -127,7 +127,7 @@ const List = () => {
     const { mutate: fetchShopData } = useGlobalMutation(url_api.shopFindAll, {
         onSuccess: (res: any) => {
             setShopList(
-                res.data.list.map((item: any) => ({
+                res?.data?.list.map((item: any) => ({
                     value: item.id,
                     label: item.name,
                 }))

@@ -63,9 +63,9 @@ export const convertDateClientToDb = (date: any) => {
     return getDateEN(date)
   }
   if (typeof date === 'object' && date !== null && date.length === 1) {
-    const day = String(date[0].getDate()).padStart(2, '0')
-    const month = String(date[0].getMonth() + 1).padStart(2, '0')
-    const year = parseInt(date[0].getFullYear())
+    const day = String(date?.[0].getDate()).padStart(2, '0')
+    const month = String(date?.[0].getMonth() + 1).padStart(2, '0')
+    const year = parseInt(date?.[0].getFullYear())
     return `${year}-${month}-${day}`
   }
   return ''

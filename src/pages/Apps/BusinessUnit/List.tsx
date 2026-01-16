@@ -65,8 +65,8 @@ const List = () => {
 
   const { mutate: fetchBusinessUnitData, isLoading: isBusinessUnitLoading } = useBusinessUnitFindAllMutation({
     onSuccess: (res: any) => {
-      setitemList(res.data.list)
-      setTotalItems(res.data.total)
+      setitemList(res?.data?.list)
+      setTotalItems(res?.data?.total)
     },
     onError: () => {
       showErrorMessage('Failed to fetch business units')

@@ -7,13 +7,15 @@ import IconPrinter from '../../../components/Icon/IconPrinter';
 import IconDownload from '../../../components/Icon/IconDownload';
 import IconEdit from '../../../components/Icon/IconEdit';
 import IconPlus from '../../../components/Icon/IconPlus';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin'
 
 const Preview = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     useEffect(() => {
-        dispatch(setPageTitle('Invoice Preview'));
+        dispatch(setPageTitle(t('invoice_preview')));
     });
     const exportTable = () => {
         window.print();
@@ -80,32 +82,32 @@ const Preview = () => {
             <div className="flex items-center lg:justify-end justify-center flex-wrap gap-4 mb-6">
                 <button type="button" className="btn btn-info gap-2">
                     <IconSend />
-                    Send Invoice
+                    {t('send_invoice')}
                 </button>
 
                 <button type="button" className="btn btn-primary gap-2" onClick={() => exportTable()}>
                     <IconPrinter />
-                    Print
+                    {t('print')}
                 </button>
 
                 <button type="button" className="btn btn-success gap-2">
                     <IconDownload />
-                    Download
+                    {t('download')}
                 </button>
 
                 <Link to="/apps/invoice/add" className="btn btn-secondary gap-2">
                     <IconPlus />
-                    Create
+                    {t('create')}
                 </Link>
 
                 <Link to="/apps/invoice/edit" className="btn btn-warning gap-2">
                     <IconEdit />
-                    Edit
+                    {t('edit')}
                 </Link>
             </div>
             <div className="panel">
                 <div className="flex justify-between flex-wrap gap-4 px-4">
-                    <div className="text-2xl font-semibold uppercase">Invoice</div>
+                    <div className="text-2xl font-semibold uppercase">{t('invoice')}</div>
                     <div className="shrink-0">
                         <img src="/assets/images/logo.svg" alt="img" className="w-14 ltr:ml-auto rtl:mr-auto" />
                     </div>
@@ -122,7 +124,7 @@ const Preview = () => {
                 <div className="flex justify-between lg:flex-row flex-col gap-6 flex-wrap">
                     <div className="flex-1">
                         <div className="space-y-1 text-white-dark">
-                            <div>Issue For:</div>
+                            <div>{t('issue_for')}:</div>
                             <div className="text-black dark:text-white font-semibold">John Doe</div>
                             <div>405 Mulberry Rd. Mc Grady, NC, 28649</div>
                             <div>redq@company.com</div>
@@ -132,41 +134,41 @@ const Preview = () => {
                     <div className="flex justify-between sm:flex-row flex-col gap-6 lg:w-2/3">
                         <div className="xl:1/3 lg:w-2/5 sm:w-1/2">
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">Invoice :</div>
+                                <div className="text-white-dark">{t('invoice')} :</div>
                                 <div>#8701</div>
                             </div>
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">Issue Date :</div>
+                                <div className="text-white-dark">{t('issue_date')} :</div>
                                 <div>13 Sep 2022</div>
                             </div>
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">Order ID :</div>
+                                <div className="text-white-dark">{t('order_id')} :</div>
                                 <div>#OD-85794</div>
                             </div>
                             <div className="flex items-center w-full justify-between">
-                                <div className="text-white-dark">Shipment ID :</div>
+                                <div className="text-white-dark">{t('shipment_id')} :</div>
                                 <div>#SHP-8594</div>
                             </div>
                         </div>
                         <div className="xl:1/3 lg:w-2/5 sm:w-1/2">
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">Bank Name:</div>
+                                <div className="text-white-dark">{t('bank_name')}:</div>
                                 <div className="whitespace-nowrap">Bank Of America</div>
                             </div>
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">Account Number:</div>
+                                <div className="text-white-dark">{t('account_number')}:</div>
                                 <div>1234567890</div>
                             </div>
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">SWIFT Code:</div>
+                                <div className="text-white-dark">{t('swift_number')}:</div>
                                 <div>S58K796</div>
                             </div>
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">IBAN:</div>
+                                <div className="text-white-dark">{t('iban_number')}:</div>
                                 <div>L5698445485</div>
                             </div>
                             <div className="flex items-center w-full justify-between mb-2">
-                                <div className="text-white-dark">Country:</div>
+                                <div className="text-white-dark">{t('country')}:</div>
                                 <div>United States</div>
                             </div>
                         </div>
@@ -204,23 +206,23 @@ const Preview = () => {
                     <div></div>
                     <div className="ltr:text-right rtl:text-left space-y-2">
                         <div className="flex items-center">
-                            <div className="flex-1">Subtotal</div>
+                            <div className="flex-1">{t('subtotal')}</div>
                             <div className="w-[37%]">$3255</div>
                         </div>
                         <div className="flex items-center">
-                            <div className="flex-1">Tax</div>
+                            <div className="flex-1">{t('tax')}</div>
                             <div className="w-[37%]">$700</div>
                         </div>
                         <div className="flex items-center">
-                            <div className="flex-1">Shipping Rate</div>
+                            <div className="flex-1">{t('shipping_rate')}</div>
                             <div className="w-[37%]">$0</div>
                         </div>
                         <div className="flex items-center">
-                            <div className="flex-1">Discount</div>
+                            <div className="flex-1">{t('discount')}</div>
                             <div className="w-[37%]">$10</div>
                         </div>
                         <div className="flex items-center font-semibold text-lg">
-                            <div className="flex-1">Grand Total</div>
+                            <div className="flex-1">{t('grand_total')}</div>
                             <div className="w-[37%]">$3945</div>
                         </div>
                     </div>

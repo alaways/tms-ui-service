@@ -9,13 +9,15 @@ import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import IconPlus from '../../../components/Icon/IconPlus';
 import IconEdit from '../../../components/Icon/IconEdit';
 import IconEye from '../../../components/Icon/IconEye';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin'
 
 const List = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     useEffect(() => {
-        dispatch(setPageTitle('Invoice List'));
+        dispatch(setPageTitle(t('invoice_list')));
     });
     const [items, setItems] = useState([
         {
@@ -216,15 +218,15 @@ const List = () => {
                     <div className="flex items-center gap-2">
                         <button type="button" className="btn btn-danger gap-2" onClick={() => deleteRow()}>
                             <IconTrashLines />
-                            Delete
+                            {t('delete')}
                         </button>
                         <Link to="/apps/invoice/add" className="btn btn-primary gap-2">
                             <IconPlus />
-                            Add New
+                            {t('add')}
                         </Link>
                     </div>
                     <div className="ltr:ml-auto rtl:mr-auto">
-                        <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                        <input type="text" className="form-input w-auto" placeholder={t('search')} value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
                 </div>
 

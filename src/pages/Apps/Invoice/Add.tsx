@@ -7,13 +7,15 @@ import IconDownload from '../../../components/Icon/IconDownload';
 import IconEye from '../../../components/Icon/IconEye';
 import IconSend from '../../../components/Icon/IconSend';
 import IconSave from '../../../components/Icon/IconSave';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin'
 
 const Add = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     useEffect(() => {
-        dispatch(setPageTitle('Invoice Add'));
+        dispatch(setPageTitle(t('invoice_add')));
     });
     const currencyList = ['USD - US Dollar', 'GBP - British Pound', 'IDR - Indonesian Rupiah', 'INR - Indian Rupee', 'BRL - Brazilian Real', 'EUR - Germany (Euro)', 'TRY - Turkish Lira'];
 
@@ -68,25 +70,25 @@ const Add = () => {
                     <div className="lg:w-1/2 w-full lg:max-w-fit">
                         <div className="flex items-center">
                             <label htmlFor="number" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Invoice Number
+                                {t('invoice_number')}
                             </label>
                             <input id="number" type="text" name="inv-num" className="form-input lg:w-[250px] w-2/3" placeholder="#8801" />
                         </div>
                         <div className="flex items-center mt-4">
                             <label htmlFor="invoiceLabel" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Invoice Label
+                                {t('invoice_label')}
                             </label>
-                            <input id="invoiceLabel" type="text" name="inv-label" className="form-input lg:w-[250px] w-2/3" placeholder="Enter Invoice Label" />
+                            <input id="invoiceLabel" type="text" name="inv-label" className="form-input lg:w-[250px] w-2/3" placeholder={t('invoice_label')} />
                         </div>
                         <div className="flex items-center mt-4">
                             <label htmlFor="startDate" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Invoice Date
+                                {t('invoice_date')}
                             </label>
                             <input id="startDate" type="date" name="inv-date" className="form-input lg:w-[250px] w-2/3" />
                         </div>
                         <div className="flex items-center mt-4">
                             <label htmlFor="dueDate" className="flex-1 ltr:mr-2 rtl:ml-2 mb-0">
-                                Due Date
+                                {t('due_date')}
                             </label>
                             <input id="dueDate" type="date" name="due-date" className="form-input lg:w-[250px] w-2/3" />
                         </div>
@@ -96,64 +98,64 @@ const Add = () => {
                 <div className="mt-8 px-4">
                     <div className="flex justify-between lg:flex-row flex-col">
                         <div className="lg:w-1/2 w-full ltr:lg:mr-6 rtl:lg:ml-6 mb-6">
-                            <div className="text-lg">Bill To :-</div>
+                            <div className="text-lg">{t('bill_to')} :-</div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Name
+                                    {t('name')}
                                 </label>
-                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" placeholder="Enter Name" />
+                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" placeholder={t('name')} />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-email" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Email
+                                    {t('email')}
                                 </label>
-                                <input id="reciever-email" type="email" name="reciever-email" className="form-input flex-1" placeholder="Enter Email" />
+                                <input id="reciever-email" type="email" name="reciever-email" className="form-input flex-1" placeholder={t('email')} />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-address" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Address
+                                    {t('address')}
                                 </label>
-                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" placeholder="Enter Address" />
+                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" placeholder={t('address')} />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-number" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Phone Number
+                                    {t('phone_number')}
                                 </label>
-                                <input id="reciever-number" type="text" name="reciever-number" className="form-input flex-1" placeholder="Enter Phone number" />
+                                <input id="reciever-number" type="text" name="reciever-number" className="form-input flex-1" placeholder={t('phone_number')} />
                             </div>
                         </div>
                         <div className="lg:w-1/2 w-full">
-                            <div className="text-lg">Payment Details:</div>
+                            <div className="text-lg">{t('payment_details')}:</div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="acno" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Account Number
+                                    {t('account_number')}
                                 </label>
-                                <input id="acno" type="text" name="acno" className="form-input flex-1" placeholder="Enter Account Number" />
+                                <input id="acno" type="text" name="acno" className="form-input flex-1" placeholder={t('account_number')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="bank-name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Bank Name
+                                    {t('bank_name')}
                                 </label>
-                                <input id="bank-name" type="text" name="bank-name" className="form-input flex-1" placeholder="Enter Bank Name" />
+                                <input id="bank-name" type="text" name="bank-name" className="form-input flex-1" placeholder={t('bank_name')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="swift-code" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    SWIFT Number
+                                    {t('swift_number')}
                                 </label>
-                                <input id="swift-code" type="text" name="swift-code" className="form-input flex-1" placeholder="Enter SWIFT Number" />
+                                <input id="swift-code" type="text" name="swift-code" className="form-input flex-1" placeholder={t('swift_number')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="iban-code" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    IBAN Number
+                                    {t('iban_number')}
                                 </label>
-                                <input id="iban-code" type="text" name="iban-code" className="form-input flex-1" placeholder="Enter IBAN Number" />
+                                <input id="iban-code" type="text" name="iban-code" className="form-input flex-1" placeholder={t('iban_number')} />
                             </div>
                             <div className="flex items-center mt-4">
                                 <label htmlFor="country" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0">
-                                    Country
+                                    {t('country')}
                                 </label>
                                 <select id="country" name="country" className="form-select flex-1">
-                                    <option value="">Choose Country</option>
+                                    <option value="">{t('choose_country')}</option>
                                     <option value="United States">United States</option>
                                     <option value="United Kingdom">United Kingdom</option>
                                     <option value="Canada">Canada</option>
@@ -354,10 +356,10 @@ const Add = () => {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Item</th>
-                                    <th className="w-1">Quantity</th>
-                                    <th className="w-1">Price</th>
-                                    <th>Total</th>
+                                    <th>{t('item')}</th>
+                                    <th className="w-1">{t('quantity')}</th>
+                                    <th className="w-1">{t('price')}</th>
+                                    <th>{t('total')}</th>
                                     <th className="w-1"></th>
                                 </tr>
                             </thead>
@@ -365,7 +367,7 @@ const Add = () => {
                                 {items.length <= 0 && (
                                     <tr>
                                         <td colSpan={5} className="!text-center font-semibold">
-                                            No Item Available
+                                            {t('no_item_available')}
                                         </td>
                                     </tr>
                                 )}
@@ -373,14 +375,14 @@ const Add = () => {
                                     return (
                                         <tr className="align-top" key={item.id}>
                                             <td>
-                                                <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item.title} />
-                                                <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea>
+                                                <input type="text" className="form-input min-w-[200px]" placeholder={t('enter_item_name')} defaultValue={item.title} />
+                                                <textarea className="form-textarea mt-4" placeholder={t('enter_description')} defaultValue={item.description}></textarea>
                                             </td>
                                             <td>
                                                 <input
                                                     type="number"
                                                     className="form-input w-32"
-                                                    placeholder="Quantity"
+                                                    placeholder={t('quantity')}
                                                     min={0}
                                                     defaultValue={item.quantity}
                                                     onChange={(e) => changeQuantityPrice('quantity', e.target.value, item.id)}
@@ -390,7 +392,7 @@ const Add = () => {
                                                 <input
                                                     type="number"
                                                     className="form-input w-32"
-                                                    placeholder="Price"
+                                                    placeholder={t('price')}
                                                     min={0}
                                                     defaultValue={item.amount}
                                                     onChange={(e) => changeQuantityPrice('price', e.target.value, item.id)}
@@ -411,41 +413,41 @@ const Add = () => {
                     <div className="flex justify-between sm:flex-row flex-col mt-6 px-4">
                         <div className="sm:mb-0 mb-6">
                             <button type="button" className="btn btn-primary" onClick={() => addItem()}>
-                                Add Item
+                                {t('add_item')}
                             </button>
                         </div>
                         <div className="sm:w-2/5">
                             <div className="flex items-center justify-between">
-                                <div>Subtotal</div>
+                                <div>{t('subtotal')}</div>
                                 <div>$0.00</div>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <div>Tax(%)</div>
+                                <div>{t('tax')}(%)</div>
                                 <div>0%</div>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <div>Shipping Rate($)</div>
+                                <div>{t('shipping_rate')}($)</div>
                                 <div>$0.00</div>
                             </div>
                             <div className="flex items-center justify-between mt-4">
-                                <div>Discount(%)</div>
+                                <div>{t('discount')}(%)</div>
                                 <div>0%</div>
                             </div>
                             <div className="flex items-center justify-between mt-4 font-semibold">
-                                <div>Total</div>
+                                <div>{t('total')}</div>
                                 <div>$0.00</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="mt-8 px-4">
-                    <label htmlFor="notes">Notes</label>
-                    <textarea id="notes" name="notes" className="form-textarea min-h-[130px]" placeholder="Notes...."></textarea>
+                    <label htmlFor="notes">{t('notes')}</label>
+                    <textarea id="notes" name="notes" className="form-textarea min-h-[130px]" placeholder={t('notes')}></textarea>
                 </div>
             </div>
             <div className="xl:w-96 w-full xl:mt-0 mt-6">
                 <div className="panel mb-5">
-                    <label htmlFor="currency">Currency</label>
+                    <label htmlFor="currency">{t('currency')}</label>
                     <select id="currency" name="currency" className="form-select">
                         {currencyList.map((i) => (
                             <option key={i}>{i}</option>
@@ -454,28 +456,28 @@ const Add = () => {
                     <div className="mt-4">
                         <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
                             <div>
-                                <label htmlFor="tax">Tax(%) </label>
-                                <input id="tax" type="number" name="tax" className="form-input" defaultValue={0} placeholder="Tax" />
+                                <label htmlFor="tax">{t('tax')}(%) </label>
+                                <input id="tax" type="number" name="tax" className="form-input" defaultValue={0} placeholder={t('tax')} />
                             </div>
                             <div>
-                                <label htmlFor="discount">Discount(%) </label>
-                                <input id="discount" type="number" name="discount" className="form-input" defaultValue={0} placeholder="Discount" />
+                                <label htmlFor="discount">{t('discount')}(%) </label>
+                                <input id="discount" type="number" name="discount" className="form-input" defaultValue={0} placeholder={t('discount')} />
                             </div>
                         </div>
                     </div>
                     <div className="mt-4">
                         <div>
-                            <label htmlFor="shipping-charge">Shipping Charge($) </label>
-                            <input id="shipping-charge" type="number" name="shipping-charge" className="form-input" defaultValue={0} placeholder="Shipping Charge" />
+                            <label htmlFor="shipping-charge">{t('shipping_rate')}($) </label>
+                            <input id="shipping-charge" type="number" name="shipping-charge" className="form-input" defaultValue={0} placeholder={t('shipping_rate')} />
                         </div>
                     </div>
                     <div className="mt-4">
-                        <label htmlFor="payment-method">Accept Payment Via</label>
+                        <label htmlFor="payment-method">{t('accept_payment_via')}</label>
                         <select id="payment-method" name="payment-method" className="form-select">
-                            <option value=" ">Select Payment</option>
-                            <option value="bank">Bank Account</option>
-                            <option value="paypal">Paypal</option>
-                            <option value="upi">UPI Transfer</option>
+                            <option value=" ">{t('select_payment')}</option>
+                            <option value="bank">{t('bank_account')}</option>
+                            <option value="paypal">{t('paypal')}</option>
+                            <option value="upi">{t('upi_transfer')}</option>
                         </select>
                     </div>
                 </div>
@@ -483,22 +485,22 @@ const Add = () => {
                     <div className="grid xl:grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
                         <button type="button" className="btn btn-success w-full gap-2">
                             <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Save
+                            {t('save')}
                         </button>
 
                         <button type="button" className="btn btn-info w-full gap-2">
                             <IconSend className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Send Invoice
+                            {t('send_invoice')}
                         </button>
 
                         <Link to="/apps/invoice/preview" className="btn btn-primary w-full gap-2">
                             <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Preview
+                            {t('preview')}
                         </Link>
 
                         <button type="button" className="btn btn-secondary w-full gap-2">
                             <IconDownload className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Download
+                            {t('download')}
                         </button>
                     </div>
                 </div>

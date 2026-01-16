@@ -73,7 +73,7 @@ const Add = () => {
 
   const { mutate: businessUnitCreate, isLoading: isLoadingCreate  } = useGlobalMutation(url_api.businessUnitCreate, {
         onSuccess: async (res: any, event: any) => {
-      if (res.statusCode === 200 || res.code === 200) {
+      if (res?.statusCode === 200 || res?.code === 200) {
         toast.fire({
           icon: 'success',
           title: t('save_success'),                     // 已有 key
@@ -100,7 +100,7 @@ const Add = () => {
 
   const { mutate: getDistrict } = useDistrictMutation({
     onSuccess: (res: any, variables: any) => {
-      const mapList = res.data.map((item: any) => ({
+      const mapList = res?.data?.map((item: any) => ({
         value: item.id,
         label: item.name_th,
       }))
@@ -118,7 +118,7 @@ const Add = () => {
   // TODO: global mutate
   const { mutate: getSubDistrict } = useSubDistrictMutation({
     onSuccess: (res: any, variables: any) => {
-      const mapList = res.data.map((item: any) => ({
+      const mapList = res?.data?.map((item: any) => ({
         value: item.id,
         label: item.name_th,
         zipCode: item.zip_code,

@@ -13,11 +13,14 @@ import IconInstagram from '../../components/Icon/IconInstagram';
 import IconFacebookCircle from '../../components/Icon/IconFacebookCircle';
 import IconTwitter from '../../components/Icon/IconTwitter';
 import IconGoogle from '../../components/Icon/IconGoogle';
+import { useTranslation } from 'react-i18next';
 
 const RegisterBoxed = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
+    
     useEffect(() => {
-        dispatch(setPageTitle('Register Boxed'));
+        dispatch(setPageTitle(t('register_boxed')));
     });
     const navigate = useNavigate();
     const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
@@ -93,32 +96,32 @@ const RegisterBoxed = () => {
                         </div>
                         <div className="mx-auto w-full max-w-[440px]">
                             <div className="mb-10">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign Up</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to register</p>
+                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">{t('sign_up')}</h1>
+                                <p className="text-base font-bold leading-normal text-white-dark">{t('enter_email_password_register')}</p>
                             </div>
                             <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                                 <div>
-                                    <label htmlFor="Name">Name</label>
+                                    <label htmlFor="Name">{t('name')}</label>
                                     <div className="relative text-white-dark">
-                                        <input id="Name" type="text" placeholder="Enter Name" className="form-input ps-10 placeholder:text-white-dark" />
+                                        <input id="Name" type="text" placeholder={t('enter_name')} className="form-input ps-10 placeholder:text-white-dark" />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                             <IconUser fill={true} />
                                         </span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="Email">Email</label>
+                                    <label htmlFor="Email">{t('email')}</label>
                                     <div className="relative text-white-dark">
-                                        <input id="Email" type="email" placeholder="Enter Email" className="form-input ps-10 placeholder:text-white-dark" />
+                                        <input id="Email" type="email" placeholder={t('enter_email')} className="form-input ps-10 placeholder:text-white-dark" />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                             <IconMail fill={true} />
                                         </span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="Password">Password</label>
+                                    <label htmlFor="Password">{t('password')}</label>
                                     <div className="relative text-white-dark">
-                                        <input id="Password" type="password" placeholder="Enter Password" className="form-input ps-10 placeholder:text-white-dark" />
+                                        <input id="Password" type="password" placeholder={t('enter_password')} className="form-input ps-10 placeholder:text-white-dark" />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                             <IconLockDots fill={true} />
                                         </span>
@@ -127,16 +130,16 @@ const RegisterBoxed = () => {
                                 <div>
                                     <label className="flex cursor-pointer items-center">
                                         <input type="checkbox" className="form-checkbox bg-white dark:bg-black" />
-                                        <span className="text-white-dark">Subscribe to weekly newsletter</span>
+                                        <span className="text-white-dark">{t('subscribe_newsletter')}</span>
                                     </label>
                                 </div>
                                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                                    Sign Up
+                                    {t('sign_up')}
                                 </button>
                             </form>
                             <div className="relative my-7 text-center md:mb-9">
                                 <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
-                                <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">or</span>
+                                <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">{t('or')}</span>
                             </div>
                             <div className="mb-10 md:mb-[60px]">
                                 <ul className="flex justify-center gap-3.5 text-white">
@@ -179,9 +182,9 @@ const RegisterBoxed = () => {
                                 </ul>
                             </div>
                             <div className="text-center dark:text-white">
-                                Already have an account ?&nbsp;
+                                {t('already_have_account')}&nbsp;
                                 <Link to="/auth/boxed-signin" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
-                                    SIGN IN
+                                    {t('sign_in')}
                                 </Link>
                             </div>
                         </div>

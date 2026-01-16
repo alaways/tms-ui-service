@@ -8,20 +8,22 @@ import { url_api } from '../../../services/endpoints';
 import IconInfoCircle from '../../../components/Icon/IconInfoCircle';
 import { useGlobalMutation } from '../../../helpers/globalApi';
 import themeConfig from '../../../theme.config';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin';
 
 const List = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const storedUser = localStorage.getItem(mode);
     const role = storedUser ? JSON.parse(storedUser).role : null;
     const id_shop = storedUser ? JSON.parse(storedUser).id_shop : null;
 
     useEffect(() => {
-        dispatch(setPageTitle('การแจ้งเตือน'));
-    }, [dispatch]);
+        dispatch(setPageTitle(t('notifications_title')));
+    }, [dispatch, t]);
 
     const [notifications, setNotifications] = useState([]);
     const [newNotificationsCount, setNewNotificationsCount] = useState(0);
@@ -37,7 +39,7 @@ const List = () => {
 
     const { mutate: markNotificationAsRead } = useGlobalMutation(url_api.readNotify, {
         onSuccess: (res: any) => {
-            setReadNotifications((prevReadNotifications) => [...prevReadNotifications, res.data.notificationId]);
+            setReadNotifications((prevReadNotifications) => [...prevReadNotifications, res?.data?.notificationId]);
             setNewNotificationsCount((prevCount) => prevCount - 1);
         },
         onError: (err: any) => {
@@ -103,18 +105,18 @@ const List = () => {
             const diffInMonths = Math.floor(diffInDays / 30);
 
             if (diffInMinutes < 60) {
-                return `${diffInMinutes} นาทีที่ผ่านมา`;
+                return `${diffInMinutes} ${t('minutes_ago')}`;
             } else if (diffInHours < 24) {
-                return `${diffInHours} ชั่วโมงที่ผ่านมา`;
+                return `${diffInHours} ${t('hours_ago')}`;
             } else if (diffInDays < 7) {
-                return `${diffInDays} วันที่ผ่านมา`;
+                return `${diffInDays} ${t('days_ago')}`;
             } else if (diffInWeeks < 4) {
-                return `${diffInWeeks} สัปดาห์ที่ผ่านมา`;
+                return `${diffInWeeks} ${t('weeks_ago')}`;
             } else {
-                return `${diffInMonths} เดือนที่ผ่านมา`;
+                return `${diffInMonths} ${t('months_ago')}`;
             }
         } else {
-            return "1 นาทีที่ผ่านมา";
+            return `1 ${t('minutes_ago')}`;
         }
     };
 
@@ -129,7 +131,7 @@ const List = () => {
             <div className="panel px-0 ">
                 <div className="mb-4.5 px-5 md:items-center md:flex-row flex-col gap-5">
                     <div className={`notification-header px-5 py-4 flex items-center justify-between bg-themePrimary text-white`}>
-                        <h4 className="text-lg font-bold">การแจ้งเตือน</h4>
+                        <h4 className="text-lg font-bold">{t('notifications_title')}</h4>
                         <div className="notification-tabs flex gap-4">
                             {/* Tabs for filtering notifications can be added here */}
                         </div>
@@ -187,7 +189,7 @@ const List = () => {
                             <div className="flex items-center justify-center py-8">
                                 <div className="flex flex-col items-center">
                                     <IconInfoCircle fill={true} className="w-10 h-10 text-primary mb-4" />
-                                    <p className="text-lg text-center">ไม่พบข้อมูล</p>
+                                    <p className="text-lg text-center">{t('no_data_found')}</p>
                                 </div>
                             </div>
                         )}
@@ -195,7 +197,7 @@ const List = () => {
                     <div className="flex justify-center mt-4 p-4">
                         {hasMore && (
                             <button className="btn btn-primary" onClick={loadMoreNotifications} disabled={loading}>
-                                {loading ? 'กำลังโหลด...' : 'ดูการแจ้งเตือนก่อนหน้า'}
+                                {loading ? t('loading') : t('view_previous_notifications')}
                             </button>
                         )}
                     </div>
