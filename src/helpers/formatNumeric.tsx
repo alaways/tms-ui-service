@@ -27,48 +27,48 @@ export const numberWithCommas = (value: any, decimal: number = 2): string => {
   value = formatNumber(value).toString()
   var pattern = /(-?\d+)(\d{3})/
   while (pattern.test(value))
-    value = value.replace(pattern, "$1,$2")
+    value = value?.replace(pattern, "$1,$2")
   return value
 }
 
 export const formatIDNumber = (value: any): string => {
   const cleaned = value?.replace(/\D/g, '')
-  if (cleaned.length < 10) {
+  if (cleaned?.length < 10) {
     return String(value).padStart(13, '0').replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, '$1-$2-$3-$4-$5')
   }
-  if (cleaned.length === 13) {
-    return cleaned.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, '$1-$2-$3-$4-$5')
-  } else if (cleaned.length === 12) {
-    return cleaned.replace(/(\d{1})(\d{4})(\d{5})(\d{2})/, '$1-$2-$3-$4-x')
-  } else if (cleaned.length === 11) {
-    return cleaned.replace(/(\d{1})(\d{4})(\d{5})(\d{1})/, '$1-$2-$3-$4x-x')
-  } else if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{3})(\d{7})(\d{1})/, '$1-$2-$3')
+  if (cleaned?.length === 13) {
+    return cleaned?.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, '$1-$2-$3-$4-$5')
+  } else if (cleaned?.length === 12) {
+    return cleaned?.replace(/(\d{1})(\d{4})(\d{5})(\d{2})/, '$1-$2-$3-$4-x')
+  } else if (cleaned?.length === 11) {
+    return cleaned?.replace(/(\d{1})(\d{4})(\d{5})(\d{1})/, '$1-$2-$3-$4x-x')
+  } else if (cleaned?.length === 10) {
+    return cleaned?.replace(/(\d{3})(\d{7})(\d{1})/, '$1-$2-$3')
   }
   return value
 }
 
 export const formatPhoneNumber = (value: any): string => {
-  const cleaned = value.replace(/\D/g, '')
-  if (cleaned.length < 9) {
+  const cleaned = value?.replace(/\D/g, '')
+  if (cleaned?.length < 9) {
     return String(value).padStart(10, '0').replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
   }
-  if (cleaned.length > 10) {
+  if (cleaned?.length > 10) {
     value = value.substring(0, 10)
     return String(value).replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
   }
-  if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
-  } else if (cleaned.length === 9) {
-    return cleaned.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3')
+  if (cleaned?.length === 10) {
+    return cleaned?.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
+  } else if (cleaned?.length === 9) {
+    return cleaned?.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3')
   }
   return value
 }
 
 export const formatBankAccountNumber = (value: string): string => {
   const cleaned = value.replace(/\D/g, '')
-  if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{3})(\d{1})(\d{5})(\d{1})/, '$1-$2-$3-$4')
+  if (cleaned?.length === 10) {
+    return cleaned?.replace(/(\d{3})(\d{1})(\d{5})(\d{1})/, '$1-$2-$3-$4')
   }
   return value
 }

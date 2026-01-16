@@ -28,10 +28,12 @@ import List from './CreditCustomer/List'
 import ListNoteCustomer from './NoteCustomer/List'
 import themeConfig from '../../../theme.config'
 import CameraOCR from '../../../components/CameraOCR'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const Edit = () => {
+  const { t } = useTranslation()
   const acc = JSON.parse(localStorage.getItem(mode) ?? '{}')?.acc
   const { id } = useParams()
   const creditLevelTypes = useSelector((state: IRootState) => state.dataStore.credit_level)
@@ -41,7 +43,7 @@ const Edit = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(setPageTitle('ข้อมูลลูกค้า'))
+    dispatch(setPageTitle(t('customer_info')))
     dispatch(setSidebarActive(['customer', '/apps/customer/list']))
   })
 
@@ -54,8 +56,8 @@ const Edit = () => {
   const [installmentsData,setInstallmentsData] = useState([])
 
   const breadcrumbItems = [
-    { to: '/apps/customer/list', label: 'ลูกค้า' },
-    { label: pageAction ? 'ข้อมูล' : 'แก้ไข', isCurrent: true },
+    { to: '/apps/customer/list', label: t('customer') },
+    { label: pageAction ? t('info') : t('edit'), isCurrent: true },
   ]
 
   // shop - only view
@@ -219,7 +221,7 @@ const Edit = () => {
     onError: (error: any) => {
       toast.fire({
         icon: 'warning',
-        title: 'ไม่สามารถอ่านค่ารูปบัตรประชาชนได้',
+        title: t('cannot_read_citizen_id'),
         padding: '10px 20px',
       })
     }
@@ -284,7 +286,7 @@ const Edit = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกสำเร็จ',
+          title: t('save_success'),
           padding: '10px 20px',
         })
         setTimeout(() => {
@@ -306,7 +308,7 @@ const Edit = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกระดับเครดิต (ร้านค้า)สำเร็จ',
+          title: t('save_credit_level_shop_success'),
           padding: '10px 20px',
         })
       } else {
@@ -353,7 +355,7 @@ const Edit = () => {
           if (event.citizen_image_url === '' || event.citizen_image_url === null) {
             toast.fire({
               icon: 'warning',
-              title: 'ไม่พบข้อมูลรูปบัตรประชาชน',
+              title: t('citizen_id_not_found'),
               padding: '10px 20px',
             })
             return
@@ -366,7 +368,7 @@ const Edit = () => {
           if (event.verification_image_url === '' || event.verification_image_url === null) {
             toast.fire({
               icon: 'warning',
-              title: 'ไม่พบข้อมูลรูปภาพยืนยันบุคคล',
+              title: t('verification_image_not_found'),
               padding: '10px 20px',
             })
             return
@@ -469,24 +471,24 @@ const Edit = () => {
   }
 
   const SubmittedForm = Yup.object().shape({
-    title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    phone_number: Yup.string().length(10, 'กรุณาใส่ข้อมูลให้ครบ 10 เลข'),
-    citizen_id: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').length(13, 'กรุณาใส่ข้อมูลให้ครบ 13 หลัก'),
-    email: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').matches(/^[A-Za-z0-9@._]+$/,'กรุณาใช้ตัวอักษรภาษาอังกฤษ ตัวเลข เครื่องหมายมหัพภาค(.) _ และ @ เท่านั้น').email('กรุณาใส่อีเมลที่ถูกต้อง'),
-    address: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_address: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_address: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    // credit_level: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+    title: Yup.string().required(t('please_fill_all_fields')),
+    name: Yup.string().required(t('please_fill_all_fields')),
+    phone_number: Yup.string().length(10, t('phone_10_digits')),
+    citizen_id: Yup.string().required(t('please_fill_all_fields')).length(13, t('citizen_id_13_digits')),
+    email: Yup.string().required(t('please_fill_all_fields')).matches(/^[A-Za-z0-9@._]+$/,t('email_english_only')).email(t('invalid_email')),
+    address: Yup.string().required(t('please_fill_all_fields')),
+    id_province: Yup.string().nullable().required(t('please_fill_all_fields')),
+    id_district: Yup.string().nullable().required(t('please_fill_all_fields')),
+    id_subdistrict: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_address: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_id_province: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_id_district: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_id_subdistrict: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_address: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_id_province: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_id_district: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_id_subdistrict: Yup.string().nullable().required(t('please_fill_all_fields')),
+    // credit_level: Yup.string().nullable().required(t('please_fill_all_fields')),
   })
 
   const personalContent = (props: any) => {
@@ -495,7 +497,7 @@ const Edit = () => {
         <div className="input-flex-row">
           <div className="check-container">
             <InputField
-              label="รหัสบัตรประชาชน"
+              label={t('citizen_id_label')}
               name="citizen_id"
               type="text"
               disabled={pageAction}
@@ -510,23 +512,23 @@ const Edit = () => {
         </div>
         <hr className="mt-4"></hr>
         <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-          ข้อมูลส่วนบุคคล
+          {t('personal_information')}
         </div>
         <div className="input-flex-row">
           <SelectField
             require={true}
-            label="คำนำหน้า"
+            label={t('title')}
             id="title"
             name="title"
             options={thaiTitles}
-            placeholder="กรุณาเลือก"
+            placeholder={t('please_select')}
             onChange={(e: any) => handleChangeSelect(props, e, 'title')}
             isSearchable={false}
             disabled={pageAction}
           />
           <InputField
             require={true}
-            label="ชื่อ-นามสกุล"
+            label={t('name_surname')}
             name="name"
             type="text"
             disabled={pageAction}
@@ -535,7 +537,7 @@ const Edit = () => {
         <div className="input-flex-row">
           <InputField
             require={true}
-            label="เบอร์โทรติดต่อ"
+            label={t('phone_contact')}
             name="phone_number"
             type="text"
             maxLength={10}
@@ -548,7 +550,7 @@ const Edit = () => {
           />
           <InputField
             require={true}
-            label="เบอร์โทรอ้างอิง"
+            label={t('phone_reference')}
             name="phone_number_ref"
             type="text"
             maxLength={10}
@@ -562,13 +564,13 @@ const Edit = () => {
         </div>
         <div className="input-flex-row">
           <InputField
-            label="Facebook ID"
+            label={t('facebook_id')}
             name="facebook_id"
             type="text"
             disabled={pageAction}
           />
           <InputField
-            label="Line ID"
+            label={t('line_id')}
             name="line_id"
             type="text"
             disabled={pageAction}
@@ -576,13 +578,13 @@ const Edit = () => {
         </div>
         <div className="input-flex-row">
           <InputField
-            label="Tiktok ID"
+            label={t('tiktok_id')}
             name="tiktok_id"
             type="text"
             disabled={pageAction}
           />
           <InputField
-            label="Instagram ID"
+            label={t('instagram_id')}
             name="instagram_id"
             type="text"
             disabled={pageAction}
@@ -591,7 +593,7 @@ const Edit = () => {
         <div className="input-flex-row">
           <InputField
             require={true}
-            label="Email"
+            label={t('email')}
             name="email"
             type="text"
             disabled={pageAction}
@@ -600,7 +602,7 @@ const Edit = () => {
         </div>
         <br />
         <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-          ข้อมูลที่อยู่
+          {t('address_information')}
         </div>
         {addressContent(props)}
         <br />
@@ -608,21 +610,21 @@ const Edit = () => {
           role != 'shop' && (<div className="input-flex-row">
             {/* <SelectField
               require={true}
-              label="ระดับเครดิต (แอดมิน)"
+              label={t('credit_level_admin')}
               id="credit_level"
               name="credit_level"
               options={creditLevelTypes}
-              placeholder="กรุณาเลือก"
+              placeholder={t('please_select')}
               isSearchable={true}
               disabled={pageAction}
             /> */}
             <SelectField
               require={true}
-              label="รับการแจ้งเตือนค่างวด"
+              label={t('receive_installment_notification')}
               id="enabled_line_notify"
               name="enabled_line_notify"
-              options={[{ label: 'เปิด', value: true }, { label: 'ปิด', value: false }]}
-              placeholder="กรุณาเลือก"
+              options={[{ label: t('open'), value: true }, { label: t('close'), value: false }]}
+              placeholder={t('please_select')}
               isSearchable={true}
               disabled={pageAction}
             />
@@ -633,11 +635,11 @@ const Edit = () => {
           role == 'shop' && (<div className="input-flex-row">
             <SelectField
               require={true}
-              label="ระดับเครดิต (ร้านค้า)"
+              label={t('credit_level_shop')}
               id="shop_credit_level"
               name="shop_credit_level"
               options={creditLevelTypes}
-              placeholder="กรุณาเลือก"
+              placeholder={t('please_select')}
               isSearchable={true}
             />
             <div className="blank-container"></div>
@@ -653,14 +655,14 @@ const Edit = () => {
         <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
           <div className=" border-white-light dark:border-[#1b2e4b] p-5 pt-0">
             <span className="bg-white dark:bg-black dark:text-white-light w-[15svw] h-[20px] lg:w-[10vw] lg:h-[20px] rounded flex justify-center items-center text-[12px] font-semibold -mt-[10px] ">
-              ที่อยู่ตามบัตรประชาชน
+              {t('id_card_address')}
             </span>
           </div>
           <div className="px-5 pb-5">
             <div className="input-flex-row">
               <InputField
                 require={true}
-                label="ที่อยู่"
+                label={t('address_label')}
                 name="address"
                 rows="1"
                 disabled={pageAction}
@@ -674,11 +676,11 @@ const Edit = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="จังหวัด"
+                label={t('province')}
                 id="id_province"
                 name="id_province"
                 options={dataStoredProvinces}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'id_province')
                   props.setFieldValue('copyAddress', false)
@@ -689,11 +691,11 @@ const Edit = () => {
               />
               <SelectField
                 require={true}
-                label="อำเภอ/เขต"
+                label={t('district_label')}
                 id="id_district"
                 name="id_district"
                 options={districtIdList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'id_district')
                   props.setFieldValue('copyAddress', false)
@@ -706,11 +708,11 @@ const Edit = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="ตำบล/แขวง"
+                label={t('subdistrict_label')}
                 id="id_subdistrict"
                 name="id_subdistrict"
                 options={subDistrictIdList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'id_subdistrict')
                   props.setFieldValue('copyAddress', false)
@@ -720,7 +722,7 @@ const Edit = () => {
                 disabled={subDistrictIdList.length === 0 || pageAction}
               />
               <InputField
-                label="รหัสไปรษณีย์"
+                label={t('zip_code')}
                 name="zip_code"
                 rows="1"
                 disabled={true}
@@ -731,7 +733,7 @@ const Edit = () => {
        <label className="flex cursor-pointer items-center">
           {/* <Checkbox
             name="copyAddress"
-            label="ใช้ที่อยู่เดียวกับบัตรประชาชน"
+            label={t('same_as_id_card')}
             onCheck={(e: any) => handleCheck(props, e)}
             disabled={pageAction}
           /> */}
@@ -740,14 +742,14 @@ const Edit = () => {
         <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
           <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0">
             <span className="bg-white dark:bg-black  dark:text-white-light w-[15svw] h-[20px] lg:w-[8vw] lg:h-[20px] rounded flex justify-center items-center text-[12px] font-semibold -mt-[10px] ">
-              ที่อยู่ปัจจุบัน
+              {t('current_address')}
             </span>
           </div>
           <div className="px-5 pb-5">
             <div className="input-flex-row">
               <InputField
                 require={true}
-                label="ที่อยู่"
+                label={t('address_label')}
                 name="current_address"
                 rows="1"
                 disabled={pageAction}
@@ -760,11 +762,11 @@ const Edit = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="จังหวัด"
+                label={t('province')}
                 id="current_id_province"
                 name="current_id_province"
                 options={dataStoredProvinces}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'current_id_province')
                   props.setFieldValue('copyAddress', false)
@@ -774,11 +776,11 @@ const Edit = () => {
               />
               <SelectField
                 require={true}
-                label="อำเภอ/เขต"
+                label={t('district_label')}
                 id="current_id_district"
                 name="current_id_district"
                 options={districtCurrentList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'current_id_district')
                   props.setFieldValue('copyAddress', false)
@@ -790,11 +792,11 @@ const Edit = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="ตำบล/แขวง"
+                label={t('subdistrict_label')}
                 id="current_id_subdistrict"
                 name="current_id_subdistrict"
                 options={subDistrictCurrentList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'current_id_subdistrict')
                   props.setFieldValue('copyAddress', false)
@@ -803,7 +805,7 @@ const Edit = () => {
                 disabled={subDistrictCurrentList.length === 0 || pageAction}
               />
               <InputField
-                label="รหัสไปรษณีย์"
+                label={t('zip_code')}
                 name="current_zip_code"
                 rows="1"
                 disabled={true}
@@ -814,7 +816,7 @@ const Edit = () => {
         <label className="flex cursor-pointer items-center">
           {/* <Checkbox
             name="copyAddressForWork"
-            label="ใช้ที่อยู่เดียวกับบัตรประชาชน"
+            label={t('same_as_id_card')}
             onCheck={(e: any) => handleCheckForWork(props, e)}
             disabled={pageAction}
           /> */ }
@@ -823,14 +825,14 @@ const Edit = () => {
         <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
           <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0">
             <span className="bg-white dark:bg-black  dark:text-white-light w-[15svw] h-[20px] lg:w-[8vw] lg:h-[20px] rounded flex justify-center items-center text-[12px] font-semibold -mt-[10px] ">
-              ที่อยู่ที่ทำงาน
+              {t('work_address')}
             </span>
           </div>
           <div className="px-5 pb-5">
             <div className="input-flex-row">
               <InputField
                 require={true}
-                label="ที่อยู่"
+                label={t('address_label')}
                 name="work_address"
                 rows="1"
                 disabled={pageAction}
@@ -843,11 +845,11 @@ const Edit = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="จังหวัด"
+                label={t('province')}
                 id="work_id_province"
                 name="work_id_province"
                 options={dataStoredProvinces}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'work_id_province')
                   props.setFieldValue('copyAddressForWork', false)
@@ -857,11 +859,11 @@ const Edit = () => {
               />
               <SelectField
                 require={true}
-                label="อำเภอ/เขต"
+                label={t('district_label')}
                 id="work_id_district"
                 name="work_id_district"
                 options={districtWorkList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   props.setFieldValue('copyAddressForWork', false)
                   handleChangeSelect(props, e, 'work_id_district')
@@ -873,11 +875,11 @@ const Edit = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="ตำบล/แขวง"
+                label={t('subdistrict_label')}
                 id="work_id_subdistrict"
                 name="work_id_subdistrict"
                 options={subDistrictWorkList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   props.setFieldValue('copyAddressForWork', false)
                   handleChangeSelect(props, e, 'work_id_subdistrict')
@@ -886,7 +888,7 @@ const Edit = () => {
                 disabled={subDistrictWorkList.length === 0 || pageAction}
               />
               <InputField
-                label="รหัสไปรษณีย์"
+                label={t('zip_code')}
                 name="work_zip_code"
                 rows="1"
                 disabled={true}
@@ -906,7 +908,7 @@ const Edit = () => {
         <div className="upload-container">
           <div className="custom-file-container" data-upload-id="myFirstImage">
             <div className="label-container">
-              <label>รูปบัตรประชาชน <span className="text-rose-600">*</span></label>
+              <label>{t('citizen_image')} <span className="text-rose-600">*</span></label>
               {!pageAction && (
                 <button
                   type="button"
@@ -929,11 +931,11 @@ const Edit = () => {
                   {!pageAction && (
                     <>
                       <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                      เลือกไฟล์...
+                      {t('select_file')}
                       </button>
                       <div style={{ textAlign: 'right' }}>
                           <button type="button" className="btn btn-primary" onClick={() => setIsCameraOcr(true)} style={{ display: 'inline-block' }}>
-                            ถ่ายรูป
+                            {t('take_photo')}
                           </button>
                         </div>
                     </>
@@ -946,7 +948,7 @@ const Edit = () => {
                     </div>
                   ))}
                   {!pageAction && imageList.length > 0 && <button type="button" className="btn btn-success mt-2 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]" onClick={onImgAnalisy}>
-                    ตรวจสอบบัตรประชาชน
+                    {t('verify_citizen_id')}
                   </button>}
                 </div>
               )}
@@ -958,7 +960,7 @@ const Edit = () => {
         <div className="upload-container mt-10">
           <div className="custom-file-container" data-upload-id="myFirstImage">
             <div className="label-container">
-              <label>รูปยืนยันบุคคล <span className="text-rose-600">*</span></label>
+              <label>{t('verification_image')} <span className="text-rose-600">*</span></label>
               {!pageAction && (
                 <button
                   type="button"
@@ -980,7 +982,7 @@ const Edit = () => {
                 <div className="upload__image-wrapper">
                   {!pageAction && (
                     <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                      เลือกไฟล์...
+                      {t('select_file')}
                     </button>
                   )}
                   &nbsp;
@@ -1024,16 +1026,16 @@ const Edit = () => {
             (pageAction && role !== 'shop') && (
               <>
                 <a className="cursor-pointer btn btn-warning mr-1" onClick={() => checkProfile()}>
-                   ตรวจสอบเครดิต
+                   {t('check_credit')}
                 </a>
 
                 <a className="cursor-pointer btn btn-primary mr-1" onClick={() => goCreditProcess()}>
                   <IconEdit className="w-4.5 h-4.5" /> &nbsp;
-                  สัญญาที่ดำเนินการ
+                  {t('contracts_in_progress')}
                 </a>
                 <a className="cursor-pointer btn btn-info mr-1" onClick={() => goEdit()}>
                   <IconEdit className="w-4.5 h-4.5" /> &nbsp;
-                  แก้ไข
+                  {t('edit')}
                 </a>
               </>
             )
@@ -1044,7 +1046,7 @@ const Edit = () => {
               <>
                 <a className="hover:text-info cursor-pointer btn btn-primary mr-1" onClick={() => goCreditProcess()}>
                   <IconEdit className="w-4.5 h-4.5" /> &nbsp;
-                  สัญญาที่ดำเนินการ
+                  {t('contracts_in_progress')}
                 </a>
               </>
             )
@@ -1057,14 +1059,14 @@ const Edit = () => {
             <Tab as={Fragment}>
               {({ selected }) => (
                 <button onClick={() => setTabIndex(0)} className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black ` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
-                  บัญชีลูกค้า
+                  {t('customer_account')}
                 </button>
               )}
             </Tab>
             {role !== 'shop' && <Tab as={Fragment}>
               {({ selected }) => (
                 <button onClick={() => setTabIndex(1)} className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black ` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
-                  เครดิตลูกค้า
+                  {t('customer_credit_tab')}
                 </button>
               )}
             </Tab>}
@@ -1072,7 +1074,7 @@ const Edit = () => {
             <Tab as={Fragment}>
               {({ selected }) => (
                 <button onClick={() => setTabIndex(2)} className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black ` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
-                  บันทึกข้อความ
+                  {t('notes_tab')}
                 </button>
               )}
             </Tab>
@@ -1085,7 +1087,7 @@ const Edit = () => {
                   {(props) => (
                     <Form className="space-y-5 dark:text-white custom-select">
                       <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                        บัญชีลูกค้า
+                        {t('customer_account')}
                       </div>
                       <div className="grid md:grid-rows-1 xl:grid-cols-4 gap-2 pb-5">
                         {personalContent(props)}
@@ -1094,7 +1096,7 @@ const Edit = () => {
                       {!pageAction && (
                         <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                           {(isUpload || isLoading) && <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>}
-                          {pageAction ? 'ข้อมูล' : 'แก้ไข'}
+                          {pageAction ? t('info') : t('edit')}
                         </button>
                       )}
                       {
@@ -1107,7 +1109,7 @@ const Edit = () => {
                           })
                         }}>
                           {(isUpload || isLoading) && <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>}
-                          แก้ไขระดับเครดิต (ร้านค้า)
+                          {t('edit_credit_level_shop')}
                         </button>)
                       }
                     </Form>
@@ -1127,27 +1129,27 @@ const Edit = () => {
                             <IconX />
                           </button>
                           <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                            ข้อมูลบัตรประชาชน
+                            {t('citizen_id_data')}
                           </div>
                           <div className="px-5 pt-3 pb-5">
                             <div className="flex flex-wrap justify-start">
                               <div className="w-full">
                                 <p>
-                                  เลขบัตรประชาชน:
+                                  {t('citizen_id_label')}:
                                   {customerFormUpload?.citizen_id}
                                 </p>
                               </div>
                               <div className="w-full">
                                 <p>
-                                  ชื่อ-นามสกุล: {customerFormUpload.name?.trim()}
+                                  {t('name_surname_label')}: {customerFormUpload.name?.trim()}
                                 </p>
                               </div>
                               <div className="w-full">
                                 <p>
-                                  {customerFormUpload?.address ? `ที่อยู่: ${customerFormUpload?.address} ` : ' '}
-                                  {customerFormUpload?.subdistrict ? `ตำบล${customerFormUpload?.subdistrict} ` : ' '}
-                                  {customerFormUpload?.district ? `อำเภอ${customerFormUpload?.district} ` : ' '}
-                                  {customerFormUpload?.province ? `จังหวัด${customerFormUpload?.province} ` : ' '}
+                                  {customerFormUpload?.address ? `${t('address_detail')}: ${customerFormUpload?.address} ` : ' '}
+                                  {customerFormUpload?.subdistrict ? `${t('subdistrict_label')}${customerFormUpload?.subdistrict} ` : ' '}
+                                  {customerFormUpload?.district ? `${t('district_label')}${customerFormUpload?.district} ` : ' '}
+                                  {customerFormUpload?.province ? `${t('province')}${customerFormUpload?.province} ` : ' '}
                                   {isNaN(customerFormUpload?.zip_code) ? ' ' : customerFormUpload?.zip_code}
                                 </p>
                               </div>
@@ -1156,10 +1158,10 @@ const Edit = () => {
                               <button type="button" className="btn btn-outline-danger" onClick={() => {
                                 setActionModal(false)
                               }}>
-                                ยกเลิก
+                                {t('cancel')}
                               </button>
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={onConfirmDataUpload}>
-                                ยืนยัน
+                                {t('confirm')}
                               </button>
                             </div>
                           </div>
@@ -1194,11 +1196,11 @@ const Edit = () => {
                           <IconX />
                         </button>
                         <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                          ข้อมูลเครดิต
+                          {t('credit_info')}
                         </div>
                         <div className="px-5 pt-3 pb-5 space-y-2">
                         {installmentsData.length === 0 ? (
-                          <p>ไม่มีข้อมูลผ่อนชำระ</p>
+                          <p>{t('no_installment_data')}</p>
                         ) : (
                           installmentsData.map((item:any, index) => (
                             <div

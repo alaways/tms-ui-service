@@ -12,10 +12,12 @@ import { thaiTitles, roleTypes, accessLevelTypes, toastAlert } from '../../../he
 import Breadcrumbs from '../../../helpers/breadcrumbs'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const Add = () => {
+  const { t } = useTranslation()
   const toast = Swal.mixin(toastAlert)
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -28,13 +30,13 @@ const Add = () => {
   }
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { label: 'เพิ่ม', isCurrent: true },
+    { to: '/apps/employee/list', label: t('employee') },
+    { label: t('add'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มพนักงาน'))
-  })
+    dispatch(setPageTitle(t('add_employee')))
+  }, [dispatch, t])
 
   const [employeeFormData] = useState<Employees>({
     title: '',
@@ -49,14 +51,14 @@ const Add = () => {
   const [businessUnit, setBusinessUnit] = useState<any>([])
 
   const SubmittedForm = Yup.object().shape({
-    title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    phone_number: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    email: Yup.string().email('กรุณาใส่อีเมลที่ถูกต้อง').required('กรุณาใส่ข้อมูลให้ครบ'),
-    role: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    access_level: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    password: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    password_repeat: Yup.string().oneOf([Yup.ref('password'), null], 'รหัสผ่านไม่ตรงกัน').required('กรุณาใส่ข้อมูลให้ครบ'),
+    title: Yup.string().required(t('please_fill_all_fields')),
+    name: Yup.string().required(t('please_fill_all_fields')),
+    phone_number: Yup.string().required(t('please_fill_all_fields')),
+    email: Yup.string().email(t('please_enter_valid_email')).required(t('please_fill_all_fields')),
+    role: Yup.string().required(t('please_fill_all_fields')),
+    access_level: Yup.string().required(t('please_fill_all_fields')),
+    password: Yup.string().required(t('please_fill_all_fields')),
+    password_repeat: Yup.string().oneOf([Yup.ref('password'), null], t('password_not_match')).required(t('please_fill_all_fields')),
   })
 
 
@@ -85,7 +87,7 @@ const Add = () => {
        if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกสำเร็จ',
+          title: t('save_success'),
           padding: '10px 20px',
         })
         navigate('/apps/employee/list')
@@ -130,10 +132,10 @@ const Add = () => {
               <Form className="space-y-5 dark:text-white custom-select">
                 <div className="input-flex-row">
                   <SelectField
-                    label="คำนำหน้า"
+                    label={t('title_prefix')}
                     id="title"
                     name="title"
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     options={thaiTitles}
                     isSearchable={false}
                     onChange={(e: any) => {
@@ -142,7 +144,7 @@ const Add = () => {
                     require={true}
                   />
                   <InputField
-                    label="ชื่อพนักงาน"
+                    label={t('employee_name')}
                     name="name"
                     type="text"
                     require={true}
@@ -163,10 +165,10 @@ const Add = () => {
                 </div>
                 <div className="input-flex-row">
                   <SelectField
-                    label="ตำแหน่ง"
+                    label={t('position')}
                     id="role"
                     name="role"
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     options={roleTypes}
                     isSearchable={false}
                     onChange={(e: any) => {
@@ -175,10 +177,10 @@ const Add = () => {
                     require={true}
                   />
                   <SelectField
-                    label="ระดับสิทธิ"
+                    label={t('access_level')}
                     id="access_level"
                     name="access_level"
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     isSearchable={false}
                     options={accessLevelTypes}
                     onChange={(e: any) => {
@@ -189,7 +191,7 @@ const Add = () => {
                 </div>
                 <div className="input-flex-row">
                   <InputField
-                    label="เบอร์โทรศัพท์พนักงาน"
+                    label={t('employee_phone')}
                     name="phone_number"
                     type="text"
                     require={true}
@@ -203,10 +205,10 @@ const Add = () => {
                   {
                     role === 'admin' && (
                       <SelectField
-                        label="หน่วยธุรกิจ"
+                        label={t('business_unit')}
                         id="id_business_unit"
                         name="id_business_unit"
-                        placeholder="กรุณาเลือก"
+                        placeholder={t('please_select')}
                         className="w-auto"
                         options={businessUnit}
                         isSearchable={true}
@@ -220,18 +222,18 @@ const Add = () => {
 
                 <div className="input-flex-row">
                   <InputField
-                    label="รหัสผ่าน"
+                    label={t('password')}
                     name="password"
                     type="password"
                   />
                   <InputField
-                    label="ยืนยันรหัสผ่าน"
+                    label={t('confirm_password')}
                     name="password_repeat"
                     type="password"
                   />
                 </div>
                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                  เพิ่ม
+                  {t('add')}
                 </button>
               </Form>
             )}

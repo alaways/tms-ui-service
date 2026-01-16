@@ -12,9 +12,12 @@ import { useDispatch } from 'react-redux';
 import { setPageTitle, setSidebarActive } from '../../../store/themeConfigSlice';
 import { toastAlert } from '../../../helpers/constant';
 import Swal from 'sweetalert2';
+import { useTranslation } from 'react-i18next';
+
 const mode = process.env.MODE || 'admin';
 
 const DashboardContract = () => {
+    const { t } = useTranslation()
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [dashboardData, setDashboardData] = useState<any>();
@@ -65,13 +68,13 @@ const DashboardContract = () => {
     }, []);
 
     useEffect(() => {
-        dispatch(setPageTitle('Dashboard V2'));
+        dispatch(setPageTitle(t('dashboard_v2')));
         // dispatch(setSidebarActive(['', '/']));
-    }, [dispatch]);
+    }, [dispatch, t]);
 
     return (
         <div className="pt-5">
-            <h1 className="text-2xl font-semibold">Dashboard</h1>
+            <h1 className="text-2xl font-semibold">{t('dashboard')}</h1>
             {mode != 'business_unit' && !dataStored?.id_business_unit && (
                 <Formik
                     initialValues={{ id_business_unit: '' }}
@@ -79,7 +82,7 @@ const DashboardContract = () => {
                         if (values.id_business_unit === null) {
                             toast.fire({
                                 icon: 'warning',
-                                title: 'กรุณาเลือกหน่วยธุรกิจเพื่อค้นหา',
+                                title: t('please_select_business_unit'),
                                 padding: '10px 20px',
                             });
                         } else {
@@ -99,7 +102,7 @@ const DashboardContract = () => {
                                 <div className="w-full flex flex-wrap items-end gap-4 pt-6 mb-6 min-[1141px]:max-w-[634px]">
                                     <SelectField
                                         id="bu"
-                                        label="หน่วยธุรกิจ"
+                                        label={t('business_unit')}
                                         className="z-10 flex-1 min-w-[250px]"
                                         name="id_business_unit"
                                         options={itemBusinessUnit}
@@ -108,7 +111,7 @@ const DashboardContract = () => {
                                         onChange={(e) => {}}
                                     />
                                     <button type="submit" className="btn btn-success gap-2 h-[40px] px-4 whitespace-nowrap">
-                                        ค้นหา
+                                        {t('search')}
                                     </button>
                                 </div>
                             </>
@@ -132,20 +135,20 @@ const DashboardContract = () => {
                             style={{ backgroundImage: "url('https://t3.ftcdn.net/jpg/08/55/60/54/360_F_855605431_u6po8au4Ma8CAdY5GDtfFt6AcuLmqq9b.jpg')", backgroundSize: 'cover' }}
                         >
                             <div className="border h-full rounded-lg shadow-sm pt-4 bg-black/20 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] text-white relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/60 before:via-transparent before:to-transparent before:opacity-70 before:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none">
-                                <h1 className="text-xl font-semibold px-4">บัญชีสัญญา</h1>
+                                <h1 className="text-xl font-semibold px-4">{t('contract_account')}</h1>
                                 <table className="w-full table-fixed border-collapse">
                                     <tr className="h-[50px]">
-                                        <th className="w-1/4 text-left px-4">รายการ</th>
-                                        <th className="w-1/4">เมื่อวานนี้</th>
-                                        <th className="w-1/4">เดือนนี้</th>
-                                        <th className="w-1/4">ย้อนหลัง 1 เดือน</th>
-                                        <th className="w-1/4">ย้อนหลัง 3 เดือน</th>
-                                        <th className="w-1/4">ย้อนหลัง 6 เดือน</th>
-                                        <th className="w-1/4">ปีนี้</th>
-                                        <th className="w-1/4">ทั้งหมด</th>
+                                        <th className="w-1/4 text-left px-4">{t('item')}</th>
+                                        <th className="w-1/4">{t('yesterday')}</th>
+                                        <th className="w-1/4">{t('this_month')}</th>
+                                        <th className="w-1/4">{t('1_month_ago')}</th>
+                                        <th className="w-1/4">{t('3_months_ago')}</th>
+                                        <th className="w-1/4">{t('6_months_ago')}</th>
+                                        <th className="w-1/4">{t('this_year')}</th>
+                                        <th className="w-1/4">{t('all')}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">จำนวนสัญญาที่อนุมัติ</th>
+                                        <th className="text-left px-4">{t('approved_contracts')}</th>
                                         <th>{numberCommas(dashboardData?.contract?.appv.today)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.appv.month)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.appv.month_1)}</th>
@@ -155,7 +158,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.contract?.appv.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">มูลค่าสัญญาทั้งหมด</th>
+                                        <th className="text-left px-4">{t('total_contract_value')}</th>
                                         <th>{numberCommas(dashboardData?.contract?.price_total.today)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.price_total.month)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.price_total.month_1)}</th>
@@ -165,7 +168,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.contract?.price_total.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">เงินดาวน์</th>
+                                        <th className="text-left px-4">{t('down_payment_amount')}</th>
                                         <th>{numberCommas(dashboardData?.contract?.down_payment.today)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.down_payment.month)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.down_payment.month_1)}</th>
@@ -175,7 +178,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.contract?.down_payment.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">ค่าดำเนินการให้เช่าซื้อ</th>
+                                        <th className="text-left px-4">{t('contract_processing_fee')}</th>
                                         <th>{numberCommas(dashboardData?.contract?.fee.today)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.fee.month)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.fee.month_1)}</th>
@@ -185,7 +188,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.contract?.fee.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">ต้นทุนสินค้า</th>
+                                        <th className="text-left px-4">{t('product_cost')}</th>
                                         <th>{numberCommas(dashboardData?.contract?.principle.today)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.principle.month)}</th>
                                         <th>{numberCommas(dashboardData?.contract?.principle.month_1)}</th>
@@ -205,20 +208,20 @@ const DashboardContract = () => {
                             }}
                         >
                             <div className="border h-full rounded-lg shadow-sm pt-4 bg-black/20 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] text-white relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/60 before:via-transparent before:to-transparent before:opacity-70 before:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none">
-                                <h1 className="text-xl font-semibold px-4">บัญชีลูกหนี้</h1>
+                                <h1 className="text-xl font-semibold px-4">{t('debtor_account')}</h1>
                                 <table className="w-full table-fixed border-collapse">
                                     <tr className="h-[50px]">
-                                        <th className="w-1/4 text-left px-4">รายการ</th>
-                                        <th className="w-1/4">เมื่อวานนี้</th>
-                                        <th className="w-1/4">เดือนนี้</th>
-                                        <th className="w-1/4">ย้อนหลัง 1 เดือน</th>
-                                        <th className="w-1/4">ย้อนหลัง 3 เดือน</th>
-                                        <th className="w-1/4">ย้อนหลัง 6 เดือน</th>
-                                        <th className="w-1/4">ปีนี้</th>
-                                        <th className="w-1/4">ทั้งหมด</th>
+                                        <th className="w-1/4 text-left px-4">{t('item')}</th>
+                                        <th className="w-1/4">{t('yesterday')}</th>
+                                        <th className="w-1/4">{t('this_month')}</th>
+                                        <th className="w-1/4">{t('1_month_ago')}</th>
+                                        <th className="w-1/4">{t('3_months_ago')}</th>
+                                        <th className="w-1/4">{t('6_months_ago')}</th>
+                                        <th className="w-1/4">{t('this_year')}</th>
+                                        <th className="w-1/4">{t('all')}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">บัญชีลูกหนี้</th>
+                                        <th className="text-left px-4">{t('outstanding_debt')}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.outstanding.today)}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.outstanding.month)}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.outstanding.month_1)}</th>
@@ -228,7 +231,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.debtor?.outstanding.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">รับชำระแล้ว</th>
+                                        <th className="text-left px-4">{t('paid')}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.paid.today)}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.paid.month)}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.paid.month_1)}</th>
@@ -238,7 +241,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.debtor?.paid.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">ค้างชำระ</th>
+                                        <th className="text-left px-4">{t('overdue')}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.price_total.today)}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.price_total.month)}</th>
                                         <th>{numberCommas(dashboardData?.debtor?.price_total.month_1)}</th>
@@ -259,20 +262,20 @@ const DashboardContract = () => {
                             }}
                         >
                             <div className="border min-h-[100px] rounded-lg shadow-sm pt-4 bg-black/20 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] text-white relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/60 before:via-transparent before:to-transparent before:opacity-70 before:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none">
-                                <h1 className="text-xl font-semibold px-4">บัญชีรับชำระค่างวด</h1>
+                                <h1 className="text-xl font-semibold px-4">{t('installment_payment_account')}</h1>
                                 <table className="w-full table-fixed border-collapse">
                                     <tr className="h-[50px]">
-                                        <th className="w-1/4 text-left px-4">รายการ</th>
-                                        <th className="w-1/4">เมื่อวานนี้</th>
-                                        <th className="w-1/4">เดือนนี้</th>
-                                        <th className="w-1/4">ย้อนหลัง 1 เดือน</th>
-                                        <th className="w-1/4">ย้อนหลัง 3 เดือน</th>
-                                        <th className="w-1/4">ย้อนหลัง 6 เดือน</th>
-                                        <th className="w-1/4">ปีนี้</th>
-                                        <th className="w-1/4">ทั้งหมด</th>
+                                        <th className="w-1/4 text-left px-4">{t('item')}</th>
+                                        <th className="w-1/4">{t('yesterday')}</th>
+                                        <th className="w-1/4">{t('this_month')}</th>
+                                        <th className="w-1/4">{t('1_month_ago')}</th>
+                                        <th className="w-1/4">{t('3_months_ago')}</th>
+                                        <th className="w-1/4">{t('6_months_ago')}</th>
+                                        <th className="w-1/4">{t('this_year')}</th>
+                                        <th className="w-1/4">{t('all')}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">Pay solution</th>
+                                        <th className="text-left px-4">{t('pay_solution')}</th>
                                         <th>{numberCommas(dashboardData?.payment?.ps.today)}</th>
                                         <th>{numberCommas(dashboardData?.payment?.ps.month)}</th>
                                         <th>{numberCommas(dashboardData?.payment?.ps.month_1)}</th>
@@ -282,7 +285,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.payment?.ps.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">เงินสด/เงินโอนธนาคาร</th>
+                                        <th className="text-left px-4">{t('cash_bank_transfer')}</th>
                                         <th>{numberCommas(dashboardData?.payment?.cash.today)}</th>
                                         <th>{numberCommas(dashboardData?.payment?.cash.month)}</th>
                                         <th>{numberCommas(dashboardData?.payment?.cash.month_1)}</th>
@@ -292,7 +295,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.payment?.cash.all)}</th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
-                                        <th className="text-left px-4">รวมเป็นเงิน</th>
+                                        <th className="text-left px-4">{t('total_amount')}</th>
                                         <th>{numberCommas(dashboardData?.payment?.total.today)}</th>
                                         <th>{numberCommas(dashboardData?.payment?.total.month)}</th>
                                         <th>{numberCommas(dashboardData?.payment?.total.month_1)}</th>
@@ -314,13 +317,13 @@ const DashboardContract = () => {
                             }}
                         >
                             <div className="border h-full rounded-lg shadow-sm pt-4 bg-black/20 backdrop-blur-sm border border-white/50 rounded-lg shadow-[inset_0_1px_0px_rgba(255,255,255,0.75),0_0_9px_rgba(0,0,0,0.2),0_3px_8px_rgba(0,0,0,0.15)] text-white relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/60 before:via-transparent before:to-transparent before:opacity-70 before:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:bg-gradient-to-tl after:from-white/30 after:via-transparent after:to-transparent after:opacity-50 after:pointer-events-none">
-                                <h1 className="text-xl font-semibold px-4">สัญญาที่ชำระเกินกำหนด</h1>
+                                <h1 className="text-xl font-semibold px-4">{t('overdue_contracts')}</h1>
                                 <table className="w-full table-fixed border-collapse">
                                      <tr className="h-[50px]">
-                                        <th className="w-1/4">ระยะที่ 1</th>
-                                        <th className="w-1/4">ระยะที่ 2</th>
-                                        <th className="w-1/4">ระยะที่ 3</th>
-                                        <th className="w-1/4">ระยะที่ 4</th>
+                                        <th className="w-1/4">{t('phase_1')}</th>
+                                        <th className="w-1/4">{t('phase_2')}</th>
+                                        <th className="w-1/4">{t('phase_3')}</th>
+                                        <th className="w-1/4">{t('phase_4')}</th>
                                         <th className="w-1/4"></th>
                                     </tr>
                                     <tr className="h-[50px] border-t">

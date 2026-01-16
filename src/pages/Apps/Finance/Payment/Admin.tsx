@@ -26,6 +26,7 @@ import 'tippy.js/dist/tippy.css'
 import DateRangeAntd from '../../../../components/HOC/DateRangeAntd'
 import IconEye from '../../../../components/Icon/IconEye'
 import IconRefresh from '../../../../components/Icon/IconRefresh'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 const toast = Swal.mixin(toastAlert)
@@ -46,6 +47,7 @@ const PaymentHistory = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const apiUrl = process.env.BACKEND_URL
 
@@ -151,7 +153,7 @@ const PaymentHistory = () => {
         setIsDownloading(false)
         toast.fire({
           icon: 'warning',
-          title: 'กรุณาเลือกข้อมูลวันที่ให้ครบเพื่อดาวน์โหลด',
+          title: t('please_select_date_download'),
           padding: '10px 20px',
         })
       }
@@ -290,7 +292,7 @@ const PaymentHistory = () => {
     if (mode !== 'admin' && mode !== 'business_unit') {
       navigate('/')
     }
-    dispatch(setPageTitle('การชำระเงิน'))
+    dispatch(setPageTitle(t('payment_history')))
     dispatch(setSidebarActive(['finance', '/apps/finance/payment-history']))
     fetchBusinessUnitData({
       data: {
@@ -305,7 +307,7 @@ const PaymentHistory = () => {
     if (values.id_business_unit === null) {
       toast.fire({
         icon: 'warning',
-        title: 'กรุณาเลือกหน่วยธุรกิจเพื่อค้นหา',
+        title: t('please_select_business_unit'),
         padding: '10px 20px',
       })
     } else {
@@ -351,7 +353,7 @@ const PaymentHistory = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'ปรับปรุงข้อมูลสำเร็จ',
+          title: t('update_info_success'),
           padding: '10px 20px',
         })
       } else {
@@ -403,7 +405,7 @@ const PaymentHistory = () => {
       {(isLoading || isDownloading) && <PreLoading />}
       <div className="invoice-table">
         <div className="ml-7 my-5 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">
-          การชำระเงิน
+          {t('payment_history')}
         </div>
         <div className="mb-4.5 px-5 md:items-center md:flex-row flex-col gap-5">
           <Formik
@@ -429,35 +431,35 @@ const PaymentHistory = () => {
                   <div className="flex-1 z-10">
                     <SelectField
                       id='id_business_unit'
-                      label='หน่วยธุรกิจ'
+                      label={t('business_unit')}
                       name='id_business_unit'
-                      placeholder='เลือกหน่วยธุรกิจ'
+                      placeholder={t('select_business_unit')}
                       options={businessUnit}
                     />
                   </div>
                   <div className="flex-1 z-10">
                     <SelectField
                       id='status'
-                      label='สถานะการชำระเงิน'
+                      label={t('payment_status')}
                       name='status'
-                      placeholder='กรุณาเลือก'
+                      placeholder={t('please_select')}
                       options={statusPaymentType}
                     />
                   </div>
                   <div className="flex-1 z-10">
                     <SelectField
                       id='payment_method'
-                      label='ช่องทางชำระเงิน'
+                      label={t('payment_channel')}
                       name='payment_method'
-                      placeholder='กรุณาเลือก'
+                      placeholder={t('please_select')}
                       options={paymentMethod}
                     />
                   </div>
                 </div>
 
                 <div className='flex flex-col sm:flex-row md:flex-row gap-5'>
-                <SelectField id="status_code" label="สถานะดำเนินการ" name="status_code" placeholder="เลือก สถานะ" options={status} isSearchable={true} />
-                <DateRangeAntd label="วันที่ชำระ" name="date_at" />
+                <SelectField id="status_code" label={t('operation_status')} name="status_code" placeholder={t('select_status')} options={status} isSearchable={true} />
+                <DateRangeAntd label={t('payment_date')} name="date_at" />
                   {/* <DatePicker
                     label="วันที่เริ่ม"
                     name="start_at"
@@ -472,9 +474,9 @@ const PaymentHistory = () => {
                       setFieldValue('end_at', convertDateClientToDb(value))
                     }}
                   /> */}
-                  <InputField label="ค้นหา" placeholder="ค้นหา" name="query" type="text" />
+                  <InputField label={t('search')} placeholder={t('search')} name="query" type="text" />
                   <button type="submit" className="btn btn-primary gap-2 mt-5">
-                    ค้นหา
+                    {t('search')}
                   </button>
                   <button
                     type="reset"
@@ -483,11 +485,11 @@ const PaymentHistory = () => {
                       handleReset()
                     }}
                   >
-                    ล้างค่า
+                    {t('clear_values')}
                   </button>
                   <div className="flex flex-col pt-5">
                     <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => handleExport(`payment_history_${new Date().toLocaleString()}`, values)}>
-                      Export
+                      {t('export')}
                     </button>
                   </div>
                 </div>
@@ -497,15 +499,15 @@ const PaymentHistory = () => {
         </div>
         <div className="datatables pagination-padding">
           {paymentLists.length === 0 ? (
-            <div className="text-center text-gray-500">ไม่พบข้อมูล</div>
+            <div className="text-center text-gray-500">{t('no_data')}</div>
           ) : (
             <DataTable
               className="whitespace-nowrap table-hover invoice-table"
-              records={[...paymentLists.map((item: any, index: number) => ({ ...item, key: index })), { id: 'total', amount: totalAmount, total: totalToltal, penalty_fee: totalPenaltyFee, tracking_fee: totalTrackingFee, unlock_fee: totalUnlockFee, discount: totalDiscount, isTotalRow: true, ins_no: 'ผลรวม' }]}
+              records={[...paymentLists.map((item: any, index: number) => ({ ...item, key: index })), { id: 'total', amount: totalAmount, total: totalToltal, penalty_fee: totalPenaltyFee, tracking_fee: totalTrackingFee, unlock_fee: totalUnlockFee, discount: totalDiscount, isTotalRow: true, ins_no: t('total_sum') }]}
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('order_number'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (row, index) => {
@@ -515,19 +517,19 @@ const PaymentHistory = () => {
                 },
                 {
                   accessor: 'credit_code',
-                  title: 'สถานะดำเนินการ',
+                  title: t('operation_status'),
                   textAlignment: 'left',
                   sortable: false,
                 },
                 {
                   accessor: 'reference',
-                  title: 'เลขที่อ้างอิง',
+                  title: t('reference_number'),
                   textAlignment: 'left',
                   sortable: false,
                 },
                 {
                   accessor: 'contract_reference',
-                  title: 'เลขที่สัญญา',
+                  title: t('contract_number'),
                   textAlignment: 'center',
                   sortable: true,
                   render: (item: any) =>
@@ -539,110 +541,110 @@ const PaymentHistory = () => {
                 },
                 {
                   accessor: 'business_unit_name',
-                  title: 'หน่วยธุรกิจ',
+                  title: t('business_unit'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item) => <div className="pointer">{item?.business_unit_name}</div>,
                 },
                 {
                   accessor: 'customer_name',
-                  title: 'ชื่อลูกค้า',
+                  title: t('customer_name'),
                   textAlignment: 'left',
                   sortable: false,
                 },
                 {
                   accessor: 'payment_method',
-                  title: 'ช่องทางชำระเงิน',
+                  title: t('payment_channel'),
                   textAlignment: 'center',
                   sortable: false,
                 },
                 {
                   accessor: 'ins_no',
-                  title: 'ชำระงวดที่',
+                  title: t('installment_number'),
                   textAlignment: 'center',
                   sortable: false,
                 },
                 {
                   accessor: 'amount',
-                  title: 'ค่างวด',
+                  title: t('installment_fee'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ amount, isTotalRow }) => (
                     <div className="flex items-center justify-end font-normal">
                       <div className={isTotalRow ? 'font-bold' : ''}>
-                        {numberWithCommas(amount)} {isTotalRow && 'บาท'}
+                        {numberWithCommas(amount)} {isTotalRow && t('baht')}
                       </div>
                     </div>
                   ),
                 },
                 {
                   accessor: 'penalty_fee',
-                  title: 'ค่าดำเนินการล่าช้า',
+                  title: t('late_fee'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ penalty_fee, isTotalRow }) => (
                     <div className="flex items-center justify-end font-normal">
                       <div className={isTotalRow ? 'font-bold' : ''}>
-                        {numberWithCommas(penalty_fee)} {isTotalRow && 'บาท'}
+                        {numberWithCommas(penalty_fee)} {isTotalRow && t('baht')}
                       </div>
                     </div>
                   ),
                 },
                 {
                   accessor: 'tracking_fee',
-                  title: 'ค่าติดตาม',
+                  title: t('tracking_fee'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ tracking_fee, isTotalRow }) => (
                     <div className="flex items-center justify-end font-normal">
                       <div className={isTotalRow ? 'font-bold' : ''}>
-                        {numberWithCommas(tracking_fee)} {isTotalRow && 'บาท'}
+                        {numberWithCommas(tracking_fee)} {isTotalRow && t('baht')}
                       </div>
                     </div>
                   ),
                 },
                 {
                   accessor: 'unlock_fee',
-                  title: 'ค่าปลดล็อค',
+                  title: t('unlock_fee'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ unlock_fee, isTotalRow }) => (
                     <div className="flex items-center justify-end font-normal">
                       <div className={isTotalRow ? 'font-bold' : ''}>
-                        {numberWithCommas(unlock_fee)} {isTotalRow && 'บาท'}
+                        {numberWithCommas(unlock_fee)} {isTotalRow && t('baht')}
                       </div>
                     </div>
                   ),
                 },
                 {
                   accessor: 'discount',
-                  title: 'ส่วนลด',
+                  title: t('discount'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ discount, isTotalRow }) => (
                     <div className="flex items-center justify-end font-normal">
                       <div className={isTotalRow ? 'font-bold' : ''}>
-                        {numberWithCommas(discount)} {isTotalRow && 'บาท'}
+                        {numberWithCommas(discount)} {isTotalRow && t('baht')}
                       </div>
                     </div>
                   ),
                 },
                 {
                   accessor: 'total',
-                  title: 'ยอดชำระ',
+                  title: t('payment_amount'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ total, isTotalRow }) => (
                     <div className="flex items-center justify-end font-normal">
                       <div className={isTotalRow ? 'font-bold' : ''}>
-                        {numberWithCommas(total)} {isTotalRow && 'บาท'}
+                        {numberWithCommas(total)} {isTotalRow && t('baht')}
                       </div>
                     </div>
                   ),
                 },
                 {
                   accessor: 'status',
-                  title: 'สถานะการชำระเงิน',
+                  title: t('payment_status'),
                   textAlignment: 'center',
                   sortable: false,
                   render: ({ status, isTotalRow }) =>
@@ -651,14 +653,14 @@ const PaymentHistory = () => {
                         <div
                           className={`badge ${status === 'complete' ? 'badge-outline-success' : status === 'pending' ? 'badge-outline-warning' : 'badge-outline-danger'}`}
                         >
-                          {status === 'complete' ? 'สำเร็จ' : status === 'pending' ? 'รอชำระ' : 'ไม่สำเร็จ'}
+                          {status === 'complete' ? t('success') : status === 'pending' ? t('pending') : t('failed')}
                         </div>
                       </div>
                     ),
                 },
                 {
                   accessor: 'channel',
-                  title: 'ช่องทาง',
+                  title: t('channel'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -667,7 +669,7 @@ const PaymentHistory = () => {
                 },
                 {
                   accessor: 'payed_at',
-                  title: 'วันที่ชำระ',
+                  title: t('payment_date'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ payed_at, isTotalRow }) =>
@@ -679,7 +681,7 @@ const PaymentHistory = () => {
                 },
                 {
                   accessor: 'created_at',
-                  title: 'วันที่ดำเนินการ',
+                  title: t('operation_date'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ created_at, isTotalRow }) =>
@@ -691,7 +693,7 @@ const PaymentHistory = () => {
                 },
                 {
                   accessor: 'action',
-                  title: 'Actions',
+                  title: t('actions'),
                   sortable: false,
                   textAlignment: 'center',
                   render: (item) =>
@@ -728,7 +730,7 @@ const PaymentHistory = () => {
                 setPageSize(p)
               }}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
               )}
             />
           )}
@@ -772,7 +774,7 @@ const PaymentHistory = () => {
                     >
                       <IconX />
                     </button>
-                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">สถานะการชำระเงิน</div>
+                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{t('payment_status_label')}</div>
                     <div className="p-5">
                       <div className="flex items-center justify-center">
                         <span className="flex items-center justify-center w-16 h-16 rounded-full bg-[#d9f2e6] dark:bg-white/10">
@@ -782,23 +784,23 @@ const PaymentHistory = () => {
                       <div className="p-5">
                         <div className="mb-5 space-y-1">
                           <div className="flex items-center justify-between">
-                            <p className="text-[#515365] font-semibold">จำนวนเงิน </p>
-                            <span className="font-semibold ">{statusData?.Total !== null && statusData?.Total !== undefined ? `${statusData?.Total} บาท` : '-'}</span>
+                            <p className="text-[#515365] font-semibold">{t('amount_label')} </p>
+                            <span className="font-semibold ">{statusData?.Total !== null && statusData?.Total !== undefined ? `${statusData?.Total} ${t('baht')}` : '-'}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <p className="text-[#515365] font-semibold">สถานะ</p>
+                            <p className="text-[#515365] font-semibold">{t('status_label')}</p>
                             <p className="text-base">
                               <span className="font-semibold">
                                 {statusData?.StatusName !== null && statusData?.StatusName !== undefined
                                   ? statusData?.StatusName === 'Paid'
-                                    ? 'ชำระแล้ว'
-                                    : 'ค้างชำระ'
+                                    ? t('paid')
+                                    : t('unpaid')
                                   : '-'}
                               </span>
                             </p>
                           </div>
                           <div className="flex items-center justify-between">
-                            <p className="text-[#515365] font-semibold">วันที่ชำระเงิน</p>
+                            <p className="text-[#515365] font-semibold">{t('payment_date_label')}</p>
                             <p className="text-base">
                               <span className="font-semibold ">
                                 {statusData?.OrderDateTime !== null && statusData?.OrderDateTime !== undefined
@@ -820,11 +822,11 @@ const PaymentHistory = () => {
                                 }
                               })
                             }}>
-                            ปรับปรุงข้อมูล
+                            {t('update_info')}
                           </button>
                           :(
                             <button type="button" className="btn btn-success" disabled>
-                              ปรับปรุงข้อมูล
+                              {t('update_info')}
                             </button>
                             
                           )}

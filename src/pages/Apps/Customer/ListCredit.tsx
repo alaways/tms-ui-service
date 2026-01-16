@@ -10,10 +10,12 @@ import { debounce } from 'lodash';
 import Breadcrumbs from '../../../helpers/breadcrumbs';
 import { url_api } from '../../../services/endpoints';
 import { useGlobalMutation } from '../../../helpers/globalApi';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin';
 
 const ListCredit = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
 
     const storedUser = localStorage.getItem(mode);
@@ -31,21 +33,21 @@ const ListCredit = () => {
     const [contractUnread, setContractUnread] = useState<any>([]);
 
     const breadcrumbItems = [
-        { to: '/apps/customer/list', label: 'ลูกค้า' },
-        { to: `/apps/customer/edit/${id}`, label: 'ข้อมูล' },
-        { label: 'สัญญาที่ดำเนินการ', isCurrent: true },
+        { to: '/apps/customer/list', label: t('customer') },
+        { to: `/apps/customer/edit/${id}`, label: t('info') },
+        { label: t('contracts_in_progress'), isCurrent: true },
     ];
 
     const column: any = [
         {
             accessor: 'index',
-            title: 'ลำดับ',
+            title: t('sequence'),
             textAlignment: 'center',
             render: (_row: any, index: any) => <p>{index + 1 + (page - 1) * pageSize}</p>,
         },
         {
             accessor: 'credit',
-            title: 'สถานะดำเนินการ',
+            title: t('operation_status'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p>{item.credit?.code}</p>,
@@ -53,7 +55,7 @@ const ListCredit = () => {
         // TODO: clean code later
         mode !== 'shop' && {
             accessor: 'id',
-            title: 'เลขสัญญา',
+            title: t('contract_number'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => {
@@ -73,7 +75,7 @@ const ListCredit = () => {
         // TODO: clean code later
         mode === 'shop' && {
             accessor: 'id',
-            title: 'เลขสัญญา',
+            title: t('contract_number'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => {
@@ -92,84 +94,84 @@ const ListCredit = () => {
         },
         {
             accessor: 'business_unit',
-            title: 'หน่วยธุรกิจ',
+            title: t('business_unit'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p className="pointer">{item?.business_unit?.name}</p>,
         },
         {
             accessor: 'shop',
-            title: 'ร้านค้า',
+            title: t('shop'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p>{item.shop.name}</p>,
         },
         {
             accessor: 'ins_due_at',
-            title: 'งวดแรกเริ่มเมื่อ',
+            title: t('first_installment_start'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p className="pointer">{convertDateDbToClient(item?.ins_due_at) ?? '-'}</p>,
         },
         {
             accessor: 'contract_date',
-            title: 'วันที่ทำสัญญา',
+            title: t('contract_date'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p className="pointer">{convertDateDbToClient(item?.contract_date) ?? '-'}</p>,
         },
         {
             accessor: 'approved_at',
-            title: 'วันที่อนุมัติ',
+            title: t('approval_date'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <div className="pointer">{item.approved_at !== null ? convertDateDbToClient(item?.approved_at) : '-'}</div>,
         },
         {
             accessor: 'customer',
-            title: 'ชื่อลูกค้า',
+            title: t('customer_name'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p>{item.customer.name}</p>,
         },
         {
             accessor: 'ins_pay_day',
-            title: 'ชำระทุกวันที่',
+            title: t('payment_due_day'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => <p>{item.ins_pay_day}</p>,
         },
         {
             accessor: 'ins_amount',
-            title: 'ค่างวด',
+            title: t('installment_amount'),
             textAlignment: 'center',
             sortable: false,
             render: ({ ins_amount }: any) => <p>{ins_amount ? ins_amount.toLocaleString('en-US') : '-'}</p>,
         },
         {
             accessor: 'price',
-            title: 'ราคา',
+            title: t('price'),
             textAlignment: 'right',
             sortable: false,
             render: ({ price }: any) => <p>{price ? price.toLocaleString('en-US') : '-'}</p>,
         },
         {
             accessor: 'down_payment',
-            title: 'ชำระเงินดาวน์',
+            title: t('down_payment'),
             textAlignment: 'right',
             sortable: false,
             render: ({ down_payment }: any) => <p>{down_payment ? down_payment.toLocaleString('en-US') : '-'}</p>,
         },
         {
             accessor: 'principle',
-            title: 'ทุนเช่าซื้อ',
+            title: t('lease_principal'),
             textAlignment: 'right',
             sortable: false,
             render: ({ principle }: any) => <p>{principle ? principle.toLocaleString('en-US') : '-'}</p>,
         },
         {
             accessor: 'ins_period',
-            title: 'จำนวนงวด',
+            title: t('installment_period'),
             textAlignment: 'center',
             sortable: false,
         },
@@ -177,7 +179,7 @@ const ListCredit = () => {
        
         mode !== 'shop' && {
             accessor: 'action',
-            title: 'Actions',
+            title: t('actions'),
             sortable: false,
             textAlignment: 'center',
             render: (item: any) => (
@@ -190,7 +192,7 @@ const ListCredit = () => {
         },
          mode === 'shop' && {
             accessor: 'action',
-            title: 'Actions',
+            title: t('actions'),
             sortable: false,
             textAlignment: 'center',
             render: (item: any) => (
@@ -274,13 +276,13 @@ const ListCredit = () => {
             </div>
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
                 <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
-                    <h2 className="text-xl">สัญญาที่ดำเนินการ : {contractList[0]?.customer?.name}</h2>
+                    <h2 className="text-xl">{t('contracts_in_progress')} : {contractList[0]?.customer?.name}</h2>
                 </div>
                 <div className="flex items-center justify-end flex-wrap gap-4 mb-4.5 px-5 ">
                     <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto ">
                         <div className="flex flex-row gap-3">
                             <div className="relative">
-                                <input type="text" placeholder="ค้นหา" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={handleSearch} />
+                                <input type="text" placeholder={t('search_text')} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={handleSearch} />
                                 <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
                                     <IconSearch className="mx-auto" />
                                 </button>
@@ -290,7 +292,7 @@ const ListCredit = () => {
                 </div>
                 <div className="datatables pagination-padding">
                     {contractList.length === 0 ? (
-                        <div className="my-10 text-center text-gray-500">ไม่พบข้อมูล</div>
+                        <div className="my-10 text-center text-gray-500">{t('not_found_data')}</div>
                     ) : (
                         <DataTable
                             className="whitespace-nowrap table-hover invoice-table"
@@ -306,7 +308,7 @@ const ListCredit = () => {
                                 setPageSize(p);
                             }}
                             highlightOnHover
-                            paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                            paginationText={({ from, to, totalRecords }) => `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`}
                         />
                     )}
                 </div>

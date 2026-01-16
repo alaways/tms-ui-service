@@ -22,10 +22,11 @@ import IconX from '../../../components/Icon/IconX'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
 import CameraOCR from '../../../components/CameraOCR'
+import { useTranslation } from 'react-i18next'
 const mode = process.env.MODE || 'admin'
 
 const AddV2 = () => {
-
+  const { t } = useTranslation()
   const acc = JSON.parse(localStorage.getItem(mode) ?? '{}')?.acc
   const toast = Swal.mixin(toastAlert)
 
@@ -35,12 +36,12 @@ const AddV2 = () => {
   const dispatch = useDispatch()
 
   const breadcrumbItems = [
-    { to: '/apps/customer/list', label: 'ลูกค้า' },
-    { label: 'เพิ่ม', isCurrent: true },
+    { to: '/apps/customer/list', label: t('customer') },
+    { label: t('add'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มข้อมูลลูกค้า'))
+    dispatch(setPageTitle(t('add_customer')))
   })
 
   const storedUser = localStorage.getItem(mode)
@@ -215,7 +216,7 @@ const AddV2 = () => {
       setIsLoadding(false)
       toast.fire({
         icon: 'warning',
-        title: 'ไม่สามารถอ่านค่ารูปบัตรประชาชนได้',
+        title: t('cannot_read_citizen_id'),
         padding: '10px 20px',
       })
     }
@@ -281,7 +282,7 @@ const AddV2 = () => {
     onSuccess: () => {
       toast.fire({
         icon: 'success',
-        title: 'บันทึกสำเร็จ',
+        title: t('save_success'),
         padding: '10px 20px',
       })
       navigate('/apps/customer/list')
@@ -301,7 +302,7 @@ const AddV2 = () => {
         } else {
           toast.fire({
             icon: 'success',
-            title: 'บันทึกสำเร็จ',
+            title: t('save_success'),
             padding: '10px 20px',
           })
           navigate('/apps/customer/list')
@@ -321,7 +322,7 @@ const AddV2 = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกสำเร็จ',
+          title: t('save_success'),
           padding: '10px 20px',
         })
         shopCustomerCreate({ data: { id_shop: variables.data.id_shop, id_customer: res.data.id, shop_credit_level: variables.data.shop_credit_level, uuid_customer: res.data.uuid } })
@@ -371,7 +372,7 @@ const AddV2 = () => {
           if (customerParams.data.citizen_image_url === '' || customerParams.data.citizen_image_url === null) {
             toast.fire({
               icon: 'warning',
-              title: 'ไม่พบข้อมูลรูปบัตรประชาชน',
+              title: t('citizen_id_not_found'),
               padding: '10px 20px',
             })
             return
@@ -379,7 +380,7 @@ const AddV2 = () => {
           if (customerParams.data.verification_image_url === '' || customerParams.data.verification_image_url === null) {
             toast.fire({
               icon: 'warning',
-              title: 'ไม่พบข้อมูลรูปภาพยืนยันบุคคล',
+              title: t('verification_image_not_found'),
               padding: '10px 20px',
             })
             return
@@ -510,31 +511,31 @@ const AddV2 = () => {
   }
 
   const SubmittedForm = Yup.object().shape({
-    title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    phone_number: Yup.string().length(10, 'กรุณาใส่ข้อมูลให้ครบ 10 เลข'),
-    id_shop: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    citizen_id: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').length(13, 'กรุณาใส่ข้อมูลให้ครบ 13 หลัก'),
-    email: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').matches(/^[A-Za-z0-9@._]+$/, 'กรุณาใช้ตัวอักษรภาษาอังกฤษ ตัวเลข เครื่องหมายมหัพภาค(.) _ และ @ เท่านั้น').email('กรุณาใส่อีเมลที่ถูกต้อง'),
-    address: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_address: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    current_id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_address: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    work_id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+    title: Yup.string().required(t('please_fill_all_fields')),
+    name: Yup.string().required(t('please_fill_all_fields')),
+    phone_number: Yup.string().length(10, t('phone_10_digits')),
+    id_shop: Yup.string().required(t('please_fill_all_fields')),
+    citizen_id: Yup.string().required(t('please_fill_all_fields')).length(13, t('citizen_id_13_digits')),
+    email: Yup.string().required(t('please_fill_all_fields')).matches(/^[A-Za-z0-9@._]+$/, t('email_english_only')).email(t('invalid_email')),
+    address: Yup.string().required(t('please_fill_all_fields')),
+    id_province: Yup.string().nullable().required(t('please_fill_all_fields')),
+    id_district: Yup.string().nullable().required(t('please_fill_all_fields')),
+    id_subdistrict: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_address: Yup.string().required(t('please_fill_all_fields')),
+    current_id_province: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_id_district: Yup.string().nullable().required(t('please_fill_all_fields')),
+    current_id_subdistrict: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_address: Yup.string().required(t('please_fill_all_fields')),
+    work_id_province: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_id_district: Yup.string().nullable().required(t('please_fill_all_fields')),
+    work_id_subdistrict: Yup.string().nullable().required(t('please_fill_all_fields')),
     // ...(role == 'admin' && {
-    //   credit_level: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+    //   credit_level: Yup.string().nullable().required(t('please_fill_all_fields')),
     // })
   })
 
   const SubmittedFormCitizen = Yup.object().shape({
-    id_shop: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    id_shop: Yup.string().required(t('please_fill_all_fields')),
   })
 
   const personalContent = (props: any) => {
@@ -544,7 +545,7 @@ const AddV2 = () => {
           <div className="check-container">
             <InputField
               require={true}
-              label="รหัสบัตรประชาชน"
+              label={t('citizen_id_label')}
               name="citizen_id"
               type="text"
               maxLength={13}
@@ -565,7 +566,7 @@ const AddV2 = () => {
                   } else {
                     toast.fire({
                       icon: 'error',
-                      title: 'กรุณากรอกรหัสบัตรประชาชนให้ครบก่อนค้นหา',
+                      title: t('citizen_id_search_required'),
                       padding: '10px 20px',
                     })
                   }
@@ -589,13 +590,13 @@ const AddV2 = () => {
                 } else {
                   toast.fire({
                     icon: 'error',
-                    title: 'กรุณากรอกรหัสบัตรประชาชนให้ครบก่อนค้นหา',
+                    title: t('citizen_id_search_required'),
                     padding: '10px 20px',
                   })
                 }
               }}
             >
-              ตรวจสอบ
+              {t('check')}
             </button>
             {/* <p className="mt-4 text-[11px] text-white-dark">หากพบจะแสดงบัญชีลูกค้า หากไม่พบจะแสดงแบบฟอร์มให้สร้างบัญชีลูกค้าใหม่ได้</p> */}
           </div>
@@ -606,7 +607,7 @@ const AddV2 = () => {
               <div className="upload-container w-full pb-3">
                 <div className="custom-file-container" data-upload-id="myFirstImage">
                   <div className="label-container">
-                    <label>รูปบัตรประชาชน <span className="text-rose-600">*</span></label>
+                    <label>{t('citizen_image')} <span className="text-rose-600">*</span></label>
                     {isFoundCitizen === 1 && (
                       <button
                         type="button"
@@ -632,11 +633,11 @@ const AddV2 = () => {
                               {isFoundCitizen === 1 && (
                                 <>
                                   <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                                    เลือกไฟล์...
+                                    {t('select_file')}
                                   </button>
                                   <div style={{ textAlign: 'right' }}>
                                     <button type="button" className="btn btn-primary" onClick={() => setIsCameraOcr(true)} style={{ display: 'inline-block' }}>
-                                      ถ่ายรูป
+                                      {t('take_photo')}
                                     </button>
                                   </div>
                                 </>
@@ -652,7 +653,7 @@ const AddV2 = () => {
                             {
                               isFoundCitizen !== 2 && imageList.length > 0 && (
                                 <button type="button" className="btn btn-success mt-2 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]" onClick={onImgAnalisy}>
-                                  ตรวจสอบบัตรประชาชน
+                                  {t('verify_citizen_id')}
                                 </button>
                               )
                             }
@@ -672,13 +673,13 @@ const AddV2 = () => {
             <>
               <hr className="mt-4"></hr>
               <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-                ข้อมูลส่วนบุคคล
+                {t('personal_information')}
               </div>
               {!id_shop && (
                 <div className="input-flex-row">
                   <SelectField
                     require={true}
-                    label="ร้านค้า"
+                    label={t('shop')}
                     id="id_shop"
                     name="id_shop"
                     isSearchable={true}
@@ -697,17 +698,17 @@ const AddV2 = () => {
               <div className="input-flex-row">
                 <SelectField
                   require={true}
-                  label="คำนำหน้า"
+                  label={t('title')}
                   id="title"
                   name="title"
                   options={thaiTitles}
-                  placeholder="กรุณาเลือก"
+                  placeholder={t('please_select')}
                   isSearchable={true}
                   disabled={isFoundCitizen === 2}
                 />
                 <InputField
                   require={true}
-                  label="ชื่อ-นามสกุล"
+                  label={t('name_surname')}
                   name="name"
                   type="text"
                   disabled={isFoundCitizen === 2}
@@ -716,7 +717,7 @@ const AddV2 = () => {
               <div className="input-flex-row">
                 <InputField
                   require={true}
-                  label="เบอร์โทรติดต่อ"
+                  label={t('phone_contact')}
                   name="phone_number"
                   type="text"
                   maxLength={10}
@@ -728,7 +729,7 @@ const AddV2 = () => {
                   disabled={isFoundCitizen === 2}
                 />
                 <InputField
-                  label="เบอร์โทรอ้างอิง"
+                  label={t('phone_reference')}
                   name="phone_number_ref"
                   type="text"
                   maxLength={10}
@@ -742,13 +743,13 @@ const AddV2 = () => {
               </div>
               <div className="input-flex-row">
                 <InputField
-                  label="Facebook ID"
+                  label={t('facebook_id')}
                   name="facebook_id"
                   type="text"
                   disabled={isFoundCitizen === 2}
                 />
                 <InputField
-                  label="Line ID"
+                  label={t('line_id')}
                   name="line_id"
                   type="text"
                   disabled={isFoundCitizen === 2}
@@ -756,13 +757,13 @@ const AddV2 = () => {
               </div>
               <div className="input-flex-row">
                 <InputField
-                  label="Tiktok ID"
+                  label={t('tiktok_id')}
                   name="tiktok_id"
                   type="text"
                   disabled={isFoundCitizen === 2}
                 />
                 <InputField
-                  label="Instagram ID"
+                  label={t('instagram_id')}
                   name="instagram_id"
                   type="text"
                   disabled={isFoundCitizen === 2}
@@ -771,7 +772,7 @@ const AddV2 = () => {
               <div className="input-flex-row">
                 <InputField
                   require={true}
-                  label="Email"
+                  label={t('email')}
                   name="email"
                   type="text"
                   disabled={isFoundCitizen === 2}
@@ -779,18 +780,18 @@ const AddV2 = () => {
                 <div className="blank-container"></div>
               </div>
               <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-                ข้อมูลที่อยู่
+                {t('address_information')}
               </div>
               {addressContent(props)}
               {/* {
                 role != 'shop' && (<div className="input-flex-row">
                   <SelectField
                     require={true}
-                    label="ระดับเครดิต (แอดมิน)"
+                    label={t('credit_level_admin')}
                     id="credit_level"
                     name="credit_level"
                     options={creditLevelTypes}
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     isSearchable={true}
                     disabled={isFoundCitizen === 2}
                   />
@@ -801,11 +802,11 @@ const AddV2 = () => {
                 role == 'shop' && (<div className="input-flex-row">
                   <SelectField
                     require={true}
-                    label="ระดับเครดิต (ร้านค้า)"
+                    label={t('credit_level_shop')}
                     id="shop_credit_level"
                     name="shop_credit_level"
                     options={creditLevelTypes}
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     isSearchable={true}
                     disabled={isFoundCitizen === 2}
                   />
@@ -826,14 +827,14 @@ const AddV2 = () => {
         <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
           <div className=" border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex">
             <span className="bg-white dark:bg-black dark:text-white-light inline-block px-3 h-[20px] lg:h-[20px] rounded flex items-center text-[12px] font-semibold -mt-[10px] ">
-              ที่อยู่ตามบัตรประชาชน
+              {t('id_card_address')}
             </span>
           </div>
           <div className="px-5 pb-5">
             <div className="input-flex-row">
               <InputField
                 require={true}
-                label="ที่อยู่"
+                label={t('address_label')}
                 name="address"
                 as="textarea"
                 rows="1"
@@ -848,11 +849,11 @@ const AddV2 = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="จังหวัด"
+                label={t('province')}
                 id="id_province"
                 name="id_province"
                 options={dataStoredProvinces}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'id_province')
                   props.setFieldValue('copyAddress', false)
@@ -863,11 +864,11 @@ const AddV2 = () => {
               />
               <SelectField
                 require={true}
-                label="อำเภอ/เขต"
+                label={t('district_label')}
                 id="id_district"
                 name="id_district"
                 options={districtIdList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'id_district')
                   props.setFieldValue('copyAddress', false)
@@ -880,11 +881,11 @@ const AddV2 = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="ตำบล/แขวง"
+                label={t('subdistrict_label')}
                 id="id_subdistrict"
                 name="id_subdistrict"
                 options={subDistrictIdList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'id_subdistrict')
                   props.setFieldValue('copyAddress', false)
@@ -894,7 +895,7 @@ const AddV2 = () => {
                 disabled={subDistrictIdList.length === 0 || isFoundCitizen === 2}
               />
               <InputField
-                label="รหัสไปรษณีย์"
+                label={t('zip_code')}
                 name="zip_code"
                 as="textarea"
                 rows="1"
@@ -906,7 +907,7 @@ const AddV2 = () => {
         <label className="flex cursor-pointer items-center">
           <Checkbox
             name="copyAddress"
-            label="ใช้ที่อยู่เดียวกับบัตรประชาชน"
+            label={t('same_as_id_card')}
             onCheck={(e: any) => handleCheck(props, e)}
             disabled={isFoundCitizen === 2}
           />
@@ -914,14 +915,14 @@ const AddV2 = () => {
         <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
           <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex">
             <span className="bg-white dark:bg-black  dark:text-white-light inline-block px-3 h-[20px] lg:h-[20px] rounded flex justify-center items-center text-[12px] font-semibold -mt-[10px] ">
-              ที่อยู่ปัจจุบัน
+              {t('current_address')}
             </span>
           </div>
           <div className="px-5 pb-5">
             <div className="input-flex-row">
               <InputField
                 require={true}
-                label="ที่อยู่"
+                label={t('address_label')}
                 name="current_address"
                 as="textarea"
                 rows="1"
@@ -935,11 +936,11 @@ const AddV2 = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="จังหวัด"
+                label={t('province')}
                 id="current_id_province"
                 name="current_id_province"
                 options={dataStoredProvinces}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'current_id_province')
                   props.setFieldValue('copyAddress', false)
@@ -949,11 +950,11 @@ const AddV2 = () => {
               />
               <SelectField
                 require={true}
-                label="อำเภอ/เขต"
+                label={t('district_label')}
                 id="current_id_district"
                 name="current_id_district"
                 options={districtCurrentList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'current_id_district')
                   props.setFieldValue('copyAddress', false)
@@ -965,11 +966,11 @@ const AddV2 = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="ตำบล/แขวง"
+                label={t('subdistrict_label')}
                 id="current_id_subdistrict"
                 name="current_id_subdistrict"
                 options={subDistrictCurrentList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'current_id_subdistrict')
                   props.setFieldValue('copyAddress', false)
@@ -978,7 +979,7 @@ const AddV2 = () => {
                 disabled={subDistrictCurrentList.length === 0 || isFoundCitizen === 2}
               />
               <InputField
-                label="รหัสไปรษณีย์"
+                label={t('zip_code')}
                 name="current_zip_code"
                 as="textarea"
                 rows="1"
@@ -990,7 +991,7 @@ const AddV2 = () => {
         <label className="flex cursor-pointer items-center">
           <Checkbox
             name="copyAddressForWork"
-            label="ใช้ที่อยู่เดียวกับบัตรประชาชน"
+            label={t('same_as_id_card')}
             onCheck={(e: any) => handleCheckForWork(props, e)}
             disabled={isFoundCitizen === 2}
           />
@@ -998,14 +999,14 @@ const AddV2 = () => {
         <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
           <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex">
             <span className="bg-white dark:bg-black dark:text-white-light inline-block px-3 h-[20px] lg:h-[20px] rounded flex justify-center items-center text-[12px] font-semibold -mt-[10px]">
-              ที่อยู่ที่ทำงาน
+              {t('work_address')}
             </span>
           </div>
           <div className="px-5 pb-5">
             <div className="input-flex-row">
               <InputField
                 require={true}
-                label="ที่อยู่"
+                label={t('address_label')}
                 name="work_address"
                 as="textarea"
                 rows="1"
@@ -1019,11 +1020,11 @@ const AddV2 = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="จังหวัด"
+                label={t('province')}
                 id="work_id_province"
                 name="work_id_province"
                 options={dataStoredProvinces}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   handleChangeSelect(props, e, 'work_id_province')
                   props.setFieldValue('copyAddressForWork', false)
@@ -1033,11 +1034,11 @@ const AddV2 = () => {
               />
               <SelectField
                 require={true}
-                label="อำเภอ/เขต"
+                label={t('district_label')}
                 id="work_id_district"
                 name="work_id_district"
                 options={districtWorkList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   props.setFieldValue('copyAddressForWork', false)
                   handleChangeSelect(props, e, 'work_id_district')
@@ -1049,11 +1050,11 @@ const AddV2 = () => {
             <div className="input-flex-row">
               <SelectField
                 require={true}
-                label="ตำบล/แขวง"
+                label={t('subdistrict_label')}
                 id="work_id_subdistrict"
                 name="work_id_subdistrict"
                 options={subDistrictWorkList}
-                placeholder="กรุณาเลือก"
+                placeholder={t('please_select')}
                 onChange={(e: any) => {
                   props.setFieldValue('copyAddressForWork', false)
                   handleChangeSelect(props, e, 'work_id_subdistrict')
@@ -1062,7 +1063,7 @@ const AddV2 = () => {
                 disabled={subDistrictWorkList.length === 0 || isFoundCitizen === 2}
               />
               <InputField
-                label="รหัสไปรษณีย์"
+                label={t('zip_code')}
                 name="work_zip_code"
                 as="textarea"
                 rows="1"
@@ -1081,7 +1082,7 @@ const AddV2 = () => {
         <div className="upload-container mt-6">
           <div className="custom-file-container" data-upload-id="myFirstImage">
             <div className="label-container">
-              <label>รูปยืนยันบุคคล <span className="text-rose-600">*</span></label>
+              <label>{t('verification_image')} <span className="text-rose-600">*</span></label>
               {isFoundCitizen === 1 && (
                 <button
                   type="button"
@@ -1103,7 +1104,7 @@ const AddV2 = () => {
                 <div className="upload__image-wrapper">
                   {isFoundCitizen === 1 && (
                     <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                      เลือกไฟล์...
+                      {t('select_file')}
                     </button>
                   )}
                   {imageList.map((image, index) => (
@@ -1136,7 +1137,7 @@ const AddV2 = () => {
           {(props) => (
             <Form className="space-y-5 dark:text-white custom-select ">
               <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                บัญชีลูกค้า
+                {t('customer_account')}
               </div>
               <div className={`grid md:grid-rows-1 ${isFoundCitizen !== 0 && `xl:grid-cols-8`} gap-2 pb-6`}>
                 {personalContent(props)}
@@ -1149,7 +1150,7 @@ const AddV2 = () => {
                       <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>
                     )}
 
-                  {isFoundCitizen == 2 ? 'เพิ่มเข้าร้านค้า' : 'เพิ่มข้อมูล'}
+                  {isFoundCitizen == 2 ? t('add_to_shop') : t('add_data')}
                 </button>
               )}
             </Form>
@@ -1169,27 +1170,27 @@ const AddV2 = () => {
                     <IconX />
                   </button>
                   <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                    ข้อมูลบัตรประชาชน
+                    {t('citizen_id_data')}
                   </div>
                   <div className="px-5 pt-3 pb-5">
                     <div className="flex flex-wrap justify-start">
                       <div className="w-full">
                         <p>
-                          เลขบัตรประชาชน:
+                          {t('citizen_id_label')}:
                           {citizenId}
                         </p>
                       </div>
                       <div className="w-full">
                         <p>
-                          ชื่อ-นามสกุล: {customerFormData.name?.trim()}
+                          {t('name_surname_label')}: {customerFormData.name?.trim()}
                         </p>
                       </div>
                       <div className="w-full">
                         <p>
-                          {customerFormData?.address ? `ที่อยู่: ${customerFormData?.address} ` : ' '}
-                          {customerFormData?.subdistrict ? `ตำบล${customerFormData?.subdistrict} ` : ' '}
-                          {customerFormData?.district ? `อำเภอ${customerFormData?.district} ` : ' '}
-                          {customerFormData?.district ? `จังหวัด${customerFormData?.province} ` : ' '}
+                          {customerFormData?.address ? `${t('address_detail')}: ${customerFormData?.address} ` : ' '}
+                          {customerFormData?.subdistrict ? `${t('subdistrict')}${customerFormData?.subdistrict} ` : ' '}
+                          {customerFormData?.district ? `${t('district')}${customerFormData?.district} ` : ' '}
+                          {customerFormData?.district ? `${t('province')}${customerFormData?.province} ` : ' '}
                           {isNaN(customerFormData?.zip_code) ? ' ' : customerFormData?.zip_code}
                         </p>
                       </div>
@@ -1210,10 +1211,10 @@ const AddV2 = () => {
                         }))
                         setActionModal(false)
                       }}>
-                        ยกเลิก
+                        {t('cancel')}
                       </button>
                       <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={() => setActionModal(false)}>
-                        ยืนยัน
+                        {t('confirm')}
                       </button>
                     </div>
                   </div>

@@ -30,6 +30,8 @@ import IconPlus from '../../../components/Icon/IconPlus'
 import IconEdit from '../../../components/Icon/IconEdit'
 import IconSearch from '../../../components/Icon/IconSearch'
 
+import { useTranslation } from 'react-i18next'
+
 import 'tippy.js/dist/tippy.css'
 
 const defaultsForm = {
@@ -41,12 +43,13 @@ const defaultsForm = {
 const mode = process.env.MODE || 'admin'
 
 const List = () => {
+  const { t } = useTranslation()
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการสัญญา'))
+    dispatch(setPageTitle(t('contract_type_list')))
   }, [dispatch])
 
   const storedUser = localStorage.getItem(mode)
@@ -72,7 +75,7 @@ const List = () => {
   const [search, setSearch] = useState('')
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('please_fill_all_fields')),
   })
 
   const { mutate: fetchContractTypesData } = useGlobalMutation(url_api.contractTypeFindAll, {
@@ -131,7 +134,7 @@ const List = () => {
   const { mutate: contractTypeCreate } = useGlobalMutation(url_api.contractTypeCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('เพิ่มข้อมูลสำเร็จ', 'success')
+        showNotification(t('add_success'), 'success')
         setActionModal(false)
         fetchContractTypesData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -146,7 +149,7 @@ const List = () => {
   const { mutate: contractTypeUpdate } = useGlobalMutation(url_api.contractTypeUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
         setActionModal(false)
         fetchContractTypesData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -180,17 +183,17 @@ const List = () => {
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
         <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
           <h2 className="text-xl">
-            ประเภทสัญญา
+            {t('contract_type')}
           </h2>
           <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
             <div className="flex gap-3">
               <button type="button" className="btn btn-primary" onClick={() => addEditContractType()}>
                 <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                เพิ่มสัญญา
+                {t('add_contract_type')}
               </button>
             </div>
             <div className="relative">
-              <input type="text" placeholder="ค้นหา" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input type="text" placeholder={t('search_text')} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
               <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
                 <IconSearch className="mx-auto" />
               </button>
@@ -204,7 +207,7 @@ const List = () => {
             columns={[
               {
                 accessor: 'id',
-                title: 'ลำดับ',
+                title: t('sequence'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (row, index) => (
@@ -213,7 +216,7 @@ const List = () => {
               },
               {
                 accessor: 'name',
-                title: 'ชื่อสัญญา',
+                title: t('contract_name'),
                 textAlignment: 'left',
                 sortable: false,
                 render: ({ name }) => (
@@ -224,23 +227,23 @@ const List = () => {
               },
               {
                 accessor: 'is_active',
-                title: 'เปิด/ปิด การใช้งาน',
+                title: t('active_inactive_status'),
                 textAlignment: 'center',
                 sortable: false,
                 render: ({ is_active }) => (
                   <span className={`badge ${is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                    {is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+                    {is_active ? t('open') : t('close')}
                   </span>
                 ),
               },
               {
                 accessor: 'action',
-                title: 'Actions',
+                title: t('actions'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (item) => (
                   <div className="flex gap-4 items-center w-max mx-auto">
-                    <Tippy content="แก้ไข" theme="Primary">
+                    <Tippy content={t('edit')} theme="Primary">
                       <a className="flex cursor-pointer active" onClick={() => { addEditContractType(item) }}>
                         <IconEdit className="w-4.5 h-4.5" />
                       </a>
@@ -260,7 +263,7 @@ const List = () => {
               setPageSize(p)
             }}
             paginationText={({ from, to, totalRecords }) => (
-              `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+              `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
             )}
           />
         </div>
@@ -277,33 +280,33 @@ const List = () => {
                       <IconX />
                     </button>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                      {formData.id ? 'แก้ไข' : 'เพิ่ม'}
+                      {formData.id ? t('edit') : t('add')}
                     </div>
                     <div className="p-5">
                       <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedForm}>
                         {(props) => (
                           <Form className="space-y-5 mb-7 dark:text-white custom-select">
                             <InputField
-                              label="ชื่อสัญญา"
+                              label={t('contract_name')}
                               name="name"
                               type="text"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_info')}
                             />
                             <SelectField
-                              label="สถานะ*"
+                              label={t('status') + '*'}
                               id="is_active"
                               name="is_active"
                               options={[
                                 {
                                   value: true,
-                                  label: 'เปิด',
+                                  label: t('open'),
                                 },
                                 {
                                   value: false,
-                                  label: 'ปิด',
+                                  label: t('close'),
                                 },
                               ]}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => {
                                 props.setFieldValue('is_active', e.value)
                               }}
@@ -311,10 +314,10 @@ const List = () => {
                             />
                             <div className="flex justify-end items-center mt-8">
                               <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                                ยกเลิก
+                                {t('cancel')}
                               </button>
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {formData.id ? 'บันทึก' : 'เพิ่ม'}
+                                {formData.id ? t('save') : t('add')}
                               </button>
                             </div>
                           </Form>

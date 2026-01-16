@@ -14,6 +14,7 @@ import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
 import Breadcrumbs from '../../../helpers/breadcrumbs'
 import themeInit from '../../../theme.init'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 const toast = Swal.mixin(toastAlert)
@@ -24,6 +25,7 @@ const Edit = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -42,12 +44,12 @@ const Edit = () => {
   }
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { label: 'แก้ไข', isCurrent: true },
+    { to: '/apps/employee/list', label: t('employee') },
+    { label: t('edit'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('แก้ไขพนักงาน'))
+    dispatch(setPageTitle(t('edit_employee')))
     dispatch(setSidebarActive(['employee', '/apps/employee/list']))
   }, [])
   const [businessUnit, setBusinessUnit] = useState<any>([])
@@ -105,7 +107,7 @@ const Edit = () => {
      if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'แก้ไขสำเร็จ',
+          title: t('edit_success'),
           padding: '10px 20px',
         })
         navigate('/apps/employee/list')
@@ -132,7 +134,7 @@ const Edit = () => {
     if(cleanedEvent?.pin && cleanedEvent?.pin?.length != 6) {
       toast.fire({
           icon: 'error',
-          title: 'PIN ต้องมีความยาว 6 ตัวเท่านั้น',
+          title: t('pin_length_error'),
           padding: '10px 20px',
         })
         return false
@@ -141,19 +143,19 @@ const Edit = () => {
       data: cleanedEvent, 
       id: id || dataStoredEmployee.id 
     });
-  }, []);
+  }, [t]);
 
   const SubmittedForm = Yup.object().shape({
-    title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    phone_number: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    email: Yup.string().email('กรุณาใส่อีเมลที่ถูกต้อง').required('กรุณาใส่ข้อมูลให้ครบ'),
-    role: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    access_level: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    password_repeat: Yup.string().oneOf([Yup.ref('password'), null], 'รหัสผ่านไม่ตรงกัน'),
+    title: Yup.string().required(t('please_fill_all_fields')),
+    name: Yup.string().required(t('please_fill_all_fields')),
+    phone_number: Yup.string().required(t('please_fill_all_fields')),
+    email: Yup.string().email(t('please_enter_valid_email')).required(t('please_fill_all_fields')),
+    role: Yup.string().required(t('please_fill_all_fields')),
+    access_level: Yup.string().required(t('please_fill_all_fields')),
+    password_repeat: Yup.string().oneOf([Yup.ref('password'), null], t('password_not_match')),
   })
 
-  if (isEmployeeLoading) return <div>Loading...</div>
+  if (isEmployeeLoading) return <div>{t('loading')}</div>
 
   return (
     <>
@@ -165,38 +167,38 @@ const Edit = () => {
               <Form className="space-y-5 dark:text-white custom-select">
                 <div className="input-flex-row">
                   <SelectField
-                    label="คำนำหน้า"
+                    label={t('title_prefix')}
                     id="title"
                     name="title"
                     options={thaiTitles}
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     onChange={(e: any) => handleChangeSelect(props, e, 'title')}
                     isSearchable={false}
                     require={true}
                   />
-                  <InputField label="ชื่อพนักงาน" name="name" type="text" placeholder="กรุณาใส่ข้อมูล" require={true} />
+                  <InputField label={t('employee_name')} name="name" type="text" placeholder={t('please_enter_data')} require={true} />
                 </div>
                 <div className="input-flex-row">
-                  <InputField label="Line ID" name="line_id" type="text" placeholder="กรุณาใส่ข้อมูล" />
-                  <InputField label="Email" name="email" type="text" placeholder="กรุณาใส่ข้อมูล" require={true} />
+                  <InputField label={t('line_id')} name="line_id" type="text" placeholder={t('please_enter_data')} />
+                  <InputField label={t('email')} name="email" type="text" placeholder={t('please_enter_data')} require={true} />
                 </div>
                 <div className="input-flex-row">
                   <SelectField
-                    label="ตำแหน่ง"
+                    label={t('position')}
                     id="role"
                     name="role"
                     options={roleTypes}
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     onChange={(e: any) => handleChangeSelect(props, e, 'role')}
                     isSearchable={false}
                     require={true}
                   />
                   <SelectField
-                    label="ระดับสิทธิ"
+                    label={t('access_level')}
                     id="access_level"
                     name="access_level"
                     options={accessLevelTypes}
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     onChange={(e: any) => handleChangeSelect(props, e, 'access_level')}
                     isSearchable={false}
                     require={true}
@@ -205,7 +207,7 @@ const Edit = () => {
 
                 <div className="input-flex-row">
                   <InputField
-                    label="เบอร์โทรศัพท์พนักงาน"
+                    label={t('employee_phone')}
                     name="phone_number"
                     type="text"
                     maxLength={10}
@@ -219,10 +221,10 @@ const Edit = () => {
                   {
                     role === 'admin' && (
                       <SelectField
-                        label="หน่วยธุรกิจ"
+                        label={t('business_unit')}
                         id="id_business_unit"
                         name="id_business_unit"
-                        placeholder="กรุณาเลือก"
+                        placeholder={t('please_select')}
                         className="w-auto"
                         options={businessUnit}
                         isSearchable={true}
@@ -236,18 +238,18 @@ const Edit = () => {
                 {(access_level == 'A' || access_level == 'B') && (
                  <div className="input-flex-row">
                       <SelectField
-                          label="เปิดใช้งาน"
+                          label={t('active_status')}
                           id="is_active"
                           name="is_active"
-                          placeholder="กรุณาเลือก"
+                          placeholder={t('please_select')}
                           options={[
                           {
                             value: true,
-                            label: 'เปิดการใช้งาน'
+                            label: t('active')
                           },
                           {
                             value: false,
-                            label: 'ปิดการใช้งาน'
+                            label: t('inactive')
                           },
                         ]}
                         />
@@ -255,14 +257,14 @@ const Edit = () => {
                 )}
                 
                 <div className="input-flex-row">
-                  <InputField label="รหัสผ่าน" name="password" type="password" require={true} />
-                  <InputField label="ยืนยันรหัสผ่าน" name="password_repeat" type="password" require={true} />
+                  <InputField label={t('password')} name="password" type="password" require={true} />
+                  <InputField label={t('confirm_password')} name="password_repeat" type="password" require={true} />
                 </div>
                 {enabledPin && (
                     <>
                      <div className="input-flex-row">
                         <InputField
-                          label="PIN"
+                          label={t('pin_label')}
                           name="pin"
                           type="password"
                           maxLength={6}
@@ -278,7 +280,7 @@ const Edit = () => {
                     
                 )}
                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                  บันทึก
+                  {t('save')}
                 </button>
               </Form>
             )}

@@ -133,11 +133,13 @@ const List = () => {
   }, [])
 
   const goAdd = () => {
-    open('/apps/contract', '_blank');
+    window.open(process.env.BACKEND_URL?.split('/api')[0] + '/#/apps/contract') 
+    // open('/apps/contract', '_blank');
   }
 
   const goEdit = (item: any) => {
-    open('/apps/contract/' + item.id + '/' + item.uuid, '_blank');
+    window.open(process.env.BACKEND_URL?.split('/api')[0] + '/#/apps/contract/' + item.id + '/' + item.uuid)
+    // open('/apps/contract/' + item.id + '/' + item.uuid, '_blank');
   }
 
   const fetchExportCsv = async () => {

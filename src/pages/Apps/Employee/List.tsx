@@ -23,12 +23,14 @@ import { toastAlert } from '../../../helpers/constant'
 import { Dialog, Transition } from '@headlessui/react'
 import IconX from '../../../components/Icon/IconX'
 import SelectField from '../../../components/HOC/SelectField'
+import { useTranslation } from 'react-i18next'
 const mode = process.env.MODE || 'admin'
 
 const List = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -39,7 +41,7 @@ const List = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการพนักงาน'))
+    dispatch(setPageTitle(t('employee_list')))
   })
 
   const [firstLoading, setFirstLoading] = useState(false)
@@ -69,7 +71,7 @@ const List = () => {
 
   const { mutate: fetchContractGetStatus,isLoading:isLoadingStatus } = useGlobalMutation(url_api.contractFilter, {
     onSuccess: (res: any) => {
-      setBusinessUnit([{ value: null, label: 'ทั้งหมด' }, ...res.data.business_unit.map((item: any) => ({
+      setBusinessUnit([{ value: null, label: t('all') }, ...res.data.business_unit.map((item: any) => ({
         value: item,
         label: item.name,
       }))]
@@ -147,7 +149,7 @@ const List = () => {
        if (res.statusCode === 200 || res.code === 200) {
             toast.fire({
                 icon: 'success',
-                title: 'บันทึกสำเร็จ',
+                title: t('save_success'),
                 padding: '10px 20px',
             })
             setTimeout(() => {
@@ -164,7 +166,7 @@ const List = () => {
     onError: () => {
       toast.fire({
           icon: 'error',
-          title: 'เกิดข้อผิดพลาด',
+          title: t('error_occurred'),
           padding: '10px 20px',
       })
     },
@@ -196,11 +198,11 @@ const List = () => {
           <div className="flex items-center gap-2">
             <Link to="/apps/employee/add" className="btn btn-primary gap-2">
               <IconPlus />
-              เพิ่มพนักงาน
+              {t('add_employee_btn')}
             </Link>
             {(access_level == 'A' || access_level == 'B') && (
               <button type='button' className="btn btn-success gap-2" onClick={() => { setActionModal(true)}} disabled={selectedRecords?.length > 0 ? false : true}>
-                ปรับปรุง เปิด-ปิดใช้งาน
+                {t('update_status')}
               </button>
             )}
             
@@ -227,7 +229,7 @@ const List = () => {
                               id="id_business_unit"
                               name="id_business_unit"
                               value={values.id_business_unit}
-                              placeholder="เลือก หน่วยธุรกิจ"
+                              placeholder={t('select_business_unit')}
                               className="z-10 w-[200px]"
                               options={businessUnit}
                               isSearchable={true}
@@ -241,7 +243,7 @@ const List = () => {
                           <input type="text"
                             id="query"
                             name="query"
-                            placeholder="ค้นหา"
+                            placeholder={t('search')}
                             className="form-input py-2 ltr:pr-11 rtl:pl-11 peer"
                             value={values.query}
                             onChange={(e) => {
@@ -250,7 +252,7 @@ const List = () => {
                           />
                         </div>
                       <div className="flex gap-4">
-                        <button type="submit" className="btn btn-primary w-[100px] gap-2">ค้นหา</button>
+                        <button type="submit" className="btn btn-primary w-[100px] gap-2">{t('search')}</button>
                         <button
                           type="reset"
                           className="btn btn-info gap-2 w-[100px]"
@@ -258,7 +260,7 @@ const List = () => {
                             location.reload()
                           }}
                         >
-                          ล้างค่า
+                          {t('clear_values')}
                         </button>
                       </div>
                     </div>
@@ -277,7 +279,7 @@ const List = () => {
             columns={[
               {
                 accessor: 'id',
-                title: 'ลำดับ',
+                title: t('order_number'),
                 sortable: false,
                 textAlignment: 'center',
                 render: (row, index) => (
@@ -286,7 +288,7 @@ const List = () => {
               },
               {
                 accessor: 'name',
-                title: 'ชื่อพนักงาน',
+                title: t('employee_name'),
                 sortable: false,
                 render: (item) => (
                   <div className="flex items-center justify-start font-normal">
@@ -298,7 +300,7 @@ const List = () => {
               },
               {
                 accessor: 'email',
-                title: 'อีเมล',
+                title: t('email'),
                 sortable: false,
                 render: (item: any) => (
                   <div className="flex items-center justify-start font-normal">
@@ -308,7 +310,7 @@ const List = () => {
               },
               {
                 accessor: 'phone_number',
-                title: 'เบอร์โทรศัพท์',
+                title: t('phone_number'),
                 sortable: false,
                 render: ({ phone_number }) => (
                   <div className="flex items-center justify-start font-normal">
@@ -318,7 +320,7 @@ const List = () => {
               },
               {
                 accessor: 'line_id',
-                title: 'Line ID',
+                title: t('line_id'),
                 sortable: false,
                 render: (item: any) => (
                   <div className="flex items-center justify-start font-normal">
@@ -328,7 +330,7 @@ const List = () => {
               },
               {
                 accessor: 'business_unit',
-                title: 'หน่วยธุรกิจ',
+                title: t('business_unit'),
                 sortable: false,
                 render: (item: any) => (
                   <div className="flex items-center justify-start font-normal">
@@ -338,7 +340,7 @@ const List = () => {
               },
               {
                 accessor: 'role',
-                title: 'ตำแหน่ง',
+                title: t('position'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (item: any) => (
@@ -349,7 +351,7 @@ const List = () => {
               },
               {
                 accessor: 'access_level',
-                title: 'ระดับสิทธิ์',
+                title: t('access_level'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (item: any) => (
@@ -360,18 +362,18 @@ const List = () => {
               },
               {
                 accessor: 'is_active',
-                title: 'เปิดปิดการใช้งาน',
+                title: t('active_status'),
                 textAlignment: 'center',
                 sortable: false,
                 render: ({ is_active }) => (
                   <span className={`badge ${is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                    {is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+                    {is_active ? t('active') : t('inactive')}
                   </span>
                 ),
               },
               {
                 accessor: 'action',
-                title: 'Actions',
+                title: t('actions'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (item) => (
@@ -398,7 +400,7 @@ const List = () => {
             sortStatus={sortStatus}
             onSortStatusChange={setSortStatus}
             paginationText={({ from, to, totalRecords }) => (
-              `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+              `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
             )}
           />
         </div>
@@ -437,7 +439,7 @@ const List = () => {
                       >
                       <IconX />
                       </button>
-                      <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">ปรับปรุงข้อมูล</div>
+                      <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{t('update_data')}</div>
                       <div className="p-5">
                       <Formik
                           initialValues={formUpdate}
@@ -448,14 +450,14 @@ const List = () => {
                           {(props) => (
                               <Form className="space-y-5 mb-7 dark:text-white custom-select">
                               <SelectField
-                                  label="สถานะการใช้งาน"
+                                  label={t('usage_status')}
                                   id="is_active"
                                   name="is_active"
                                   options={[
-                                      { value: true, label: 'เปิดใช้งาน' },
-                                      { value:false, label: 'ปิดใช้งาน' },
+                                      { value: true, label: t('active') },
+                                      { value:false, label: t('inactive') },
                                   ]}
-                                  placeholder="กรุณาเลือก"
+                                  placeholder={t('please_select')}
                                   onChange={(e: any) => {
                                   props.setFieldValue('is_active', e.value);
                                   }}
@@ -465,7 +467,7 @@ const List = () => {
 
                               <div className="flex justify-center items-center mt-8">
                                   <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                  ตกลง
+                                  {t('ok')}
                                   </button>
                               </div>
                               </Form>

@@ -7,6 +7,7 @@ import { numberWithCommas } from '../../../helpers/formatNumeric'
 import themeInit from '../../../theme.init'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
+import { useTranslation } from 'react-i18next'
 const mode = process.env.MODE || 'admin'
 //TODO: update param name
 interface LocationState {
@@ -32,7 +33,7 @@ interface TimeLeft {
 }
 
 const Payment = () => {
-
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
@@ -49,14 +50,14 @@ const Payment = () => {
   const apiUrl = process.env.BACKEND_URL
   const handleError = () => {
     Swal.fire({
-      title: 'ขออภัย!',
-      text: 'สร้าง QR Code ไม่สำเร็จ กรุณากด สร้าง QRCode ใหม่อีกครั้ง',
+      title: t('sorry'),
+      text: t('qr_code_failed'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: themeInit.color.themePrimary,
       cancelButtonColor: '#d33',
-      confirmButtonText: 'ยืนยัน',
-      cancelButtonText: 'ยกเลิก',
+      confirmButtonText: t('confirm'),
+      cancelButtonText: t('cancel'),
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -95,7 +96,7 @@ const Payment = () => {
   })
 
   useEffect(() => {
-    dispatch(setPageTitle('ชำระเงิน (Payment)'))
+    dispatch(setPageTitle(t('payment_title')))
     const fetchPaymentDetails = async () => {
       if(!contractID || !ins_no?.id) {
         navigate('/apps/customer-payment/list')
@@ -137,7 +138,7 @@ const Payment = () => {
         if (res.statusCode === 400 || res.code === 400) {
             Swal.fire({
                   icon: 'error',
-                  title: 'ยกเลิกชำระเงิน',
+                  title: t('payment_cancelled'),
                   padding: '10px 20px',
               }).then(() => {
                 navigate('/apps/customer-payment/list')
@@ -146,7 +147,7 @@ const Payment = () => {
           if (res.data?.status == 'cancel') {
               Swal.fire({
                   icon: 'error',
-                  title: 'ยกเลิกชำระเงิน',
+                  title: t('payment_cancelled'),
                   padding: '10px 20px',
               }).then(() => {
                   navigate('/apps/customer-payment/list')
@@ -154,7 +155,7 @@ const Payment = () => {
           } else if (res.data?.status == 'complete') {
               Swal.fire({
                   icon: 'success',
-                  title: 'ชำระเงินสำเร็จ',
+                  title: t('payment_success'),
                   padding: '10px 20px',
               }).then(() => {
                   navigate('/apps/customer-payment/success', {
@@ -253,7 +254,7 @@ const Payment = () => {
     }
     timerComponents.push(
       <span key={interval}>
-        {timeLeft[interval as keyof TimeLeft]} {interval}{' '}
+        {timeLeft[interval as keyof TimeLeft]} {t(interval as any)}{' '}
       </span>
     )
   })
@@ -263,33 +264,33 @@ const Payment = () => {
       <ul className="flex space-x-2 rtl:space-x-reverse">
         <li>
           <Link to="/apps/customer-payment/list" className="text-primary hover:underline">
-            หน้าหลัก
+            {t('home_page')}
           </Link>
         </li>
         <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-          <span>ชำระเงิน (Payment)</span>
+          <span>{t('payment_title')}</span>
         </li>
       </ul>
       <div className="py-10 animate__animated">
         <div className="panel !px-0">
           <div className="flex justify-between flex-wrap gap-4 px-4">
-            <div className="text-2xl font-semibold uppercase">ชำระเงิน (Payment)</div>
+            <div className="text-2xl font-semibold uppercase">{t('payment_title')}</div>
             <div className="shrink-0">
               <img src={themeInit.logo.CustomerLogo}  alt="img" className="w-36 ltr:ml-auto rtl:mr-auto" />
             </div>
           </div>
           <div className="ltr:text-left rtl:text-left px-4">
             <div className="space-y-1 mt-6 text-white-dark">
-              <div>เลขที่สัญญา {contractData?.reference}</div>
-              <div>งวดที่: {ins_no?.ins_no}</div>
+              <div>{t('contract_number_label')} {contractData?.reference}</div>
+              <div>{t('installment_period_label')}: {ins_no?.ins_no}</div>
             </div>
           </div>
           <div className="my-4"></div>
           <div className="flex justify-between font-bold text-[22px] mt-4">
             <div className="p-6 text-[22px] font-bold dark:border-dark dark:text-white">
-              ยอดที่ต้องชำระ
+              {t('amount_to_pay')}
             </div>
-             <div className="p-6 text-[22px] font-bold dark:border-dark dark:text-white">{numberWithCommas(payment_preview?.total)} บาท</div>
+             <div className="p-6 text-[22px] font-bold dark:border-dark dark:text-white">{numberWithCommas(payment_preview?.total)} {t('baht')}</div>
           </div>
           <div className="p-6">
             {loading ? (
@@ -304,7 +305,7 @@ const Payment = () => {
             {(qrCodeImage && timerComponents.length) && (
               <div className="text-center">
                 <button className="bg-blue-600 text-white py-2 px-4 rounded" onClick={handleDownload}>
-                  บันทึกรูป
+                  {t('save_image')}
                 </button>
               </div>
             )}
@@ -312,26 +313,26 @@ const Payment = () => {
             <br />
 
             <div className="text-center">
-              <div className="py-2">เวลานับถอยหลัง</div>
+              <div className="py-2">{t('countdown_timer')}</div>
               <div>
                 {timerComponents.length ? (
                   timerComponents
                 ) : (
                   <button className="bg-blue-600 text-white py-2 px-4 rounded" onClick={reGenerateQRCode}>
-                    สร้าง QR Code ใหม่
+                    {t('regenerate_qr_code')}
                   </button>
                 )}
               </div>
             </div>
             <div className="mt-6">
-              <div className="text-lg font-bold mb-2">ขั้นตอนดำเนินการ</div>
+              <div className="text-lg font-bold mb-2">{t('payment_steps')}</div>
               <ol className="list-decimal list-inside text-white-dark text-sm">
-                <li>บันทึกรูป QR Code โดยกดปุ่ม "บันทึกรูป"</li>
-                <li>เปิดแอปธนาคาร และเลือกวิธีสแกน QR Code</li>
-                <li>เปิดรูปที่บันทึกไว้ และสแกน ตกลง เพื่อยืนยันการชำระ</li>
-                <li>เมื่อชำระผ่านแอปธนาคารแล้ว กลับมาหน้านี้ และอัปเดต</li>
-                <li>เมื่อระบบยืนยันการชำระเรียบร้อยแล้ว จะขึ้นว่า ยืนยันการชำระเรียบร้อย</li>
-                <li>หากมีปัญหาการชำระเงิน สามารถติดต่อเจ้าหน้าที่ Line: {lineId}</li>
+                <li>{t('step_1')}</li>
+                <li>{t('step_2')}</li>
+                <li>{t('step_3')}</li>
+                <li>{t('step_4')}</li>
+                <li>{t('step_5')}</li>
+                <li>{t('step_6')} {lineId}</li>
 
               </ol>
             </div>

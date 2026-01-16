@@ -15,6 +15,7 @@ import LabelContent from '../../../components/HOC/Label'
 import IconEdit from '../../../components/Icon/IconEdit'
 
 import Breadcrumbs from '../../../helpers/breadcrumbs'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
@@ -24,6 +25,7 @@ const Preview = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -33,12 +35,12 @@ const Preview = () => {
   }
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { label: 'รายละเอียด', isCurrent: true },
+    { to: '/apps/employee/list', label: t('employee') },
+    { label: t('details'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('รายละเอียดพนักงาน'))
+    dispatch(setPageTitle(t('employee_details')))
     dispatch(setSidebarActive(['employee', '/apps/employee/list']))
   })
 
@@ -62,34 +64,34 @@ const Preview = () => {
         <div className="flex items-center lg:justify-end justify-center flex-wrap gap-4 mb-6 pt-5">
           <a className="btn btn-primary gap-2 cursor-pointer" onClick={() => goEdit()}>
             <IconEdit />
-            แก้ไข
+            {t('edit')}
           </a>
         </div>
       </div>
       <div className="panel px-6 flex-1 py-6 rtl:xl:ml-6">
         <div className="space-y-5 dark:text-white">
           <div className="input-flex-row">
-            <LabelContent label="ชื่อพนักงาน">
+            <LabelContent label={t('employee_name')}>
               {employeeData?.title + ' ' + employeeData?.name}
             </LabelContent>
-            <LabelContent label="เบอร์โทรศัพท์พนักงาน">
+            <LabelContent label={t('employee_phone')}>
               {formatPhoneNumber(employeeData?.phone_number ?? '-')}
             </LabelContent>
-            <LabelContent label="Line ID">
+            <LabelContent label={t('line_id')}>
               {employeeData?.line_id}
             </LabelContent>
           </div>
           <div className="input-flex-row">
-            <LabelContent label="Email">
+            <LabelContent label={t('email')}>
               {employeeData?.email}
             </LabelContent>
-            <LabelContent label="Role">
+            <LabelContent label={t('role_label')}>
               {roleTypes.reduce((data: any, item: any) => {
                 if (item.value === employeeData?.role) { return item.label }
                 return data
               }, '')}
             </LabelContent>
-            <LabelContent label="Access Level">
+            <LabelContent label={t('access_level_label')}>
               {accessLevelTypes.reduce((data: any, item: any) => {
                 if (item.value === employeeData?.access_level) { return item.label }
                 return data
@@ -97,7 +99,7 @@ const Preview = () => {
             </LabelContent>
           </div>
           <div className="input-flex-row">
-          <LabelContent label="หน่วยธุรกิจ">
+          <LabelContent label={t('business_unit')}>
               {employeeData?.business_unit?.name || 'TMS'}
             </LabelContent>
           </div>

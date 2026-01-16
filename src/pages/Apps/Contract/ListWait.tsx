@@ -18,6 +18,7 @@ import DateRangeAntd from '../../../components/HOC/DateRangeAntd';
 import IconChecks from '../../../components/Icon/IconChecks';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin';
 
@@ -25,6 +26,7 @@ const ListWait = () => {
     const storedUser = localStorage.getItem(mode);
     const apiUrl = process.env.BACKEND_URL;
     const dispatch = useDispatch()
+    const { t } = useTranslation();
 
     const role = storedUser ? JSON.parse(storedUser).role : null;
     const token = storedUser ? JSON.parse(storedUser).access_token : null;
@@ -184,14 +186,14 @@ const ListWait = () => {
     const columns: any = [
         {
             accessor: 'index',
-            title: 'ลำดับ',
+            title: t('order'),
             textAlignment: 'center',
             render: (_row: any, index: number) => <p>{index + 1 + (page - 1) * pageSize}</p>,
         },
 
         {
             accessor: 'close_contract_at',
-            title: 'วันที่ปิดสัญญา',
+            title: t('contract_close_date'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => {
@@ -203,7 +205,7 @@ const ListWait = () => {
         mode !== 'shop'
             ? {
                 accessor: 'credit',
-                title: 'สถานะดำเนินการ',
+                title: t('operation_status'),
                 textAlignment: 'left',
                 sortable: false,
                 render: (item: any) => <p>{item.credit?.code ?? '-'}</p>,
@@ -211,7 +213,7 @@ const ListWait = () => {
             : null,
         {
             accessor: 'id',
-            title: 'เลขสัญญา',
+            title: t('contract_number'),
             textAlignment: 'center',
             sortable: false,
             render: (item: any) => {
@@ -413,8 +415,8 @@ const ListWait = () => {
     }, [page, pageSize]);
 
     useEffect(() => {
-        dispatch(setPageTitle('รายการสัญญาที่รอสิ้นสุด'))
-    }, [dispatch])
+        dispatch(setPageTitle(t('pending_completion_contract_list')))
+    }, [dispatch, t])
 
     return (
         <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
@@ -442,71 +444,49 @@ const ListWait = () => {
                             <Form className="flex flex-col flex-auto gap-2">
                                 <div className="flex flex-col sm:flex-row md:flex-row gap-5">
                                     <div className="flex-1">
-                                        <SelectField label="หน่วยธุรกิจ" placeholder="เลือก หน่วยธุรกิจ" isSearchable={true} id="id_business_unit" name="id_business_unit" options={businessUnit} />
+                                        <SelectField label={t('business_unit')} placeholder={t('select_business_unit')} isSearchable={true} id="id_business_unit" name="id_business_unit" options={businessUnit} />
                                     </div>
                                     <div className="flex-1">
-                                        <SelectField label="สถานะการดำเนินการ" placeholder="เลือก สถานะ" isSearchable={true} id="status_code" name="status_code" options={status} />
+                                        <SelectField label={t('operation_status')} placeholder={t('select_status')} isSearchable={true} id="status_code" name="status_code" options={status} />
                                     </div>
                                     <SelectField
-                                        label="สถานะการล็อคเครื่อง"
-                                        placeholder="เลือก สถานะการล็อคเครื่อง"
+                                        label={t('device_lock_status')}
+                                        placeholder={t('select_device_lock_status')}
                                         isSearchable={true}
                                         id="is_locked"
                                         name="is_locked"
                                         options={[
                                             {
                                                 value: 'all',
-                                                label: 'ทั้งหมด',
+                                                label: t('all'),
                                             },
                                             {
                                                 value: 'locked',
-                                                label: 'ล๊อคเครื่อง',
+                                                label: t('locked'),
                                             },
                                             {
                                                 value: 'unlocked',
-                                                label: 'ปลดล๊อค',
+                                                label: t('unlocked'),
                                             },
                                         ]}
                                     />
                                 </div>
                                 <div className="flex flex-col sm:flex-row md:flex-row gap-5 pt-3">
-                                    <DateRangeAntd label="วันที่ทำสัญญา" name="contract_date" />
-                                    <DateRangeAntd label="วันที่อนุมัติ" name="approved_at" />
+                                    <DateRangeAntd label={t('contract_date')} name="contract_date" />
+                                    <DateRangeAntd label={t('contract_approval_date')} name="approved_at" />
                                     <div className="flex-1">
-                                        <DateRangeAntd label="วันที่ปิดสัญญา" name="closed_at" />
+                                        <DateRangeAntd label={t('contract_close_date')} name="closed_at" />
                                     </div>
-                                    {/* <SelectField
-                                        label="สัญญาสิ้นสุด"
-                                        placeholder="เลือก สัญญาสิ้นสุด"
-                                        isSearchable={true}
-                                        id="is_completed"
-                                        name="is_completed"
-                                        options={[
-                                            {
-                                                value: 'all',
-                                                label: 'ทั้งหมด',
-                                            },
-                                            {
-                                                value: 'pending',
-                                                label: 'รอดำเนินการ',
-                                            },
-                                            {
-                                                value: 'complete',
-                                                label: 'สัญญาสิ้นสุด',
-                                            },
-                                        ]}
-                                    /> */}
-                                   
                                 </div>
 
                                <div className="flex flex-col sm:flex-row md:flex-row gap-5 pt-3">
                                     
                                     <div className="flex-1">
-                                        <InputField label="ค้นหา" id="query" name="query" />
+                                        <InputField label={t('search')} id="query" name="query" />
                                     </div>
                                     <div className="flex flex-col sm:flex-row md:flex-row gap-5 justify-end items-start sm:items-end flex-1">
                                         <button type="submit" className="btn btn-primary gap-2 w-full h-[40px] sm:w-auto">
-                                        ค้นหา
+                                        {t('search_text')}
                                         </button>
                                         <button
                                         type="reset"
@@ -515,7 +495,7 @@ const ListWait = () => {
                                             location.reload()
                                         }}
                                         >
-                                        ล้างค่า
+                                        {t('clear')}
                                         </button>
                                         {(role === 'admin' || role === 'business_unit') && (
                                         <button
@@ -525,7 +505,7 @@ const ListWait = () => {
                                             handleExport(`contract_${new Date().toLocaleString()}`, '');
                                             }}
                                         >
-                                            Export
+                                            {t('export')}
                                         </button>
                                         )}
                                     </div>
@@ -539,7 +519,7 @@ const ListWait = () => {
 
                 <div className="datatables pagination-padding">
                     {contractList.length == 0 ? (
-                        <div className="my-10 text-center text-gray-500">ไม่พบข้อมูล</div>
+                        <div className="my-10 text-center text-gray-500">{t('not_found_data')}</div>
                     ) : (
                         <DataTable
                             className="whitespace-nowrap table-hover invoice-table"
@@ -555,7 +535,7 @@ const ListWait = () => {
                                 setPageSize(p);
                             }}
                             highlightOnHover
-                            paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                            paginationText={({ from, to, totalRecords }) => `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`}
                         />
                     )}
                 </div>

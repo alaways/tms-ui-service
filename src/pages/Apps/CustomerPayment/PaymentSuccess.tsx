@@ -4,11 +4,12 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../../store/themeConfigSlice'
 import themeConfig from '../../../theme.config'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const PaymentSuccess = () => {
-
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -17,8 +18,8 @@ const PaymentSuccess = () => {
   const { initialRecordsPeriod, ins_no, payment_preview, payment_qr } = location.state || {}
 
   useEffect(() => {
-    dispatch(setPageTitle('ชำระเงินสำเร็จ'))
-  }, [dispatch])
+    dispatch(setPageTitle(t('payment_success_title')))
+  }, [dispatch, t])
 
   const submitForm = () => {
     navigate('/apps/customer-payment/list')
@@ -40,51 +41,51 @@ const PaymentSuccess = () => {
             <div className="mx-auto mt-5 w-full max-w-[550px] md:mt-16">
               <div className="mb-12">
                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-green-500 md:text-4xl">
-                  ชำระเงินสำเร็จ
+                  {t('payment_success_title')}
                 </h1>
                 <p className="text-base font-bold leading-normal text-black">
-                  ขอบคุณค่ะ คุณได้ชำระยอดเงินจำนวน {payment_preview?.total} บาท เรียบร้อยแล้ว
+                  {t('thank_you_payment', { amount: payment_preview?.total })}
                 </p>
                 <p className="text-base font-bold leading-normal text-black">
-                  Invoice ID: {initialRecordsPeriod?.id} | Transaction ID: {payment_qr}
+                  {t('invoice_id')}: {initialRecordsPeriod?.id} | {t('transaction_id')}: {payment_qr}
                 </p>
               </div>
               <div className="mb-16 text-left text-xl font-bold leading-none text-black sm:text-2xl md:mb-24 md:gap-4 md:text-[20px]">
                 <div className="p-6">
-                  <p className="mb-4">รายการ</p>
+                  <p className="mb-4">{t('items_list')}</p>
                   <div className="flex justify-between mb-2">
-                    <div className="">ค่างวด ที่ {ins_no?.ins_no}</div>
-                    <div>{formatNumber(payment_preview?.amount)} บาท</div>
+                    <div className="">{t('installment_no_label')} {ins_no?.ins_no}</div>
+                    <div>{formatNumber(payment_preview?.amount)} {t('baht')}</div>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <div className="">ค่าดำเนินการล่าช้า/วัน</div>
-                    <div>{formatNumber(payment_preview?.penalty_fee)} บาท</div>
+                    <div className="">{t('penalty_fee')}</div>
+                    <div>{formatNumber(payment_preview?.penalty_fee)} {t('baht')}</div>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <div className="">ค่าติดตาม</div>
-                    <div>{formatNumber(payment_preview?.tracking_fee)} บาท</div>
+                    <div className="">{t('tracking_fee')}</div>
+                    <div>{formatNumber(payment_preview?.tracking_fee)} {t('baht')}</div>
                   </div>
                   {payment_preview?.unlock_fee ? (
                     <div className="flex justify-between mb-2">
-                      <div className="text-white-dark">ค่าปลดล็อค</div>
-                      <div>{formatNumber(payment_preview?.unlock_fee)} บาท</div>
+                      <div className="text-white-dark">{t('unlock_fee')}</div>
+                      <div>{formatNumber(payment_preview?.unlock_fee)} {t('baht')}</div>
                     </div>
                   ) : null}
                   <div className="flex justify-between mb-2">
-                    <div className="">ค่าธรรมเนียม</div>
-                    <div>{formatNumber(payment_preview?.fee)} บาท</div>
+                    <div className="">{t('service_fee')}</div>
+                    <div>{formatNumber(payment_preview?.fee)} {t('baht')}</div>
                   </div>
                   <div className="flex justify-between font-bold text-[22px] mt-4">
-                    <div className="">รวมเป็นเงิน</div>
-                    <div>{formatNumber(payment_preview?.total)} บาท</div>
+                    <div className="">{t('total')}</div>
+                    <div>{formatNumber(payment_preview?.total)} {t('baht')}</div>
                   </div>
                 </div>
               </div>
               <div className="text-base font-bold leading-normal text-black">
-                โปรดบันทึกหน้านี้เป็นหลักฐาน ขอบคุณค่ะ
+                {t('please_save_page')}
               </div>
               <button onClick={submitForm} className={`mt-4 px-4 py-2 bg-themePrimary text-white rounded`}>
-                กลับไปหน้าหลัก
+                {t('back_to_home')}
               </button>
             </div>
           </div>

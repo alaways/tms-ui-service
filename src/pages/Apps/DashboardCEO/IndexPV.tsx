@@ -18,10 +18,12 @@ import { toastAlert } from '../../../helpers/constant'
 import Swal from 'sweetalert2'
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin'
 
 const DashboardCEOPV = () => {
+  const { t } = useTranslation()
   const toast = Swal.mixin(toastAlert)
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -36,8 +38,8 @@ const DashboardCEOPV = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('Dashboard CEO'))
-  }, [dispatch])
+    dispatch(setPageTitle(t('dashboard_ceo_pv')))
+  }, [dispatch, t])
 
   const [itemBusinessUnit, setBusinessUnitList] = useState<any[]>([])
   const [dashboardCEOData, setDashboardCEOData] = useState<any>({
@@ -150,7 +152,7 @@ const DashboardCEOPV = () => {
             <ul className="flex space-x-2 rtl:space-x-reverse">
               <li>
                 <Link to="#" className="hover:underline text-xl">
-                  Dashboard CEO PV
+                  {t('dashboard_ceo_pv')}
                 </Link>
               </li>
             </ul>
@@ -163,7 +165,7 @@ const DashboardCEOPV = () => {
                 if (values.id_business_unit === null) {
                   toast.fire({
                     icon: 'warning',
-                    title: 'กรุณาเลือกหน่วยธุรกิจเพื่อค้นหา',
+                    title: t('please_select_business_unit'),
                     padding: '10px 20px',
                   })
                 } else {
@@ -184,7 +186,7 @@ const DashboardCEOPV = () => {
                     {role === 'admin' && (<div className='w-full min-[1141px]:max-w-[634px] pt-6'>
                       <SelectField
                         id='bu'
-                        label='หน่วยธุรกิจ'
+                        label={t('business_unit')}
                         className="z-10"
                         name="id_business_unit"
                         options={itemBusinessUnit}
@@ -197,20 +199,20 @@ const DashboardCEOPV = () => {
 
                     <div className="flex flex-col sm:flex-row flex-auto gap-4 sm:items-center ">
                       <div className='flex gap-4 items-center w-full min-[1141px]:w-auto'>
-                        <div className='w-[50px]'>วันที่ </div>
+                        <div className='w-[50px]'>{t('date_label')} </div>
                         <DatePicker
                           name="start_at"
                         />
                       </div>
                       <div className='flex gap-4 items-center w-full min-[1141px]:w-auto'>
-                        <div className='w-[50px]'>ถึง วันที่ </div>
+                        <div className='w-[50px]'>{t('to_date')} </div>
                         <DatePicker
                           name="end_at"
                         />
                       </div>
                       <div className='flex mt-1 '>
                         <button type="submit" className="btn btn-success gap-2 w-full h-[40px]">
-                          อัพเดท
+                          {t('update')}
                         </button>
                       </div>
 
@@ -226,7 +228,7 @@ const DashboardCEOPV = () => {
           <div className="flex flex-wrap items-start mt-6">
             <div className="flex flex-wrap w-full">
               <h1 className="text-[#f7931a] font-medium text-2xl">
-                บัญชีเงินสด
+                {t('cash_account')}
               </h1>
             </div>
             <div className="flex flex-wrap flex-col pt-5 mr-2" style={{ width: themeInit.paymentGateway.tqr ? 'calc(25% - 10px)' : 'calc(50% - 10px)' }}>
@@ -236,9 +238,9 @@ const DashboardCEOPV = () => {
                 </div>
 
                 <p className="text-lg text-[#113144]">
-                  Pay solution
+                  {t('pay_solution')}
                 </p>
-                              <Tippy content="เงินรับจาก Payment Gateway Pay solution" placement="right">
+                              <Tippy content={t('money_from_pay_solution')} placement="right">
                                   <img
                                       src="/assets/images/information.png"
                                       alt="Info"
@@ -264,9 +266,9 @@ const DashboardCEOPV = () => {
                     <IconDollarSignCircle className="w-6 h-6" />
                   </div>
                   <p className="text-lg text-[#113144]">
-                    Thai QR
+                    {t('thai_qr')}
                   </p>
-                                <Tippy content="เงินรับจาก Thai QR โดย ธนาคารกรุงเทพ" placement="right">
+                                <Tippy content={t('money_from_thai_qr')} placement="right">
                                     <img
                                         src="/assets/images/information.png"
                                         alt="Info"
@@ -293,9 +295,9 @@ const DashboardCEOPV = () => {
                   <IconCashBanknotes className="w-6 h-6" />
                 </div>
                 <p className="text-lg">
-                  บัญชีธนาคาร / เงินสด
+                  {t('bank_account_cash')}
                 </p>
-                              <Tippy content="ลูกค้าโอนเงิน/ชำระเงินสด" placement="right">
+                              <Tippy content={t('customer_transfer_cash')} placement="right">
                                   <img
                                       src="/assets/images/information.png"
                                       alt="Info"

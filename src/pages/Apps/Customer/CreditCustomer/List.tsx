@@ -17,8 +17,10 @@ import IconEye from '../../../../components/Icon/IconEye';
 import { convertDateTimeDbToClient} from '../../../../helpers/formatDate';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../../../store';
+import { useTranslation } from 'react-i18next';
 
 const List = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [creditList, setCreditList] = useState<any>([]);
     const [businessUnitList, setBusinessUnitList] = useState<any>([]);
@@ -47,7 +49,7 @@ const List = () => {
     const { mutate: createUpdateCredit} = useGlobalMutation(url_api.customerCreditCreateAndUpdate, {
         onSuccess: (res: any) => {
            if (res.code == 200 && res.statusCode == 200) {
-                showNotification('เพิ่มข้อมูลสำเร็จ', 'success');
+                showNotification(t('add_success'), 'success');
                 fetchCustomerCredit({ data: { id_customer: id } });
             }
         },
@@ -69,14 +71,14 @@ const List = () => {
     });
 
     const SubmittedForm = Yup.object().shape({
-        id_business_unit: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        credit_level: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+        id_business_unit: Yup.string().required(t('please_fill_all_fields')),
+        credit_level: Yup.string().required(t('please_fill_all_fields')),
     });
 
     const SubmittedFormEdit = Yup.object().shape({
-        id_business_unit: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        credit_level: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        note: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+        id_business_unit: Yup.string().required(t('please_fill_all_fields')),
+        credit_level: Yup.string().required(t('please_fill_all_fields')),
+        note: Yup.string().required(t('please_fill_all_fields')),
     });
 
     const onConfirmData = async (values: any) => {
@@ -105,9 +107,9 @@ const List = () => {
     return (
         <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
             <div className="px-5 mb-4 flex justify-between items-center">
-                <h5 className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">เครดิตลูกค้า</h5>
+                <h5 className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('customer_credit')}</h5>
                 <button className="hover:text-info cursor-pointer btn btn-primary mr-1" onClick={() => setActionModal(true)}>
-                    เพิ่มข้อมูล
+                    {t('add_data')}
                 </button>
             </div>
             <div className="datatables pagination-padding">
@@ -117,19 +119,19 @@ const List = () => {
                     columns={[
                         {
                             accessor: 'id',
-                            title: 'ลำดับ',
+                            title: t('sequence'),
                             sortable: false,
                             textAlignment: 'center',
                             render: (row, index) => <div>{index + 1}</div>,
                         },
                         {
                             accessor: 'business_unit_name',
-                            title: 'หน่วยธุรกิจ',
+                            title: t('business_unit'),
                             sortable: false,
                         },
                         {
                             accessor: 'credit_level',
-                            title: 'ระดับเครดิต',
+                            title: t('credit_level'),
                             sortable: false,
                             render: ({ credit_level }) => (
                                 <div className="flex items-center font-normal">
@@ -148,30 +150,30 @@ const List = () => {
                         // },
                         {
                             accessor: 'admin_name',
-                            title: 'ผู้ดำเนินการ',
+                            title: t('operator'),
                             sortable: false,
                         },
                         {
                             accessor: 'created_at',
-                            title: 'วันที่ - เวลา',
+                            title: t('date_time'),
                             sortable: false,
                             render: (item: any) => <p>{convertDateTimeDbToClient(item?.created_at)}</p>,
                         },
                         {
                             accessor: 'action',
-                            title: 'Actions',
+                            title: t('actions'),
                             sortable: false,
                             textAlignment: 'center',
                             render: (item) => (
                                 <div className="flex gap-4 items-center w-max mx-auto">
                                     <a className="flex cursor-pointer items-center relative group" onClick={() => onEdit(item)}>
                                         <IconEdit className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
-                                        <p className="absolute left-[-5px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">แก้ไข</p>
+                                        <p className="absolute left-[-5px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">{t('edit')}</p>
                                     </a>
 
                                     <a href={`/apps/customer/credit-level/${item.id_business_unit}?id_customer=${id}`} className="flex cursor-pointer items-center relative group">
                                         <IconEye className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
-                                        <p className="absolute left-[-10px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">ดูข้อมูล</p>
+                                        <p className="absolute left-[-10px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">{t('view_data')}</p>
                                     </a>
                                 </div>
                             ),
@@ -217,7 +219,7 @@ const List = () => {
                                             <IconX />
                                         </button>
                                         <div className="text-lg font-medium  dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                                            {creditFormData?.id ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูล'}{' '}
+                                            {creditFormData?.id ? t('edit_data') : t('add_data')}{' '}
                                         </div>
                                     </div>
                                     <Formik
@@ -230,23 +232,23 @@ const List = () => {
                                         <Form className="px-4 flex flex-col gap-3 custom-select">
                                             <SelectField
                                                 require={true}
-                                                placeholder="กรุณาเลือก"
+                                                placeholder={t('please_select')}
                                                 isSearchable={true}
-                                                label="หน่วยธุรกิจ"
+                                                label={t('business_unit')}
                                                 options={businessUnitList}
                                                 name="id_business_unit"
                                                 id="id_business_unit"
                                             />
                                             <SelectField
                                                 require={true}
-                                                label="ระดับเครดิต (แอดมิน)"
+                                                label={t('credit_level_admin')}
                                                 id="credit_level"
                                                 name="credit_level"
                                                 options={creditLevelTypes}
-                                                placeholder="กรุณาเลือก"
+                                                placeholder={t('please_select')}
                                                 isSearchable={true}
                                             />
-                                            {creditFormData.id && <InputField require={true} label="เหตุผลการแก้ไข" name="note" />}
+                                            {creditFormData.id && <InputField require={true} label={t('edit_reason')} name="note" />}
                                             <div className=" pb-5">
                                                 <div className="flex justify-end items-center mt-8">
                                                     <button
@@ -256,10 +258,10 @@ const List = () => {
                                                             setActionModal(false);
                                                         }}
                                                     >
-                                                        ยกเลิก
+                                                        {t('cancel')}
                                                     </button>
                                                     <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                        ยืนยัน
+                                                        {t('confirm')}
                                                     </button>
                                                 </div>
                                             </div>

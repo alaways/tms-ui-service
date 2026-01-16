@@ -8,9 +8,10 @@ import './Invoice.css'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
 import PreLoading from '../../../helpers/preLoading'
+import { useTranslation } from 'react-i18next'
 const mode = process.env.MODE || 'admin'
 const Invoice = () => {
-
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
@@ -37,7 +38,7 @@ const Invoice = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('ใบแจ้งหนี้ (Invoice)'))
+    dispatch(setPageTitle(t('invoice_title')))
   }, [dispatch])
 
   useEffect(() => {
@@ -73,12 +74,12 @@ const Invoice = () => {
       <ul className="flex space-x-2 rtl:space-x-reverse">
         <li>
           <Link to="/apps/customer-payment/list" className="text-primary hover:underline">
-            หน้าหลัก
+            {t('home_page')}
           </Link>
         </li>
         <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
           <span>
-             เลขที่สัญญา {paymentPreview?.reference}
+             {t('contract_number_label')} {paymentPreview?.reference}
           </span>
         </li>
       </ul>
@@ -86,7 +87,7 @@ const Invoice = () => {
         <div className="panel !px-0">
           <div className="flex justify-between flex-wrap gap-4 px-4">
             <div className="text-2xl font-semibold uppercase">
-              ใบแจ้งหนี้ (Invoice)
+              {t('invoice_title')}
             </div>
             <div className="shrink-0 py-10 invoice-logo">
               <img src={paymentPreview?.business_unit?.logo_image_url} alt="img" className="w-36 ltr:ml-auto rtl:mr-auto" />
@@ -94,14 +95,14 @@ const Invoice = () => {
           </div>
           <div className="ltr:text-left rtl:text-left px-4">
             <div className="space-y-1 mt-6 text-white-dark">
-              <div> เลขที่สัญญา: {paymentPreview?.reference}</div>
+              <div> {t('contract_number_label')}: {paymentPreview?.reference}</div>
             </div>
           </div>
           <hr className="border-white-light dark:border-[#1b2e4b] my-6" />
           <div className="ltr:text-left rtl:text-left px-6">
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ชื่อธุรกิจ :
+                {t('business_name')} :
               </div>
               <div>
                 {paymentPreview?.business_unit?.name}
@@ -109,7 +110,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ที่อยู่ :
+                {t('address')} :
               </div>
               <div>
                 {paymentPreview?.business_unit?.address}
@@ -121,7 +122,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between data-responsive">
               <div className="text-white-dark">
-                โทรศัพท์ :
+                {t('phone_number')} :
               </div>
               <div>
                 {paymentPreview?.business_unit?.phone ?? ''}
@@ -132,7 +133,7 @@ const Invoice = () => {
           <div className="ltr:text-left rtl:text-left px-6">
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ชื่อ :
+                {t('name')} :
               </div>
               <div>
                 {paymentPreview?.customer?.name ?? ''}
@@ -140,7 +141,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                เลขบัตรประจำตัวประชาชน :
+                {t('citizen_id_label')} :
               </div>
               <div>
                 {formatIDNumber(paymentPreview?.customer?.citizen_id ?? '')}
@@ -148,7 +149,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                เบอร์หลัก :
+                {t('main_phone')} :
               </div>
               <div>
                 {formatPhoneNumber(paymentPreview?.customer?.phone_number ?? '')}
@@ -156,7 +157,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                เบอร์อ้างอิง :
+                {t('reference_phone')} :
               </div>
               <div>
                 {formatPhoneNumber(paymentPreview?.customer?.phone_number_ref ?? '')}
@@ -164,7 +165,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ที่อยู่ปัจจุบัน :
+                {t('current_address')} :
               </div>
               <div>
                 {paymentPreview?.customer?.full_current_address ?? ''}
@@ -172,7 +173,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ที่อยู่ที่ทำงาน :
+                {t('work_address')} :
               </div>
               <div>
                 {paymentPreview?.customer?.full_work_address ?? ''}
@@ -183,7 +184,7 @@ const Invoice = () => {
           <div className="ltr:text-left rtl:text-left px-6">
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ชื่อสินทรัพย์ :
+                {t('asset_name')} :
               </div>
               <div>
                 {paymentPreview?.asset?.name ?? ''}
@@ -191,7 +192,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                IMEI/SN :
+                {t('imei_sn')} :
               </div>
               <div>
                 {paymentPreview?.asset?.imei ?? ''}
@@ -199,7 +200,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                รหัสรุ่น :
+                {t('model_code')} :
               </div>
               <div>
                 {paymentPreview?.asset?.serial_number ?? ''}
@@ -207,7 +208,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                สี :
+                {t('color')} :
               </div>
               <div>
                 {paymentPreview?.asset?.color ?? ''}
@@ -215,7 +216,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ความจุ :
+                {t('capacity')} :
               </div>
               <div>
                 {paymentPreview?.asset?.capacity ?? ''}
@@ -223,7 +224,7 @@ const Invoice = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ข้อสังเกตุ :
+                {t('note')} :
               </div>
               <div>
                 {paymentPreview?.asset?.note ?? ''}
@@ -232,40 +233,40 @@ const Invoice = () => {
           </div>
           <div className="my-4"></div>
           <div className="border-b border-white-light p-6 text-[22px] font-bold dark:border-dark dark:text-white">
-            รายการ
+            {t('items')}
           </div>
           <div className="p-6">
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ค่างวด
+                {t('installment_amount')}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.amount ?? 0) + ' บาท'}
+                {numberWithCommas(paymentPreview?.amount ?? 0) + ' ' + t('baht')}
               </div>
             </div>
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ค่าดำเนินการล่าช้า/วัน
+                {t('late_fee_per_day')}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.penalty_fee ?? 0) + ' บาท'}
+                {numberWithCommas(paymentPreview?.penalty_fee ?? 0) + ' ' + t('baht')}
               </div>
             </div>
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ค่าติดตาม
+                {t('tracking_fee')}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.tracking_fee ?? 0) + ' บาท'}
+                {numberWithCommas(paymentPreview?.tracking_fee ?? 0) + ' ' + t('baht')}
               </div>
             </div>
             {paymentPreview?.unlock_fee ? (
               <div className="flex justify-between mb-2 data-responsive">
                 <div className="text-white-dark">
-                  ค่าปลดล็อค
+                  {t('unlock_fee')}
                 </div>
                 <div>
-                  {numberWithCommas(paymentPreview?.unlock_fee) + ' บาท'}
+                  {numberWithCommas(paymentPreview?.unlock_fee) + ' ' + t('baht')}
                 </div>
               </div>
             ) : null}
@@ -275,16 +276,16 @@ const Invoice = () => {
             </div> */}
             <div className="flex justify-between font-bold text-[22px] mt-4 data-responsive">
               <div className="text-white-dark">
-                รวมเป็นเงิน
+                {t('total')}
               </div>
               <div className="total">
-                {numberWithCommas(paymentPreview?.total) + ' บาท'}
+                {numberWithCommas(paymentPreview?.total) + ' ' + t('baht')}
               </div>
             </div>
           </div>
           <div className="p-6">
             <button className="bg-black text-white w-full py-3 font-bold" onClick={() => goPayment() }>
-              ชำระเงิน
+              {t('pay_now')}
             </button>
           </div>
         </div>

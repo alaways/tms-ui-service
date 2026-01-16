@@ -1,1 +1,0 @@
-import{Y as o,Z as r,g as s}from"./index-a90aa29c.js";function e(a){return o(t=>r.post(s.shopFind+t.data.id,t.data,{},"json").then(n=>n),a)}function i(a){return o(t=>r.post(s.shopUpdate+t.data.id,t.data,{},"json").then(n=>n),a)}export{i as a,e as u};

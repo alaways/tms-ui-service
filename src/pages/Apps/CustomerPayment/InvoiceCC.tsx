@@ -10,9 +10,10 @@ import { url_api } from '../../../services/endpoints'
 import PreLoading from '../../../helpers/preLoading'
 import { toastAlert } from '../../../helpers/constant';
 import themeInit from '../../../theme.init'
+import { useTranslation } from 'react-i18next'
 
 const InvoiceCC = () => {
-
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const location = useLocation()
@@ -42,7 +43,7 @@ const InvoiceCC = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('ใบแจ้งหนี้ (Invoice)'))
+    dispatch(setPageTitle(t('invoice_title')))
   }, [dispatch])
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const InvoiceCC = () => {
               
             toast.fire({
                 icon: 'success',
-                title: 'ยกเลิกการปิดสัญญาเรียบร้อบแล้ว',
+                title: t('cancel_close_contract_success'),
                 padding: '10px 20px',
             })
             setTimeout(() => {
@@ -82,14 +83,14 @@ const InvoiceCC = () => {
   const handleCancelQrCode = async () => {
 
     Swal.fire({
-          title: 'ยืนยันการยกเลิกการปิดสัญญา',
-          text: 'คุณต้องการยกเลิกชำระเงินใช่หรือไม่?',
+          title: t('confirm_cancel_close_contract'),
+          text: t('cancel_payment_text'),
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: themeInit.color.themePrimary,
           cancelButtonColor: '#d33',
-          confirmButtonText: 'ยืนยัน',
-          cancelButtonText: 'ยกเลิก',
+          confirmButtonText: t('confirm'),
+          cancelButtonText: t('cancel'),
           reverseButtons: true,
       }).then((result) => {
           if (result.isConfirmed) {
@@ -124,12 +125,12 @@ const InvoiceCC = () => {
       <ul className="flex space-x-2 rtl:space-x-reverse">
         <li>
           <Link to="/apps/customer-payment/list" className="text-primary hover:underline">
-            หน้าหลัก
+            {t('home_page')}
           </Link>
         </li>
         <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
           <span>
-             เลขที่สัญญา {paymentPreview?.reference}
+             {t('contract_number_label')} {paymentPreview?.reference}
           </span>
         </li>
       </ul>
@@ -142,7 +143,7 @@ const InvoiceCC = () => {
                       className="text-left"
                       style={{ cursor: 'pointer' }}
                   >
-                      กำลังดำเนินการปิดสัญญา กรุณาชำระเงิน หรือกดยกเลิกเพื่อกลับไปชำระตามงวดปกติ {">"}
+                      {t('processing_close_contract')} {">"}
                   </div>
 
                   <button
@@ -150,7 +151,7 @@ const InvoiceCC = () => {
                       className="btn btn-xl btn-outline-danger"
                       onClick={handleCancelQrCode}
                   >
-                      ยกเลิก
+                      {t('cancel')}
                   </button>
                   </div>
               </div>
@@ -161,7 +162,7 @@ const InvoiceCC = () => {
          
           <div className="flex justify-between flex-wrap gap-4 px-4">
             <div className="text-2xl font-semibold uppercase">
-              ใบแจ้งหนี้ ปิดสัญญา(Invoice)
+              {t('close_contract_invoice')}
             </div>
             <div className="shrink-0 py-10 invoice-logo">
               <img src={paymentPreview?.business_unit?.logo_image_url} alt="img" className="w-36 ltr:ml-auto rtl:mr-auto" />
@@ -169,7 +170,7 @@ const InvoiceCC = () => {
           </div>
           <div className="ltr:text-left rtl:text-left px-4">
             <div className="space-y-1 mt-6 text-white-dark">
-              <div> เลขที่สัญญา: {paymentPreview?.reference}</div>
+              <div> {t('contract_number_label')}: {paymentPreview?.reference}</div>
             </div>
           </div>
           <hr className="border-white-light dark:border-[#1b2e4b] my-6" />
@@ -307,24 +308,24 @@ const InvoiceCC = () => {
           </div>
           <div className="my-4"></div>
           <div className="border-b border-white-light p-6 text-[22px] font-bold dark:border-dark dark:text-white">
-            รายการ
+            {t('items')}
           </div>
           <div className="p-6">
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ค่างวด x {paymentPreview?.preview.remaining_ins}
+                {t('installment_x')} {paymentPreview?.preview.remaining_ins}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.preview?.total_amount) + ' บาท'}
+                {numberWithCommas(paymentPreview?.preview?.total_amount) + ' ' + t('baht')}
               </div>
             </div>
             {paymentPreview?.preview.penalty_fee ? (
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ค่าดำเนินการล่าช้า/วัน
+                {t('late_fee_per_day')}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.preview.penalty_fee) + ' บาท'}
+                {numberWithCommas(paymentPreview?.preview.penalty_fee) + ' ' + t('baht')}
               </div>
             </div>
             ): null}
@@ -332,10 +333,10 @@ const InvoiceCC = () => {
             {paymentPreview?.preview.tracking_fee ? (
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ค่าติดตาม
+                {t('tracking_fee')}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.preview.tracking_fee) + ' บาท'}
+                {numberWithCommas(paymentPreview?.preview.tracking_fee) + ' ' + t('baht')}
               </div>
             </div>
             ): null}
@@ -343,10 +344,10 @@ const InvoiceCC = () => {
             {paymentPreview?.preview.unlock_fee ? (
               <div className="flex justify-between mb-2 data-responsive">
                 <div className="text-white-dark">
-                  ค่าปลดล็อค
+                  {t('unlock_fee')}
                 </div>
                 <div>
-                  {numberWithCommas(paymentPreview?.unlock_fee) + ' บาท'}
+                  {numberWithCommas(paymentPreview?.unlock_fee) + ' ' + t('baht')}
                 </div>
               </div>
             ):null}
@@ -355,10 +356,10 @@ const InvoiceCC = () => {
             {paymentPreview?.preview.discount ? (
             <div className="flex justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ส่วนลด
+                {t('discount_label')}
               </div>
               <div>
-                {numberWithCommas(paymentPreview?.preview.discount) + ' บาท'}
+                {numberWithCommas(paymentPreview?.preview.discount) + ' ' + t('baht')}
               </div>
             </div>
             ): null}
@@ -368,16 +369,16 @@ const InvoiceCC = () => {
             </div> */}
             <div className="flex justify-between font-bold text-[22px] mt-4 data-responsive">
               <div className="text-white-dark">
-                รวมเป็นเงิน
+                {t('total')}
               </div>
               <div className="total">
-                {numberWithCommas(paymentPreview?.preview?.total) + ' บาท'}
+                {numberWithCommas(paymentPreview?.preview?.total) + ' ' + t('baht')}
               </div>
             </div>
           </div>
           <div className="p-6">
             <button className="bg-black text-white w-full py-3 font-bold" onClick={() => goPayment() }>
-              ชำระเงิน
+              {t('pay_now')}
             </button>
           </div>
         </div>

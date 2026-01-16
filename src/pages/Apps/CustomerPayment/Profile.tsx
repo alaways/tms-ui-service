@@ -10,11 +10,12 @@ import SelectField from '../../../components/HOC/SelectField';
 import IconLogout from '../../../components/Icon/IconLogout';
 import { useGlobalMutation } from '../../../helpers/globalApi';
 import { url_api } from '../../../services/endpoints';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin'
 
 const Profile = () => {
-
+  const { t } = useTranslation()
   const navigate = useNavigate();
   const location = useLocation();
   const creditLevelTypes = useSelector((state: IRootState) => state.dataStore.credit_level)
@@ -116,11 +117,11 @@ const Profile = () => {
       <ul className="flex space-x-2 rtl:space-x-reverse">
         <li>
           <Link to="/apps/customer-payment/list" className="text-primary hover:underline">
-            หน้าหลัก
+            {t('home')}
           </Link>
         </li>
         <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-          <span>โปรไฟล์</span>
+          <span>{t('profile')}</span>
         </li>
       </ul>
       <div className="mt-5 p-5 pb-10 bg-white rounded-md border border-[#ebedf2] dark:border-[#191e3a]">
@@ -128,14 +129,14 @@ const Profile = () => {
           {(props) => (
             <Form className="space-y-5 dark:text-white custom-select">
               <div className="text-lg pt-3 font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                โปรไฟล์
+                {t('profile')}
               </div>
               <div className="grid md:grid-rows-1 xl:grid-cols-3 gap-2">
                 <div className="md:col-span-1 xl:col-span-4 mr-6">
                   <div className="input-flex-row">
                     <div className="check-container">
                       <InputField
-                        label="รหัสบัตรประชาชน"
+                        label={t('citizen_id_number')}
                         name="citizen_id"
                         type="text"
                         disabled={true}
@@ -144,20 +145,20 @@ const Profile = () => {
                   </div>
                   <hr className="mt-4"></hr>
                   <div className="text-l pt-5 pb-2 font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-                    ข้อมูลส่วนบุคคล
+                    {t('personal_info')}
                   </div>
                   <div className="input-flex-row">
                     <SelectField
-                      label="คำนำหน้า"
+                      label={t('title_prefix')}
                       id="title"
                       name="title"
                       disabled={true}
                       options={thaiTitles}
-                      placeholder="กรุณาเลือก"
+                      placeholder={t('please_select')}
                     />
                     <InputField
-                      label="ชื่อ-นามสกุล"
-                      placeholder="ชื่อ-นามสกุล"
+                      label={t('name_surname')}
+                      placeholder={t('name_surname')}
                       name="name"
                       type="text"
                       disabled={true}
@@ -165,13 +166,13 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="เบอร์โทรติดต่อ"
+                      label={t('contact_phone')}
                       name="phone_number"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="เบอร์โทรอ้างอิง"
+                      label={t('reference_phone_label')}
                       name="phone_number_ref"
                       type="text"
                       disabled={true}
@@ -215,11 +216,11 @@ const Profile = () => {
                     <div className="blank-container"></div>
                   </div>
                   <div className="text-l pt-5 pb-2 font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-                    ที่อยู่ตามบัตรประชาชน
+                    {t('id_card_address_label')}
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="ที่อยู่"
+                      label={t('address')}
                       name="address"
                       type="text"
                       disabled={true}
@@ -227,14 +228,14 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="จังหวัด"
+                      label={t('province_label')}
                       id="province_name"
                       name="province_name"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="อำเภอ/เขต"
+                      label={t('district_label')}
                       id="district_name"
                       name="district_name"
                       type="text"
@@ -243,25 +244,25 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="ตำบล/แขวง"
+                      label={t('subdistrict_label')}
                       id="subdistrict_name"
                       name="subdistrict_name"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="รหัสไปรษณีย์"
+                      label={t('zip_code_label')}
                       name="zip_code"
                       type="text"
                       disabled={true}
                     />
                   </div>
                   <div className="text-l pt-5 pb-2 font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-                    ที่อยู่ปัจจุบัน
+                    {t('current_address_label')}
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="ที่อยู่"
+                      label={t('address')}
                       name="current_address"
                       type="text"
                       disabled={true}
@@ -269,14 +270,14 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="จังหวัด"
+                      label={t('province_label')}
                       id="current_province_name"
                       name="current_province_name"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="อำเภอ/เขต"
+                      label={t('district_label')}
                       id="current_district_name"
                       name="current_district_name"
                       type="text"
@@ -285,25 +286,25 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="ตำบล/แขวง"
+                      label={t('subdistrict_label')}
                       id="current_subdistrict_name"
                       name="current_subdistrict_name"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="รหัสไปรษณีย์"
+                      label={t('zip_code_label')}
                       name="current_zip_code"
                       type="text"
                       disabled={true}
                     />
                   </div>
                   <div className="text-l pt-5 pb-2 font-semibold ltr:sm:text-left rtl:sm:text-right text-center mt-4">
-                    ที่อยู่ที่ทำงาน
+                    {t('work_address_label')}
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="ที่อยู่"
+                      label={t('address')}
                       name="work_address"
                       type="text"
                       disabled={true}
@@ -311,14 +312,14 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="จังหวัด"
+                      label={t('province_label')}
                       id="work_province_name"
                       name="work_province_name"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="อำเภอ/เขต"
+                      label={t('district_label')}
                       id="work_district_name"
                       name="work_district_name"
                       type="text"
@@ -327,14 +328,14 @@ const Profile = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label="ตำบล/แขวง"
+                      label={t('subdistrict_label')}
                       id="work_subdistrict_name"
                       name="work_subdistrict_name"
                       type="text"
                       disabled={true}
                     />
                     <InputField
-                      label="รหัสไปรษณีย์"
+                      label={t('zip_code_label')}
                       name="work_zip_code"
                       type="text"
                       disabled={true}
@@ -343,7 +344,7 @@ const Profile = () => {
                   <div className="sm:col-span-2 mt-5">
                     <a onClick={() => onLogout({})} className="btn btn-danger w-36">
                       <IconLogout className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 rotate-90 shrink-0" />
-                      ล็อคเอ้าท์
+                      {t('logout')}
                     </a>
                   </div>
                 </div>

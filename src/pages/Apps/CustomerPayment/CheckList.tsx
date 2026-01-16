@@ -21,6 +21,7 @@ import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
 import themeInit from '../../../theme.init'
 import { showNotification } from '../../../helpers/showNotification'
+import { useTranslation } from 'react-i18next'
 interface Installment {
     id: string
     amount: number
@@ -35,6 +36,7 @@ interface Installment {
 const mode = process.env.MODE || 'admin'
 
 const List: React.FC = () => {
+    const { t } = useTranslation();
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -91,7 +93,7 @@ const List: React.FC = () => {
     }, [role, navigate])
 
     useEffect(() => {
-        dispatch(setPageTitle('ยอดที่ต้องชำระ'))
+        dispatch(setPageTitle(t('amount_to_pay')))
     }, [dispatch])
 
     useEffect(() => {
@@ -103,9 +105,9 @@ const List: React.FC = () => {
     const getStatusText = (status: string, is_due?: boolean) => {
         switch (status) {
             case 'complete':
-                return 'ชำระแล้ว'
+                return t('paid')
             default:
-                return is_due ? 'ค้างชำระ' : 'ยังไม่ครบกำหนด'
+                return is_due ? t('overdue') : t('not_yet_due')
         }
     }
 
@@ -141,7 +143,7 @@ const List: React.FC = () => {
     const onError = () => {
         toast.fire({
             icon: 'error',
-            title: 'รูปภาพเกิน 10 รูป',
+            title: t('image_limit_10'),
             padding: '10px 20px',
         });
     };
@@ -197,7 +199,7 @@ const List: React.FC = () => {
                 } else {
                     toast.fire({
                         icon: 'error',
-                        title: 'เพิ่มไฟล์ผิดพลาดกรุณาใช้ไฟล์ที่เป็นรูปเท่านั้น',
+                        title: t('file_upload_error_image_only'),
                         padding: '10px 20px',
                     });
                 }
@@ -209,7 +211,7 @@ const List: React.FC = () => {
 
             Swal.fire({
                 icon: 'success',
-                title: 'ชำระเงินสำเร็จ',
+                title: t('payment_success'),
                 padding: '10px 20px',
             }).then(() => {
                 window.location.reload();
@@ -237,7 +239,7 @@ const List: React.FC = () => {
           } else {
             toast.fire({
                 icon: 'success',
-                title: 'สำเร็จ',
+                title: t('success'),
                 padding: '10px 20px',
             })
             setTimeout(() => {
@@ -258,14 +260,14 @@ const List: React.FC = () => {
     const handleCancelQrCode = async () => {
 
         Swal.fire({
-            title: 'ยืนยันการยกเลิกการชำระเงิน',
-            text: 'คุณต้องการยกเลิกชำระเงินใช่หรือไม่?',
+            title: t('cancel_payment_title'),
+            text: t('cancel_payment_text'),
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: themeInit.color.themePrimary,
             cancelButtonColor: '#d33',
-            confirmButtonText: 'ยืนยัน',
-            cancelButtonText: 'ยกเลิก',
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
             reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
@@ -282,11 +284,11 @@ const List: React.FC = () => {
            navigate('/apps/customer-payment/invoice-cc/' + contractData.id );
         } else {
             Swal.fire({
-                title: 'คุณต้องการปิดสัญญาใช่หรือไม่',
+                title: t('confirm_close_contract'),
                 text: '',
                 showCancelButton: true,
-                confirmButtonText: 'ยืนยัน',
-                cancelButtonText: 'ยกเลิก',
+                confirmButtonText: t('confirm'),
+                cancelButtonText: t('cancel'),
                 reverseButtons: true,
                 didOpen: () => {
                     const confirmButton: any = Swal.getConfirmButton();
@@ -313,11 +315,11 @@ const List: React.FC = () => {
                 <ul className="flex space-x-2 rtl:space-x-reverse">
                     <li>
                         <Link to="/apps/customer-payment/list" className="text-primary hover:underline">
-                            หน้าหลัก
+                            {t('home_page')}
                         </Link>
                     </li>
                     <li className="before:content-['/'] ltr:before:mr-2 rtl:before:ml-2">
-                        <span>เลขที่สัญญา {contractData.reference}</span>
+                        <span>{t('contract_number_label')} {contractData.reference}</span>
                     </li>
                 </ul>
                 
@@ -329,7 +331,7 @@ const List: React.FC = () => {
                         onClick={() => closeContact()}
                         disabled={contract.on_payment_process === "pay_installment"}
                         >
-                        ปิดสัญญา {contract.on_payment_process === "close_contract" ? "(กำลังชำระเงิน)" : ""}
+                        {t('close_contract')} {contract.on_payment_process === "close_contract" ? t('currently_processing_payment') : ""}
                         </button>
                     </div>
                 )}
@@ -342,7 +344,7 @@ const List: React.FC = () => {
                             <div
                                 className="text-left"
                             >
-                                ขณะนี้อยู่ระหว่างการดำเนินการชำระเงิน กรุณาชำระเงิน หรือกดยกเลิกหากท่านไม่ประสงค์จะดำเนินการต่อ {">"}
+                                {t('payment_in_progress_message')} {">"}
                             </div>
 
                             <button
@@ -350,7 +352,7 @@ const List: React.FC = () => {
                                 className="btn btn-sm btn-outline-danger"
                                 onClick={() => handleCancelQrCode()}
                             >
-                                ยกเลิก
+                                {t('cancel')}
                             </button>
                             </div>
                         </div>
@@ -359,20 +361,20 @@ const List: React.FC = () => {
                             
                     <div className="flex items-center justify-between mb-10">
                         <h5 className="font-semibold text-lg dark:text-white-light pl-4">
-                            เลขที่สัญญา {contractData.reference}
+                            {t('contract_number_label')} {contractData.reference}
                         </h5>
                         {/* TODO: change param later */}
                         <p className="mr-4">
-                            งวดที่ {installemntLast?.ins_no} / {installment.length}
+                            {t('installment_period_label')} {installemntLast?.ins_no} / {installment.length}
                         </p>
                     </div>
                     {!installemntLast?.payed_at && (
                         <>
                             <div className="flex items-center justify-center my-5">
-                                <h2 className="text-xl">ยอดที่ต้องชำระ</h2>
+                                <h2 className="text-xl">{t('amount_to_pay')}</h2>
                             </div>
                             <div className="flex items-center justify-center">
-                                <p className="text-5xl">{isLoading ? 0 : (installemntLast?.amount + installemntLast?.penalty_fee + installemntLast?.unlock_fee).toLocaleString()} บาท</p>
+                                <p className="text-5xl">{isLoading ? 0 : (installemntLast?.amount + installemntLast?.penalty_fee + installemntLast?.unlock_fee).toLocaleString()} {t('baht')}</p>
                             </div>
                             <div className="flex items-center justify-center my-5">
                                 <button
@@ -380,7 +382,7 @@ const List: React.FC = () => {
                                     className="btn btn-secondary btn-lg w-36 border-0 bg-gradient-to-r from-[#3d38e1] to-[#1e9afe]"
                                     onClick={() => installemntLast && goPreview(installemntLast)}
                                 >
-                                    ชำระเงิน
+                                    {t('pay_now')}
                                 </button>
                             </div>
                         </>
@@ -394,13 +396,13 @@ const List: React.FC = () => {
                             columns={[
                                 {
                                     accessor: 'id',
-                                    title: 'ลำดับ',
+                                    title: t('sequence'),
                                     sortable: false,
                                     render: (row, index) => <div>{index + 1}</div>
                                 },
                                 {
                                     accessor: 'amount',
-                                    title: 'ผ่อนงวดละ',
+                                    title: t('installment_per_period'),
                                     sortable: false,
                                     render: ({ amount }) => (
                                         <div className="flex items-center font-normal">
@@ -410,7 +412,7 @@ const List: React.FC = () => {
                                 },
                                 {
                                     accessor: 'due_at',
-                                    title: 'วันที่ครบกำหนด',
+                                    title: t('due_date'),
                                     sortable: false,
                                     render: ({ due_at }) => (
                                         <div className="flex items-center font-normal">
@@ -420,7 +422,7 @@ const List: React.FC = () => {
                                 },
                                 {
                                     accessor: 'status',
-                                    title: 'สถานะ',
+                                    title: t('status'),
                                     sortable: false,
                                     render: ({ status, is_due }) => (
                                         <div className="flex items-center font-normal">
@@ -432,7 +434,7 @@ const List: React.FC = () => {
                                 },
                                 {
                                     accessor: 'payment',
-                                    title: 'ยอดชำระ',
+                                    title: t('amount_paid'),
                                     sortable: false,
                                     render: ({ ins_no, payment }) => (
                                         <div className="flex items-center font-normal">
@@ -446,7 +448,7 @@ const List: React.FC = () => {
                                 },
                                 {
                                     accessor: 'payed_at',
-                                    title: 'วันที่ชำระ',
+                                    title: t('payment_date'),
                                     sortable: false,
                                     render: ({ payed_at }) => (
                                         <div className="flex items-center font-normal">
@@ -456,7 +458,7 @@ const List: React.FC = () => {
                                 },
                                 {
                                     accessor: 'action',
-                                    title: 'Actions',
+                                    title: t('actions'),
                                     sortable: false,
                                     textAlignment: 'center',
                                     render: (item) => (
@@ -466,13 +468,13 @@ const List: React.FC = () => {
                                                
                                                      <Tippy theme="Primary">
                                                         <a className="flex hover:text-info cursor-pointer" onClick={() => { setInstallmentDetail(item); setActionModal(true) }}>
-                                                        รายละเอียด
+                                                        {t('details')}
                                                         </a>
                                                     </Tippy>
 
                                                      <Tippy theme="Primary">
                                                         <a className="flex hover:text-info cursor-pointer" onClick={() => handleModalUpload(item)}>
-                                                        หลักฐานการโอนเงิน
+                                                        {t('transfer_proof_label')}
                                                         </a>
                                                     </Tippy>
                                                 </>
@@ -514,47 +516,47 @@ const List: React.FC = () => {
                                         <IconX />
                                     </button>
                                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                                        เลขที่สัญญา : {contractData.reference}
+                                        {t('contract_number_label')} : {contractData.reference}
                                     </div>
                                     <div className="p-8">
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> ชื่อสินทรัพย์ </div>
+                                            <div className="h-auto p-2 w-auto"> {t('asset_name')} </div>
                                             <div className="h-auto p-2 w-auto text-right"> {asset?.name}</div>
                                         </div>
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> งวดที่ </div>
+                                            <div className="h-auto p-2 w-auto"> {t('installment_number')} </div>
                                             <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.ins_no}</div>
                                         </div>
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> วันที่ชำระ </div>
+                                            <div className="h-auto p-2 w-auto"> {t('payment_date')} </div>
                                             <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.payed_at ? moment(installmentDetail?.payed_at).format('DD/MM/YYYY') : '-'} </div>
                                         </div>
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> ค่างวด </div>
-                                            <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.amount?.toLocaleString('en-US')} บาท</div>
+                                            <div className="h-auto p-2 w-auto"> {t('installment_amount')} </div>
+                                            <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.amount?.toLocaleString('en-US')} {t('baht')}</div>
                                         </div>
                                         {installmentDetail?.penalty_fee > 0 && (
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> ค่าดำเนินการล่าช้า </div>
-                                            <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.penalty_fee?.toLocaleString('en-US')} บาท</div>
+                                            <div className="h-auto p-2 w-auto"> {t('late_operation_fee')} </div>
+                                            <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.penalty_fee?.toLocaleString('en-US')} {t('baht')}</div>
                                         </div>
                                         )}
                                         {installmentDetail?.unlock_fee > 0 && (
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> ค่าปลดล็อค </div>
-                                            <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.unlock_fee?.toLocaleString('en-US')} บาท</div>
+                                            <div className="h-auto p-2 w-auto"> {t('unlock_fee_label')} </div>
+                                            <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.unlock_fee?.toLocaleString('en-US')} {t('baht')}</div>
                                         </div>
                                         )}
                                         {installmentDetail?.discount > 0 && (
                                             <div className="grid grid-cols-2 content-center">
-                                                <div className="h-auto p-2 w-auto"> ส่วนลด </div>
-                                                <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.discount?.toLocaleString('en-US')} บาท</div>
+                                                <div className="h-auto p-2 w-auto"> {t('discount_label')} </div>
+                                                <div className="h-auto p-2 w-auto text-right"> {installmentDetail?.discount?.toLocaleString('en-US')} {t('baht')}</div>
                                             </div>
                                         )}
                                         <div className="grid grid-cols-2 content-center">
-                                            <div className="h-auto p-2 w-auto"> รวมเป็นเงิน </div>
+                                            <div className="h-auto p-2 w-auto"> {t('total_amount')} </div>
                                             <div className="h-auto p-2 w-auto text-right">
-                                                {((installmentDetail?.payment?.amount || 0)).toLocaleString('en-US')} บาท
+                                                {((installmentDetail?.payment?.amount || 0)).toLocaleString('en-US')} {t('baht')}
                                             </div>
                                         </div>
                                     </div>
@@ -594,7 +596,7 @@ const List: React.FC = () => {
                                         <IconX />
                                     </button>
                                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                                        เพิ่มหลักฐานการชำระเงิน
+                                        {t('add_payment_proof')}
                                     </div>
                                      <Formik initialValues={formData} onSubmit={(values) => submitForm(values)} enableReinitialize autoComplete="off" onChange={() => console.log("")}>
                                         {(props) => {
@@ -613,11 +615,11 @@ const List: React.FC = () => {
                                                                             <div className="upload__image-wrapper">
                                                                              <div className="flex space-x-4">
                                                                                 <button className="btn btn-primary" onClick={onImageUpload} type="button">
-                                                                                    เลือกไฟล์...
+                                                                                    {t('select_file')}
                                                                                 </button>
 
                                                                                 <button type="submit" className="btn btn-success">
-                                                                                    บันทึกข้อมูล
+                                                                                    {t('save_data')}
                                                                                 </button>
                                                                              </div>
 

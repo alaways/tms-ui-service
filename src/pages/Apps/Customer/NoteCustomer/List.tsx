@@ -9,7 +9,10 @@ import IconEye from '../../../../components/Icon/IconEye';
 import { useParams } from 'react-router-dom';
 import { useGlobalMutation } from '../../../../helpers/globalApi';
 import { url_api } from '../../../../services/endpoints';
+import { useTranslation } from 'react-i18next';
+
 const List = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [actionModal, setActionModal] = useState(false);
     const [noteData, setNoteData] = useState<any>({ memo: '' });
@@ -46,7 +49,7 @@ const List = () => {
     return (
         <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
             <div className="px-5 mb-4 flex justify-between items-center">
-                <h1 className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">บันทึกข้อความสำหรับลูกค้า</h1>
+                <h1 className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('customer_notes')}</h1>
                 <button
                     className="hover:text-info cursor-pointer btn btn-primary mr-1"
                     onClick={() => {
@@ -54,7 +57,7 @@ const List = () => {
                         setNoteData({ memo: '' });
                     }}
                 >
-                    เพิ่มข้อมูล
+                    {t('add_data')}
                 </button>
             </div>
             <div className="overflow-x-auto px-4">
@@ -62,12 +65,12 @@ const List = () => {
                     noteList?.map((item: any, index: number) => (
                         <div className="flex flex-col bg-[#FAFAFA] gap-3 border rounded-xl p-4 mb-5" key={index}>
                             <div className="flex-1 flex-col justify-center">
-                                <h5 className="font-semibold">ข้อความ</h5>
+                                <h5 className="font-semibold">{t('message')}</h5>
                                 <p style={{ whiteSpace: 'pre-line', wordWrap: 'break-word' }}>{item.memo}</p>
                             </div>
 
                             <div className="flex gap-3 justify-end">
-                                <h5 className="font-semibold">ผู้ดำเนินการ</h5>
+                                <h5 className="font-semibold">{t('operator')}</h5>
                                 <p>
                                     {item.admin_name} {convertDateTimeDbToClient(item?.created_at)}
                                 </p>
@@ -142,14 +145,14 @@ const List = () => {
                                         >
                                             <IconX />
                                         </button>
-                                        <div className="text-lg font-medium  dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{noteData.id ? 'ดูข้อมูล' : 'เพิ่มข้อมูล'}</div>
+                                        <div className="text-lg font-medium  dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{noteData.id ? t('view_data') : t('add_data')}</div>
                                     </div>
                                     <Formik initialValues={noteData} onSubmit={onSubmitData} enableReinitialize autoComplete="off">
                                         <Form className="px-4 pb-4 flex flex-col gap-3 custom-select">
-                                            <InputField as="textarea" label="ข้อความ" name="memo" rows="10"/>
+                                            <InputField as="textarea" label={t('message')} name="memo" rows="10"/>
                                             {!noteData.id && (
                                                 <button type="submit" className="btn btn-primary  rtl:mr-4">
-                                                    บันทึก
+                                                    {t('save')}
                                                 </button>
                                             )}
                                         </Form>

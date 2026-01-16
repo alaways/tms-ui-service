@@ -29,9 +29,11 @@ import { DataTable } from 'mantine-datatable';
 import themeInit from '../../../theme.init';
 import { Dialog, Transition } from '@headlessui/react'
 import IconX from '../../../components/Icon/IconX';
+import { useTranslation } from 'react-i18next';
 const mode = process.env.MODE || 'admin';
 
 const Payment = () => {
+    const { t } = useTranslation();
     const { ctid, uuid, inid } = useParams();
     const [dataCancel, setDataCancel] = useState({
             admin_name:'',
@@ -52,7 +54,7 @@ const Payment = () => {
             value: 'promptpay',
         },
         {
-            label: 'เงินสด',
+            label: t('cash'),
             value: 'cash',
         },
     ]);
@@ -98,13 +100,13 @@ const Payment = () => {
     });
 
     const breadcrumbItems = [
-        { to: '/apps/contract/list', label: 'สัญญา' },
-        { to: true, label: 'แก้ไข' },
-        { label: 'รับชำระเงิน', isCurrent: true },
+        { to: '/apps/contract/list', label: t('contract') },
+        { to: true, label: t('edit') },
+        { label: t('payment_receive'), isCurrent: true },
     ];
 
     useEffect(() => {
-        dispatch(setPageTitle('รับชำระเงิน'));
+        dispatch(setPageTitle(t('payment_receive')));
     });
 
     const [expiredate, setExpiredate] = useState<string>('');
@@ -239,7 +241,7 @@ const Payment = () => {
             if (res.statusCode === 400 || res.code === 400) {
                 Swal.fire({
                         icon: 'error',
-                        title: 'ยกเลิกชำระเงิน',
+                        title: t('cancel_payment'),
                         padding: '10px 20px',
                     }).then(() => {
                         window.location.reload();
@@ -248,7 +250,7 @@ const Payment = () => {
                 if (res.data?.status == 'cancel') {
                     Swal.fire({
                         icon: 'error',
-                        title: 'ยกเลิกชำระเงิน',
+                        title: t('cancel_payment'),
                         padding: '10px 20px',
                     }).then(() => {
                         window.location.reload();
@@ -256,7 +258,7 @@ const Payment = () => {
                 } else if (res.data?.status == 'complete') {
                     Swal.fire({
                         icon: 'success',
-                        title: 'ชำระเงินสำเร็จ',
+                        title: t('payment_success'),
                         padding: '10px 20px',
                     }).then(() => {
                         window.location.reload();
@@ -284,19 +286,19 @@ const Payment = () => {
         }
     }, [paymentQr]);
     const SubmittedForm = Yup.object().shape({
-        payed_at: Yup.string().nullable().required('กรุณาใส่เลือกวันที่'),
-        bank_account_number: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        amount: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+        payed_at: Yup.string().nullable().required(t('please_fill_all_fields')),
+        bank_account_number: Yup.string().required(t('please_fill_all_fields')),
+        amount: Yup.string().required(t('please_fill_all_fields')),
         ...(formData?.penalty_fee_limit > 0  ? {
-         penalty_fee: Yup.number().max(formData?.penalty_fee_limit, `ค่าดำเนินการล่าช้าต้องไม่เกิน ${formData?.penalty_fee_limit} บาท/ครั้ง`).required('กรุณาใส่ข้อมูลให้ครบ'),
+         penalty_fee: Yup.number().max(formData?.penalty_fee_limit, `${t('late_fee_limit_error')} ${formData?.penalty_fee_limit} ${t('baht_per_time')}`).required(t('please_fill_all_fields')),
         } : {
-         penalty_fee: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
+         penalty_fee: Yup.number().required(t('please_fill_all_fields')),
         }),
        
-        unlock_fee: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+        unlock_fee: Yup.string().required(t('please_fill_all_fields')),
         discount: Yup.number()
             .max(formData?.amount - 1)
-            .required('กรุณาใส่ข้อมูลให้ครบ'),
+            .required(t('please_fill_all_fields')),
     });
 
     const onImgChange = async (imageList: ImageListType) => {
@@ -321,7 +323,7 @@ const Payment = () => {
                     setLoading(false);
                     Swal.fire({
                         icon: 'success',
-                        title: 'ชำระเงินสำเร็จ',
+                        title: t('payment_success'),
                         padding: '10px 20px',
                     }).then(() => {
                         navigate('/apps/contract/' + contract_id + '/' + contract_uuid);
@@ -369,7 +371,7 @@ const Payment = () => {
                 } else {
                     toast.fire({
                         icon: 'error',
-                        title: 'เพิ่มไฟล์ผิดพลาดกรุณาใช้ไฟล์ที่เป็นรูปเท่านั้น',
+                        title: t('file_upload_error_image_only'),
                         padding: '10px 20px',
                     });
                 }
@@ -445,14 +447,14 @@ const Payment = () => {
                 };
 
                 Swal.fire({
-                    title: 'ยืนยันการชำระเงิน',
-                    text: 'คุณต้องการชำระเงินรายการนี้ใช่หรือไม่?',
+                    title: t('payment_confirmation'),
+                    text: t('payment_confirmation_text'),
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: themeInit.color.themePrimary,
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'ยืนยัน',
-                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonText: t('confirm'),
+                    cancelButtonText: t('cancel'),
                     reverseButtons: true,
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -463,7 +465,7 @@ const Payment = () => {
                             setLoading(false);
                             toast.fire({
                                 icon: 'error',
-                                title: 'กรุณาเพิ่มรูปหลักฐานการชำระเงินอย่างน้อย 1 รูป',
+                                title: t('add_proof_image'),
                                 padding: '10px 20px',
                             });
                         }
@@ -479,7 +481,7 @@ const Payment = () => {
     const onError = () => {
         toast.fire({
             icon: 'error',
-            title: 'รูปภาพเกิน 10 รูป',
+            title: t('image_limit_10'),
             padding: '10px 20px',
         });
     };
@@ -588,7 +590,7 @@ const Payment = () => {
                     setLoading(false);
                     Swal.fire({
                         icon: 'success',
-                        title: 'ชำระเงินสำเร็จ',
+                        title: t('payment_success'),
                         padding: '10px 20px',
                     }).then(() => {
                         window.location.reload();
@@ -621,7 +623,7 @@ const Payment = () => {
                     setLoading(false);
                     Swal.fire({
                         icon: 'success',
-                        title: 'ยกเลิกชำระเงินสำเร็จ',
+                        title: t('cancel_payment_success'),
                         padding: '10px 20px',
                     }).then(() => {
                         navigate('/apps/contract/' + contract_id + '/' + contract_uuid);
@@ -678,7 +680,7 @@ const Payment = () => {
         if (imageTotal > 10) {
             toast.fire({
                 icon: 'error',
-                title: 'รูปภาพเกิน 10 รูป',
+                title: t('image_limit_10'),
                 padding: '10px 20px',
             });
             return false;
@@ -715,23 +717,23 @@ const Payment = () => {
         };
 
         Swal.fire({
-            title: 'ยืนยันการแก้ไขข้อมูล',
-            text: 'คุณต้องการแก้ไขข้อมูลการชำระเงินรายการนี้ใช่หรือไม่?',
+            title: t('edit_payment_confirmation'),
+            text: t('edit_payment_confirmation_text'),
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: themeInit.color.themePrimary,
             cancelButtonColor: '#d33',
-            confirmButtonText: 'ยืนยัน',
-            cancelButtonText: 'ยกเลิก',
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
             reverseButtons: true,
             html: `
-                <label for="password" style="display: block; text-align: left; font-size: 1rem; margin-top: 10px; color: #000000 color: #000000;">รหัสผ่านผู้ใช้งาน:</label>
-                <input id="password" type="password" type="text" class="swal2-input" style="margin: 0 !important; width: 100%; font-size: 1rem; color: #000000;" placeholder="รหัสผ่านผู้ใช้งาน สำหรับยืนยันการแก้ไข">`,
+                <label for="password" style="display: block; text-align: left; font-size: 1rem; margin-top: 10px; color: #000000 color: #000000;">${t('user_password')}:</label>
+                <input id="password" type="password" type="text" class="swal2-input" style="margin: 0 !important; width: 100%; font-size: 1rem; color: #000000;" placeholder="${t('user_password_for_edit')}">`,
             preConfirm: () => {
                 const password = document?.getElementById('password')?.value;
 
                 if (!password) {
-                    Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+                    Swal.showValidationMessage(t('fill_all_fields'));
                     return false;
                 }
 
@@ -757,19 +759,19 @@ const Payment = () => {
                 reason_cancel: string;
             }
             Swal.fire({
-                title: 'ยกเลิกการชำระเงิน',
-                text: 'คุณต้องการยกเลิกการชำระเงินรายการนี้ใช่หรือไม่?',
+                title: t('cancel_payment_title'),
+                text: t('cancel_payment_text'),
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: themeInit.color.themePrimary,
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'ยืนยัน',
-                cancelButtonText: 'ยกเลิก',
+                confirmButtonText: t('confirm'),
+                cancelButtonText: t('cancel'),
                 reverseButtons: true,
-                html: `<label for="reason_cancel" style="display: block; text-align: left; margin-bottom: 10px; font-size: 1rem; margin-top: 10px; color: #000000;">เหตุผลการยกเลิก:</label>
-                    <input id="reason_cancel" type="text" class="swal2-input" style="margin: 0 !important; width: 100%; font-size: 1rem; color: #000000;" placeholder="โปรดระบุ">
-                    <label for="password" style="display: block; text-align: left; font-size: 1rem; margin-top: 10px; color: #000000 color: #000000;">รหัสผ่านผู้ใช้งาน:</label>
-                    <input id="password" type="password" type="text" class="swal2-input" style="margin: 0 !important; width: 100%; font-size: 1rem; color: #000000;" placeholder="รหัสผ่านผู้ใช้งาน สำหรับยืนยันการแก้ไข">`,
+                html: `<label for="reason_cancel" style="display: block; text-align: left; margin-bottom: 10px; font-size: 1rem; margin-top: 10px; color: #000000;">${t('cancellation_reason')}:</label>
+                    <input id="reason_cancel" type="text" class="swal2-input" style="margin: 0 !important; width: 100%; font-size: 1rem; color: #000000;" placeholder="${t('please_enter_info')}">
+                    <label for="password" style="display: block; text-align: left; font-size: 1rem; margin-top: 10px; color: #000000 color: #000000;">${t('user_password')}:</label>
+                    <input id="password" type="password" type="text" class="swal2-input" style="margin: 0 !important; width: 100%; font-size: 1rem; color: #000000;" placeholder="${t('user_password_for_edit')}">`,
                 preConfirm: () => {
                     const {value} = document?.getElementById('password') as HTMLInputElement;
                    
@@ -777,7 +779,7 @@ const Payment = () => {
                     const password = document?.getElementById('password') as HTMLInputElement;
     
                     if (!reason_cancel.value || !password.value) {
-                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+                        Swal.showValidationMessage(t('fill_all_fields'));
                         return false;
                     }
 
@@ -824,7 +826,7 @@ const Payment = () => {
                 {formData.isReferenceExists && formData?.payment_method == 'cash' && !isEdit && (
                     <div className="flex">
                         <a className="hover:text-info cursor-pointer btn btn-primary mr-1" onClick={() => goEdit()}>
-                            <IconEdit className="w-4.5 h-4.5" /> &nbsp; แก้ไข
+                            <IconEdit className="w-4.5 h-4.5" /> &nbsp; {t('edit')}
                         </a>
                     </div>
                 )}
@@ -868,33 +870,33 @@ const Payment = () => {
                             >
                             <IconX />
                             </button>
-                            <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px] text-center">ข้อมูลการยกเลิก</div>
+                            <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px] text-center">{t('cancellation_info')}</div>
                             <div className="p-5">
                             
                             <div className="p-5">
                                 <div className="mb-5 space-y-1">
                                 
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[#515365] font-semibold">เหตุผลการยกเลิก </p>
+                                    <p className="text-[#515365] font-semibold">{t('cancellation_reason')} </p>
                                     <p className="text-base">
                                     <span className="font-semibold">{dataCancel?.reason_cancel ?? ''}</span>
                                     </p>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[#515365] font-semibold">ผู้ดำเนินการ</p>
+                                    <p className="text-[#515365] font-semibold">{t('operator')}</p>
                                     <p className="text-base">
                                     <span className="font-semibold">{dataCancel?.admin_name ?? '-'}</span>
                                     </p>
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[#515365] font-semibold">วันที่ยกเลิก</p>
+                                    <p className="text-[#515365] font-semibold">{t('cancellation_date')}</p>
                                     <p className="text-base">
                                     <span className="font-semibold">{convertDateTimeDbToClient(dataCancel?.created_at ?? '-')}</span>
                                     </p>
                                 </div>
                                 
-                                <p className="text-[#515365] font-semibold">หลักฐานการโอนเงิน</p>
+                                <p className="text-[#515365] font-semibold">{t('transfer_proof_label')}</p>
                                {Array.isArray(dataCancel?.payment_slip) && dataCancel.payment_slip.length > 0 ? (
                                     <div className="grid gap-4 sm:grid-cols-3 grid-cols-1">
                                         {dataCancel.payment_slip.map((image: any, index: number) => (
@@ -938,41 +940,41 @@ const Payment = () => {
 
                         return (
                             <Form onSubmit={props.handleSubmit} className="space-y-5 dark:text-white custom-select">
-                                <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">รับชำระเงิน</div>
+                                <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('payment_receive')}</div>
 
                                 <div className="grid grid-cols-6 gap-4">
                                     <div className="col-start-1 col-end-3">
-                                        <label htmlFor="">เลขที่สัญญา</label>
+                                        <label htmlFor="">{t('contract_number_label')}</label>
                                         <input disabled type="text" value={info.reference} className="form-input disabled:bg-[#eee] " />
                                     </div>
                                     <div className="col-end-7 col-span-2">
-                                        <DatePicker label="วันที่ครบกำหนด" name="due_at" disabled />
+                                        <DatePicker label={t('due_date')} name="due_at" disabled />
                                     </div>
                                 </div>
 
                                 <div className="table-responsive pt-10">
-                                    <div className="text-md font-semibold ltr:sm:text-left rtl:sm:text-right text-center">รายการ</div>
+                                    <div className="text-md font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('items')}</div>
 
                                     <table className="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th className="text-left" style={{ width: '50px' }}>
-                                                    งวดที่
+                                                    {t('installment_number')}
                                                 </th>
                                                 <th className="text-center" style={{ width: '100px' }}>
-                                                    ผ่อนงวดละ
+                                                    {t('installment_per_period')}
                                                 </th>
                                                 <th className="text-center" style={{ width: '100px' }}>
-                                                    ค่าดำเนินการล่าช้า
+                                                    {t('late_fee')}
                                                 </th>
                                                 <th className="text-center" style={{ width: '100px' }}>
-                                                    ค่าปลดล๊อค
+                                                    {t('unlock_fee')}
                                                 </th>
                                                 <th className="text-center" style={{ width: '100px' }}>
-                                                    ส่วนลด
+                                                    {t('discount')}
                                                 </th>
                                                 <th className="text-center" style={{ width: '100px' }}>
-                                                    รวม
+                                                    {t('total')}
                                                 </th>
                                             </tr>
                                         </thead>
@@ -1026,19 +1028,19 @@ const Payment = () => {
                                         <tfoot>
                                             <tr>
                                                 <td colSpan={5} className="text-right font-bold py-4">
-                                                    จำนวนเงินทั้งสิ้น
+                                                    {t('total_payment')}
                                                 </td>
-                                                <td className="text-center font-bold">{numberCommas(props.values.total) + ' บาท'}</td>
+                                                <td className="text-center font-bold">{numberCommas(props.values.total) + ' ' + t('total_amount_baht')}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                                 <>
                                     <div className="input-flex-row">
-                                        <InputField label="หมายเลขอ้างอิง" name="reference" disabled={(!!formData.isReferenceExists || props.values.payment_method == 'promptpay') && !isEdit} />
+                                        <InputField label={t('reference_number')} name="reference" disabled={(!!formData.isReferenceExists || props.values.payment_method == 'promptpay') && !isEdit} />
                                         <DatePickerTime
                                             require
-                                            label="วันที่และเวลาที่ชำระ"
+                                            label={t('payment_date_time')}
                                             name="payed_at"
                                             selected={props.values?.payed_at}
                                             onChange={(value: any) => {
@@ -1052,10 +1054,10 @@ const Payment = () => {
                                     <div className="input-flex-row">
                                         <SelectField
                                             require
-                                            label="ช่องทางชำระเงิน"
+                                            label={t('payment_channel')}
                                             id="payment_method"
                                             name="payment_method"
-                                            placeholder="กรุณาเลือก"
+                                            placeholder={t('please_select')}
                                             options={masterPaymentMethod}
                                             isSearchable={false}
                                             onChange={(e: any) => {
@@ -1066,10 +1068,10 @@ const Payment = () => {
 
                                         <SelectField
                                             require
-                                            label="โอนเข้าบัญชีธนาคาร"
+                                            label={t('transfer_to_bank_account')}
                                             id="bank_account_number"
                                             name="bank_account_number"
-                                            placeholder="กรุณาเลือก"
+                                            placeholder={t('please_select')}
                                             options={masterDataBankList}
                                             isSearchable={false}
                                             onChange={(e: any) => {
@@ -1080,7 +1082,7 @@ const Payment = () => {
                                     </div>
 
                                     <div className="input-flex-row">
-                                        <InputField label="ยอดชำระเงิน" name="total" type="text" disabled />
+                                        <InputField label={t('payment_amount')} name="total" type="text" disabled />
                                     </div>
 
                                     {/* {props.values.payment_method != 'promptpay' && ( */}
@@ -1088,7 +1090,7 @@ const Payment = () => {
                                             <div className="upload-container w-full">
                                                 <div className="custom-file-container" data-upload-id="firstImage">
                                                     <div className="label-container">
-                                                        <p>หลักฐานการโอนเงิน </p>
+                                                        <p>{t('transfer_proof')} </p>
                                                         {(!formData.isReferenceExists || isEdit) && (
                                                             <button
                                                                 type="button"
@@ -1112,7 +1114,7 @@ const Payment = () => {
                                                                 <div className="upload__image-wrapper">
                                                                     {(!formData.isReferenceExists || isEdit) && (
                                                                         <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                                                                            เลือกไฟล์...
+                                                                            {t('select_file')}
                                                                         </button>
                                                                     )}
                                                                     <div className="grid gap-4 sm:grid-cols-3 grid-cols-1 pt-[70px]">
@@ -1172,7 +1174,7 @@ const Payment = () => {
                                     <div className="input-flex"></div>
                                     <div className="mt-6">
                                         <InputField
-                                            label="หมายเหตุ"
+                                            label={t('remark')}
                                             name="remark"
                                             as="textarea"
                                             rows="5"
@@ -1193,7 +1195,7 @@ const Payment = () => {
                                                                 info?.status === 'complete' ? 'badge-outline-success' : info?.status === 'pending' ? 'badge-outline-warning' : 'badge-outline-danger'
                                                             }`}
                                                         >
-                                                            {info?.status === 'complete' ? 'สำเร็จ' : info?.status === 'pending' ? 'รอชำระ' : 'ยกเลิก'}
+                                                            {info?.status === 'complete' ? t('success') : info?.status === 'pending' ? t('pending_payment') : t('cancelled')}
                                                         </div>
                                                     </div>
 
@@ -1208,18 +1210,18 @@ const Payment = () => {
                                                     </div>
 
                                                     <div className="text-center">
-                                                        <div className="py-2">เวลานับถอยหลัง</div>
+                                                        <div className="py-2">{t('countdown_timer')}</div>
                                                         <div>{timerComponents.length && timerComponents}</div>
                                                     </div>
                                                     <br />
                                                     {qrCodeImage && timerComponents.length && (
                                                         <div className="text-center">
                                                             <button type="button" className="bg-blue-600 text-white py-2 px-4 rounded mr-2.5" onClick={handleDownload}>
-                                                                บันทึกรูป
+                                                                {t('save_image')}
                                                             </button>
 
                                                             <button type="button" className="bg-red-600 text-white py-2 px-4 rounded mg" onClick={handleCancelQrCode}>
-                                                                ยกเลิก
+                                                                {t('cancel')}
                                                             </button>
                                                         </div>
                                                     )}
@@ -1233,7 +1235,7 @@ const Payment = () => {
                                     {props.values.payment_method != 'cash' && info?.status != 'complete' &&  !qrCodeImage &&  props.values.payment_method !== undefined &&  (
                                         <div className="flex justify-center items-center mt-8">
                                             <button type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4" onClick={() => handleGenerateQrcode(props.values)}>
-                                                สร้าง QR CODE
+                                                {t('generate_qr_code')}
                                             </button>
                                         </div>
                                     )}
@@ -1241,10 +1243,10 @@ const Payment = () => {
                                     {props.values.payment_method == 'cash' && (info?.status != 'complete' || isEdit) && (
                                         <div className="flex justify-center items-center mt-8">
                                             <button type="button" onClick={cancelPayment} className="btn bg-red-500 text-white border-none shadow-lg shadow-red-500/10 ltr:ml-4 rtl:mr-4">
-                                               {formData.id_payment ? 'ยกเลิกชำระเงิน' : 'กลับ'}
+                                               {formData.id_payment ? t('cancel_payment') : t('back')}
                                             </button>
                                             <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                {!isEdit ? 'บันทึกข้อมูล' : 'แก้ไขข้อมูล'}
+                                                {!isEdit ? t('save_data') : t('edit_data')}
                                             </button>
                                         </div>
                                     )}
@@ -1256,7 +1258,7 @@ const Payment = () => {
             </div>
 
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3 px-10">
-                <h5 className="text-lg font-semibold mb-4">ประวัติการทำรายการ</h5>
+                <h5 className="text-lg font-semibold mb-4">{t('transaction_history')}</h5>
               
                 <div className="datatables pagination-padding">
                     <DataTable
@@ -1265,14 +1267,14 @@ const Payment = () => {
                         columns={[
                             {
                                 accessor: 'id',
-                                title: 'ลำดับ',
+                                title: t('sequence'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => <p>{history.length - index}</p>,
                             },
                             {
                                 accessor: 'reference',
-                                title: 'Reference',
+                                title: t('reference'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item) => (
@@ -1283,68 +1285,68 @@ const Payment = () => {
                             },
                             {
                                 accessor: 'amount',
-                                title: 'ค่างวด',
+                                title: t('installment_amount'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'penalty_fee',
-                                title: 'ค่าดำเนินการล่าช้า',
+                                title: t('late_operation_fee'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'unlock_fee',
-                                title: 'ค่าปลดล็อค',
+                                title: t('unlock_fee_label'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'discount',
-                                title: 'ส่วนลด',
+                                title: t('discount_label'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'total',
-                                title: 'ชำระทั้งสิ้น',
+                                title: t('total_payment'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'bank_account_number',
-                                title: 'บัญชีธนาคาร',
+                                title: t('bank_account'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'payed_at',
-                                title: 'วันที่ชำระ',
+                                title: t('payment_date'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item: any) => <p>{convertDateTimeDbToClient(item?.payed_at)}</p>,
                             },
                             {
                                 accessor: 'admin_name',
-                                title: 'ผู้ดำเนินการ (ปรับปรุง)',
+                                title: t('operator_adjusted'),
                                 textAlignment: 'center',
                                 sortable: false,
                             },
                             {
                                 accessor: 'created_at',
-                                title: 'วันที่ - เวลา',
+                                title: t('date_time'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item: any) => <p>{convertDateTimeDbToClient(item?.created_at)}</p>,
                             },
                              {
                                 accessor: 'deleted_at',
-                                title: 'สถานะ',
+                                title: t('status'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item) => (
                                     <span className={`badge ${item.is_deleted == 0 ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                                        {item.is_deleted ? 'ยกเลิก' : 'ปกติ'}
+                                        {item.is_deleted ? t('cancelled') : t('normal')}
                                     </span>
                                 ),
                             },

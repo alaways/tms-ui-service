@@ -8,9 +8,11 @@ import PreLoading from '../../../helpers/preLoading';
 import IconNotes from '../../../components/Icon/IconNotes'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
+import { useTranslation } from 'react-i18next'
 const mode = process.env.MODE || 'admin'
 
 const Dashboard = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const storedUser = localStorage.getItem(mode)
@@ -85,7 +87,7 @@ const Dashboard = () => {
       <div className="flex mb-5">
         <IconNotes className="w-8 h-8 mx-2" />
         <h5 className="font-semibold text-lg dark:text-white-light text-center">
-          สัญญาเช่าซื้อ
+          {t('lease_purchase_contract')}
         </h5>
       </div>
       <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -94,7 +96,7 @@ const Dashboard = () => {
         ) : contract.length === 0 ? (
           <div className="font-semibold text-center pb-8">
             <p className="text-lg text-white-dark my-4">
-              ยังไม่พบข้อมูล
+              {t('no_data_yet')}
             </p>
           </div>
         ) : (
@@ -104,16 +106,16 @@ const Dashboard = () => {
                 <div className="flex flex-col w-full">
                   <div className="font-semibold">
                     <div className="flex justify-between">
-                      <p className="text-md text-dark mt-1"> เลขที่สัญญา {item.reference} </p>
+                      <p className="text-md text-dark mt-1"> {t('contract_number_label')} {item.reference} </p>
                       {(item.status.id == 5 && !item.is_closed) && item.is_due && (
                         <p className="text-md text-red-600 mt-1">
-                          รอชำระ
+                          {t('pending_payment')}
                         </p>
                       )}
 
                       {(item.status.id == 5 && !item.is_closed) && !item.is_due && (
                         <p className="text-md text-green-600 mt-1">
-                          ปกติ
+                          {t('normal')}
                         </p>
                       )}
                     </div>
@@ -124,10 +126,10 @@ const Dashboard = () => {
                       {item.asset.name}
                     </p>
                     <p className="text-sm text-white-dark mt-1">
-                      งวดที่: {item.ins_now}
+                      {t('installment_period_label')}: {item.ins_now}
                     </p>
                     <p className="text-sm text-white-dark mt-1">
-                      วันที่ครบกำหนด {convertDateDbToClient(item?.due_at)}
+                      {t('due_date')} {convertDateDbToClient(item?.due_at)}
                     </p>
                   </div>
                 </div>
@@ -135,13 +137,13 @@ const Dashboard = () => {
               {item.status.id == 8 ? (
                 <div className="font-semibold text-center pb-0 flex justify-center items-center p-0 h-[125px]">
                   <p className="text-md text-gray-400 mt-3 mb-5">
-                    อยุ่ระหว่างดำเนินการ
+                    {t('in_progress')}
                   </p>
                 </div>
               ) : item.status.id == 5 && item.is_closed ? (
                 <div className="font-semibold text-center pb-0 flex justify-center items-center p-0 h-[125px]">
                   <p className="text-md text-gray-400 mt-3 mb-5">
-                    ปิดสัญญา
+                    {t('contract_closed')}
                   </p>
                 </div>
               ) : (
@@ -149,16 +151,16 @@ const Dashboard = () => {
                   {/* {item.is_due && ( */}
                     <>
                       <p className="text-lg text-white-dark my-4">
-                        ยอดที่ต้องชำระ
+                        {t('amount_to_pay')}
                       </p>
                       <p className="text-2xl text-red-600 mt-3 mb-5">
-                        {item.preview?.amount ? item.preview.total.toLocaleString() : '0'} บาท
+                        {item.preview?.amount ? item.preview.total.toLocaleString() : '0'} {t('baht')}
                       </p>
                     </>
                   {/* )} */}
                   <div className="w-full absolute bottom-0 flex items-center justify-between p-5 -mx-5">
                     <button type="button" className="btn btn-secondary btn-lg w-full border-0 bg-gradient-to-r from-[#3d38e1] to-[#1e9afe]" onClick={() => fetchPeriod(item)}>
-                      ดูรายละเอียด
+                      {t('view_details')}
                     </button>
                   </div>
                 </div>

@@ -14,8 +14,10 @@ import { url_api } from '../../../../services/endpoints';
 import IconEdit from '../../../../components/Icon/IconEdit';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../../../store';
+import { useTranslation } from 'react-i18next';
 
 const Preview = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
     const creditLevelTypes = useSelector((state: IRootState) => state.dataStore.credit_level)
@@ -24,9 +26,9 @@ const Preview = () => {
     const [actionModal, setActionModal] = useState(false);
 
     const breadcrumbItems = [
-        { to: '/apps/customer/list', label: 'ลูกค้า' },
-        { to: '/apps/customer/edit/' + id_customer, label: 'ลูกค้า' },
-        { label: 'ระดับเครดิต', isCurrent: true },
+        { to: '/apps/customer/list', label: t('customer') },
+        { to: '/apps/customer/edit/' + id_customer, label: t('customer') },
+        { label: t('credit_level'), isCurrent: true },
     ];
 
     const [history, setHistory] = useState<any>([]);
@@ -56,7 +58,7 @@ const Preview = () => {
     const { mutate: createUpdateCredit} = useGlobalMutation(url_api.customerCreditCreateAndUpdate, {
         onSuccess: (res: any) => {
            if (res.code == 200 && res.statusCode == 200) {
-                showNotification('เพิ่มข้อมูลสำเร็จ', 'success');
+                showNotification(t('add_success'), 'success');
             }
         },
         onError: (err: any) => {
@@ -92,9 +94,9 @@ const Preview = () => {
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
                 <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
-                        <h5 className="px-4 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">รายละเอียด ระดับเครดิต</h5>
+                        <h5 className="px-4 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('credit_level_details')}</h5>
                         <a className="hover:text-info cursor-pointer btn btn-primary mr-1" onClick={() => setActionModal(true)}>
-                            <IconEdit className="w-4.5 h-4.5" /> &nbsp; แก้ไข
+                            <IconEdit className="w-4.5 h-4.5" /> &nbsp; {t('edit')}
                         </a>
                     </div>
                     <div className="datatables pagination-padding">
@@ -104,19 +106,19 @@ const Preview = () => {
                             columns={[
                                 {
                                     accessor: 'id',
-                                    title: 'ลำดับ',
+                                    title: t('sequence'),
                                     sortable: false,
                                     textAlignment: 'center',
                                     render: (row, index) => <div>{index + 1}</div>,
                                 },
                                 {
                                     accessor: 'business_unit_name',
-                                    title: 'หน่วยธุรกิจ',
+                                    title: t('business_unit'),
                                     sortable: false,
                                 },
                                 {
                                     accessor: 'credit_level',
-                                    title: 'ระดับเครดิต',
+                                    title: t('credit_level'),
                                     sortable: false,
                                 },
                                 // {
@@ -129,12 +131,12 @@ const Preview = () => {
                                 // },
                                 {
                                     accessor: 'admin_name',
-                                    title: 'ผู้ดำเนินการ',
+                                    title: t('operator'),
                                     sortable: false,
                                 },
                                 {
                                     accessor: 'created_at',
-                                    title: 'วันที่ - เวลา',
+                                    title: t('date_time'),
                                     sortable: false,
                                     render: (item: any) => <p>{convertDateTimeDbToClient(item?.created_at)}</p>,
                                 },
@@ -145,7 +147,7 @@ const Preview = () => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-2 mt-20">
-                    <h5 className="px-4 text-[16px] ltr:sm:text-left rtl:sm:text-right text-center">ประวัติ</h5>
+                    <h5 className="px-4 text-[16px] ltr:sm:text-left rtl:sm:text-right text-center">{t('history')}</h5>
                     <div className="datatables pagination-padding">
                         <DataTable
                             className="whitespace-nowrap table-hover invoice-table"
@@ -153,25 +155,25 @@ const Preview = () => {
                             columns={[
                                 {
                                     accessor: 'id',
-                                    title: 'ลำดับ',
+                                    title: t('sequence'),
                                     sortable: false,
                                     textAlignment: 'center',
                                     render: (row, index) => <div>{index + 1}</div>,
                                 },
                                 {
                                     accessor: 'note',
-                                    title: 'รายละเอียด',
+                                    title: t('details'),
                                     sortable: false,
                                     render: (item: any) => <p>{item.note || '-'}</p>,
                                 },
                                 {
                                     accessor: 'admin_name',
-                                    title: 'ผู้ดำเนินการ',
+                                    title: t('operator'),
                                     sortable: false,
                                 },
                                 {
                                     accessor: 'created_at',
-                                    title: 'วันที่ เวลา',
+                                    title: t('date_time_label'),
                                     sortable: false,
                                     render: (item: any) => <p>{convertDateTimeDbToClient(item?.created_at)}</p>,
                                 },
@@ -207,29 +209,29 @@ const Preview = () => {
                                         >
                                             <IconX />
                                         </button>
-                                        <div className="text-lg font-medium  dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">แก้ไขข้อมูล</div>
+                                        <div className="text-lg font-medium  dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{t('edit_data')}</div>
                                     </div>
                                     <Formik initialValues={creditFormData} onSubmit={onConfirmDataUpload} enableReinitialize autoComplete="off">
                                         <Form className="px-4 flex flex-col gap-3 custom-select">
                                             <SelectField
                                                 require={true}
-                                                placeholder="กรุณาเลือก"
+                                                placeholder={t('please_select')}
                                                 isSearchable={true}
-                                                label="หน่วยธุรกิจ"
+                                                label={t('business_unit')}
                                                 options={businessUnitList}
                                                 name="id_business_unit"
                                                 id="id_business_unit"
                                             />
                                             <SelectField
                                                 require={true}
-                                                label="ระดับเครดิต (แอดมิน)"
+                                                label={t('credit_level_admin')}
                                                 id="credit_level"
                                                 name="credit_level"
                                                 options={creditLevelTypes}
-                                                placeholder="กรุณาเลือก"
+                                                placeholder={t('please_select')}
                                                 isSearchable={true}
                                             />
-                                            {creditFormData.id && <InputField require={true} label="เหตุผลการแก้ไข" name="note" />}
+                                            {creditFormData.id && <InputField require={true} label={t('edit_reason')} name="note" />}
                                             <div className=" pb-5">
                                                 <div className="flex justify-end items-center mt-8">
                                                     <button
@@ -239,10 +241,10 @@ const Preview = () => {
                                                             setActionModal(false);
                                                         }}
                                                     >
-                                                        ยกเลิก
+                                                        {t('cancel')}
                                                     </button>
                                                     <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                        ยืนยัน
+                                                        {t('confirm')}
                                                     </button>
                                                 </div>
                                             </div>

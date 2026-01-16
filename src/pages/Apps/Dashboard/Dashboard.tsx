@@ -13,7 +13,10 @@ import { url_api } from '../../../services/endpoints';
 import { toastAlert } from '../../../helpers/constant'
 import Swal from 'sweetalert2'
 import PreLoading from '../../../helpers/preLoading';
+import { useTranslation } from 'react-i18next';
+
 const Dashboard = () => {
+    const { t } = useTranslation()
     dayjs.extend(buddhistEra);
     dayjs.locale(dayTh);
     const toast = Swal.mixin(toastAlert)
@@ -112,7 +115,7 @@ const Dashboard = () => {
         if (id_business_unit === null || id_business_unit === undefined) {
             toast.fire({
               icon: 'warning',
-              title: 'กรุณาเลือกหน่วยธุรกิจเพื่อค้นหา',
+              title: t('please_select_business_unit'),
               padding: '10px 20px',
             })
           
@@ -120,7 +123,7 @@ const Dashboard = () => {
             
             toast.fire({
                 icon: 'warning',
-                title: 'กรุณาเลือกปีเพื่อค้นหา',
+                title: t('please_select_year'),
                 padding: '10px 20px',
             })
         } else {
@@ -223,14 +226,14 @@ const Dashboard = () => {
                                 />
 
                                 <button type="submit" className="text-white bg-[#002A41] rounded-lg py-2 px-4">
-                                    ค้นหา
+                                    {t('search')}
                                 </button>
                             </div>
 
                         </div>
 
                         <div className="flex flex-col gap-1">
-                            <h1 className="font-semibold text-xl">สรุปยอดแยกเดือน</h1>
+                            <h1 className="font-semibold text-xl">{t('summary_by_month')}</h1>
                             <div className="bg-white rounded-xl " style={{
                                 overflowY: 'auto',
                                 display: 'block'
@@ -239,38 +242,38 @@ const Dashboard = () => {
                                     <tr className="h-[40px]">
                                         <th colSpan={2} className="border-b border-white bg-[#002A41] text-white"></th>
                                         <th colSpan={7} className="border-r border-b border-white bg-[#002A41] text-white">
-                                            รายรับ
+                                            {t('income')}
                                         </th>
                                         <th colSpan={4} className="border border-white bg-[#002A41] text-white">
-                                            ต้นทุน
+                                            {t('cost')}
                                         </th>
                                         <th colSpan={2} className="border border-b-none border-white bg-[#002A41] text-white">
-                                            สรุป
+                                            {t('summary')}
                                         </th>
                                     </tr>
                                     <tr className="second bg-[#F0F2F7] h-[40px] sec">
-                                        <th>เดือน</th>
-                                        <th>ยอดสินเชื่อ</th>
-                                        <th>ยอดดาวน์</th>
-                                        <th>ยอดค่างวดที่จ่ายแล้ว</th>
-                                        <th>ยอดค่าดำเนินการล่าช้าที่จ่ายแล้ว</th>
-                                        <th>ยอดค่าปลดล็อคที่จ่ายแล้ว</th>
-                                        <th>ส่วนลด</th>
-                                        <th>ค่าทำสัญญา</th>
-                                        <th>รวม</th>
-                                        <th>ค่าเครื่อง</th>
-                                        <th>ค่าคอม</th>
-                                        <th>ค่าผลตอบแทนพิเศษ</th>
+                                        <th>{t('month_label')}</th>
+                                        <th>{t('credit_amount')}</th>
+                                        <th>{t('down_payment_amount')}</th>
+                                        <th>{t('installment_paid')}</th>
+                                        <th>{t('penalty_paid')}</th>
+                                        <th>{t('unlock_fee_paid')}</th>
+                                        <th>{t('discount')}</th>
+                                        <th>{t('contract_fee')}</th>
+                                        <th>{t('total_label')}</th>
+                                        <th>{t('device_cost')}</th>
+                                        <th>{t('commission_cost')}</th>
+                                        <th>{t('special_benefit')}</th>
                                        
-                                        <th>รวม</th>
-                                        <th>ยอดค้างจ่าย</th>
-                                        <th>กำไร/ขาดทุน</th>
+                                        <th>{t('total_label')}</th>
+                                        <th>{t('outstanding_payment')}</th>
+                                        <th>{t('profit_loss')}</th>
                                     </tr>
                                     <tbody>
                                         {report1.map((item, index) => (
                                             <tr key={index}>
                                                 <td className="">
-                                                    {item.month === 12 ? "รวม" : item.month + 1}
+                                                    {item.month === 12 ? t('total_label') : item.month + 1}
                                                 </td>
                                                 <td className="">{numberWithCommas(item.total_price_total)}</td>
                                                 <td className="">{numberWithCommas(item.total_down_payment)}</td>
@@ -294,7 +297,7 @@ const Dashboard = () => {
                             </div>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <h1 className="font-semibold text-xl">สรุปสถานะแยกเดือน</h1>
+                            <h1 className="font-semibold text-xl">{t('status_summary_by_month')}</h1>
                             <div className="bg-white rounded-xl " style={{
                                 overflowY: 'auto',
                                 display: 'block'
@@ -302,26 +305,26 @@ const Dashboard = () => {
                                 <table className="income">
                                     <tr className="h-[50px]">
                                         <th colSpan={10} className="border border-b-none border-white bg-[#002A41] text-white">
-                                            จำนวนสินเชื่อ
+                                            {t('credit_count')}
                                         </th>
                                     </tr>
                                     <tr className="second bg-[#F0F2F7] h-[40px] sec">
-                                        <th>เดือน</th>
-                                        <th>กำลังผ่อน</th>
-                                        <th>ปิดยอด</th>
-                                        <th>คืนเงิน</th>
-                                        <th>ติดตาม</th>
-                                        <th>ติดต่อไม่ได้</th>
-                                        <th>แจ้งความ</th>
-                                        <th>หนี้สิน</th>
-                                        <th>ยกเลิก</th>
-                                        <th>รวม</th>
+                                        <th>{t('month_label')}</th>
+                                        <th>{t('on_process')}</th>
+                                        <th>{t('closed')}</th>
+                                        <th>{t('refund')}</th>
+                                        <th>{t('tracking')}</th>
+                                        <th>{t('unable_to_contact')}</th>
+                                        <th>{t('report_to_police')}</th>
+                                        <th>{t('bad_debt')}</th>
+                                        <th>{t('cancelled')}</th>
+                                        <th>{t('total_label')}</th>
                                     </tr>
                                     <tbody>
                                         {report2.map((item, index) => (
                                             <tr key={index}>
                                                 <td className="">
-                                                    {item.month === 12 ? "รวม" : item.month + 1}
+                                                    {item.month === 12 ? t('total_label') : item.month + 1}
                                                 </td>
                                                 <td className="">{(item.on_process)}</td>
                                                 <td className="">{(item.closed)}</td>
