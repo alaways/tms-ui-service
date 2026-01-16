@@ -1378,6 +1378,7 @@
     "auth_invalid_data": "Invalid data, please try again!",
     "auth_please_enter_email_password": "Please enter email and password!",
     "auth_please_enter_username_password": "Please enter username and password!",
+    "auth_please_enter_email_password": "Please enter email and password!",
     "auth_please_enter_phone_id": "Please enter phone number and last 4 digits of ID card!",
     "auth_customer": "Customer",
     "auth_select_system": "Select System to Use",
@@ -1400,5 +1401,16 @@
     "auth_add": "Add",
     "auth_have_account": "Already have a shop account?",
     "auth_password_not_match": "Passwords do not match",
-    "auth_invalid_email": "Please enter a valid email"
+    "auth_invalid_email": "Please enter a valid email",
+    "auth_use": "Use",
+    "auth_and": "and",
+    "auth_to_login": "to login",
+    "auth_phone_number": "Phone Number",
+    "auth_enter_phone": "Enter phone number",
+    "auth_id_card_password": "Password",
+    "auth_enter_id_card_last_4": "Enter last 4 digits of ID card",
+    "auth_enter_email": "Enter email",
+    "auth_enter_password": "Enter password",
+    "auth_remember_password": "Remember Password",
+    "auth_business_unit": "Business Unit"
 }

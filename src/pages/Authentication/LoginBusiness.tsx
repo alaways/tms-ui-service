@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { setUser } from '../../store/dataStore'
 import { setPageTitle } from '../../store/themeConfigSlice'
 import { toastAlert } from '../../helpers/constant'
@@ -14,6 +15,7 @@ import { url_api } from '../../services/endpoints'
 const mode = process.env.MODE || 'business_unit'
 
 const LoginBusiness: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -86,7 +88,7 @@ const LoginBusiness: React.FC = () => {
       if (!formData.email || !formData.password) {
         Swal.fire({
           icon: 'info',
-          title: 'กรุณากรอกอีเมลและรหัสผ่าน!',
+          title: t('auth_please_enter_email_password'),
           padding: '10px 20px',
         })
         return
@@ -123,18 +125,18 @@ const LoginBusiness: React.FC = () => {
             <div className="w-full max-w-[440px] lg:mt-16">
               <div className="mb-10">
                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-[#002a41] md:text-4xl">
-                  ล็อกอิน
+                  {t('auth_login_title')}
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>อีเมล</span>
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span>
-                  เพื่อเข้าสู่ระบบ
+                  {t('auth_use')} <span className={`text-themePrimary`}>{t('auth_email')}</span>
+                  {t('auth_and')} <span className={`text-themePrimary`}>{t('auth_password')}</span>
+                  {t('auth_to_login')}
                 </p>
               </div>
               <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                 <div>
                   <label htmlFor="Username">
-                    อีเมล
+                    {t('auth_email')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -143,7 +145,7 @@ const LoginBusiness: React.FC = () => {
                       type="text"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="กรอกอีเมล"
+                      placeholder={t('auth_enter_email')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -153,7 +155,7 @@ const LoginBusiness: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="Password">
-                    รหัสผ่าน
+                    {t('auth_password')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -162,7 +164,7 @@ const LoginBusiness: React.FC = () => {
                       type="password"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="กรอกรหัสผ่าน"
+                      placeholder={t('auth_enter_password')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -180,12 +182,12 @@ const LoginBusiness: React.FC = () => {
                       className={`form-checkbox checked:bg-themePrimary focus:checked:bg-themePrimary checked:hover:bg-themePrimary bg-white dark:bg-black`}
                     />
                     <span className="text-white-dark">
-                      จำรหัสผ่าน
+                      {t('auth_remember_password')}
                     </span>
                   </label>
                 </div>
                 <button type="submit" className={`btn bg-themePrimary text-lg font-light text-white !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]`}>
-                  เข้าสู่ระบบ
+                  {t('auth_login_title')}
                 </button>
               </form>
               {/* <div className="mt-7 text-center dark:text-white">

@@ -1398,6 +1398,7 @@
     "auth_invalid_data": "ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง !",
     "auth_please_enter_email_password": "กรุณากรอกอีเมลและรหัสผ่าน!",
     "auth_please_enter_username_password": "กรุณากรอกชื่อผู้ใช้และรหัสผ่าน!",
+    "auth_please_enter_email_password": "กรุณากรอกอีเมลและรหัสผ่าน!",
     "auth_please_enter_phone_id": "กรุณากรอกเบอร์โทรศัพท์และเลข 4 ตัวท้ายบัตรประชาชน!",
     "auth_customer": "ลูกค้า",
     "auth_select_system": "เลือกระบบที่ต้องการใช้งาน",
@@ -1420,5 +1421,16 @@
     "auth_add": "เพิ่ม",
     "auth_have_account": "มีบัญชีร้านค้าแล้วต้องการเข้าสู่ระบบ?",
     "auth_password_not_match": "รหัสผ่านไม่ตรงกัน",
-    "auth_invalid_email": "กรุณาใส่อีเมลที่ถูกต้อง"
+    "auth_invalid_email": "กรุณาใส่อีเมลที่ถูกต้อง",
+    "auth_use": "ใช้",
+    "auth_and": "และ",
+    "auth_to_login": "เพื่อเข้าสู่ระบบ",
+    "auth_phone_number": "เบอร์โทรศัพท์",
+    "auth_enter_phone": "กรอกเบอร์โทรศัพท์",
+    "auth_id_card_password": "รหัสผ่าน",
+    "auth_enter_id_card_last_4": "กรอกเลข 4 ตัวท้ายบัตรประชาชน",
+    "auth_enter_email": "กรอกอีเมล",
+    "auth_enter_password": "กรอกรหัสผ่าน",
+    "auth_remember_password": "จำรหัสผ่าน",
+    "auth_business_unit": "หน่วยธุรกิจ"
 }

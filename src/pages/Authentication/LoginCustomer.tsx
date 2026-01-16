@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { setUser } from '../../store/dataStore'
 import { setPageTitle } from '../../store/themeConfigSlice'
 import { UserState } from '../../types/index'
@@ -17,11 +18,12 @@ const mode = process.env.MODE || 'customer'
 
 const LoginCustomer: React.FC = () => {
 
+  const { t } = useTranslation();
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setPageTitle('เข้าสู่ระบบ'))
+    dispatch(setPageTitle(t('auth_login_title')))
     localStorage.clear()
   }, [dispatch])
 
@@ -83,7 +85,7 @@ const LoginCustomer: React.FC = () => {
       if (!formData.phone_number || !formData.password) {
         Swal.fire({
           icon: 'info',
-          title: 'กรุณากรอกเบอร์โทรศัพท์และเลข 4 ตัวท้ายบัตรประชาชน!',
+          title: t('auth_please_enter_phone_id'),
           padding: '10px 20px',
         })
         return
@@ -114,18 +116,18 @@ const LoginCustomer: React.FC = () => {
             <div className="w-full max-w-[440px] lg:mt-16">
               <div className="mb-10">
                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-[#002a41] md:text-4xl">
-                  ล็อกอิน
+                  {t('auth_login_title')}
                 </h1>
                 <p className="text-base font-normal leading-normal text-white-dark">
-                  ใช้ <span className={`text-themePrimary`}>เบอร์โทรศัพท์</span>
-                  และ <span className={`text-themePrimary`}>รหัสผ่าน</span>
-                  เพื่อเข้าสู่ระบบ
+                  {t('auth_use')} <span className={`text-themePrimary`}>{t('auth_phone_number')}</span>
+                  {t('auth_and')} <span className={`text-themePrimary`}>{t('auth_id_card_password')}</span>
+                  {t('auth_to_login')}
                 </p>
               </div>
               <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                 <div>
                   <label htmlFor="phone_number">
-                    เบอร์โทรศัพท์
+                    {t('auth_phone_number')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -134,7 +136,7 @@ const LoginCustomer: React.FC = () => {
                       type="text"
                       value={formData.phone_number}
                       onChange={handleChange}
-                      placeholder="กรอกเบอร์โทรศัพท์"
+                      placeholder={t('auth_enter_phone')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -144,7 +146,7 @@ const LoginCustomer: React.FC = () => {
                 </div>
                 <div>
                   <label htmlFor="password">
-                    รหัสผ่าน
+                    {t('auth_id_card_password')}
                   </label>
                   <div className="relative text-white-dark">
                     <input
@@ -153,7 +155,7 @@ const LoginCustomer: React.FC = () => {
                       type="text"
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="กรอกเลข 4 ตัวท้ายบัตรประชาชน"
+                      placeholder={t('auth_enter_id_card_last_4')}
                       className="form-input ps-10 placeholder:text-white-dark"
                     />
                     <span className="absolute start-4 top-1/2 -translate-y-1/2">
@@ -162,7 +164,7 @@ const LoginCustomer: React.FC = () => {
                   </div>
                 </div>
                 <button type="submit" className={`btn bg-themePrimary text-lg font-light text-white !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]`}>
-                  เข้าสู่ระบบ
+                  {t('auth_login_title')}
                 </button>
               </form>
             </div>

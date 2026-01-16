@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { defaultCenter, googleApiKey, toastAlert } from '../../helpers/constant';
 import { useEffect, useState, useCallback } from 'react';
@@ -14,10 +15,11 @@ import { useGlobalMutation } from '../../helpers/globalApi';
 import { url_api } from '../../services/endpoints';
 
 const Register = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('ลงทะเบียนร้านค้า'));
+        dispatch(setPageTitle(t('auth_register_title')));
     });
 
     const [shopGroup, setShopGroup] = useState<any>([]);
@@ -90,7 +92,7 @@ const Register = () => {
             const toast = Swal.mixin(toastAlert);
             toast.fire({
                 icon: 'success',
-                title: 'ลงทะเบียนร้านค้าสำเร็จ โปรดรออนุมัติจากเจ้าหน้าที่',
+                title: t('auth_register_success'),
                 padding: '10px 20px',
             });
             navigate('/apps/shop/list');
@@ -158,8 +160,8 @@ const Register = () => {
                     <div className="relative flex flex-col justify-center rounded-md bg-white/60 backdrop-blur-lg dark:bg-black/50 px-6 lg:min-h-[758px] py-10">
                         <div className="mx-auto w-full max-w-[1080px]">
                             <div className="mb-5">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">ลงทะเบียนร้านค้า</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">กรอกข้อมูลให้ครบถ้วน</p>
+                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">{t('auth_register_title')}</h1>
+                                <p className="text-base font-bold leading-normal text-white-dark">{t('auth_fill_all_fields')}</p>
                             </div>
                             <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off">
                                 {(props) => (
@@ -167,65 +169,65 @@ const Register = () => {
                                         {(props) => (
                                             <Form className="space-y-5 dark:text-white ">
                                                 <div className="input-flex-row">
-                                                    <InputField label="ชื่อร้าน" name="name" type="text" />
+                                                    <InputField label={t('auth_shop_name')} name="name" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
                                                     <SelectField
-                                                        label="กลุ่มร้าน"
+                                                        label={t('auth_shop_group')}
                                                         id="id_shop_group"
                                                         name="id_shop_group"
                                                         options={shopGroup}
-                                                        placeholder="กรุณาเลือก"
+                                                        placeholder={t('please_select')}
                                                         onChange={(e: any) => handleChangeSelect(props, e, 'id_shop_group')}
                                                         isSearchable={false}
                                                     />
                                                     <SelectField
-                                                        label="หน่วยธุรกิจ"
+                                                        label={t('auth_business_unit')}
                                                         id="id_business_unit"
                                                         name="id_business_unit"
                                                         options={businessUnit}
-                                                        placeholder="กรุณาเลือก"
+                                                        placeholder={t('please_select')}
                                                         onChange={(e: any) => handleChangeSelect(props, e, 'id_business_unit')}
                                                         isSearchable={false}
                                                     />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="รหัสผ่าน" name="password" type="password" />
-                                                    <InputField label="ยืนยันรหัสผ่าน" name="password_repeat" type="password" />
+                                                    <InputField label={t('auth_password')} name="password" type="password" />
+                                                    <InputField label={t('auth_confirm_password')} name="password_repeat" type="password" />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="ชื่อผู้ติดต่อหลัก" name="contact_name" type="text" />
-                                                    <InputField label="เบอร์โทรศัพท์ร้าน" name="phone_number" type="text" />
+                                                    <InputField label={t('auth_main_contact')} name="contact_name" type="text" />
+                                                    <InputField label={t('auth_shop_phone')} name="phone_number" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
                                                     <InputField label="Line ID" name="line_id" type="text" />
                                                     <InputField label="Facebook ID" name="facebook_id" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="เว็บไซต์" name="website" type="text" />
-                                                    <InputField label="อีเมล" name="email" type="text" />
+                                                    <InputField label={t('auth_website')} name="website" type="text" />
+                                                    <InputField label={t('auth_email')} name="email" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
                                                     <InputField
-                                                        label="ที่อยู่"
+                                                        label={t('auth_address')}
                                                         name="address"
                                                         as="textarea"
                                                         rows="1"
-                                                        placeholder="กรุณาใส่ข้อมูล"
+                                                        placeholder={t('please_select')}
                                                         className="form-textarea ltr:rounded-l-none rtl:rounded-r-none resize-none"
                                                     />
                                                     <SelectField
-                                                        label="จังหวัด"
+                                                        label={t('auth_province')}
                                                         id="id_province"
                                                         name="id_province"
                                                         options={provinces}
-                                                        placeholder="กรุณาเลือก"
+                                                        placeholder={t('please_select')}
                                                         onChange={(e: any) => handleChangeSelect(props, e, 'id_province')}
                                                         isSearchable={false}
                                                     />
                                                 </div>
                                                 <div className="input-flex-row">
-                                                    <InputField label="บช. ร้านค้า" name="bank_no" type="text" />
+                                                    <InputField label={t('auth_shop_bank_account')} name="bank_no" type="text" />
                                                 </div>
                                                 <div className="input-flex-row">
                                                     <InputField label="Latitude" name="latitude" type="text" />
@@ -243,7 +245,7 @@ const Register = () => {
                                                     />
                                                 </div>
                                                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                                                    เพิ่ม
+                                                    {t('auth_add')}
                                                 </button>
                                             </Form>
                                         )}
@@ -251,9 +253,9 @@ const Register = () => {
                                 )}
                             </Formik>
                             <div className="mt-7 text-center dark:text-white">
-                                มีบัญชีร้านค้าแล้วต้องการเข้าสู่ระบบ?&nbsp;
+                                {t('auth_have_account')}&nbsp;
                                 <Link to="/apps/login" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
-                                    ล็อกอิน
+                                    {t('auth_login_title')}
                                 </Link>
                             </div>
                         </div>
