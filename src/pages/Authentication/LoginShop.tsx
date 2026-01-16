@@ -78,6 +78,10 @@ const LoginShop: React.FC = () => {
           toast.fire({
             icon: 'error',
             title: err?.message ?? t('auth_invalid_data'),
+          });
+        },
+
+      })
 
   const submitForm = useCallback(
     (event: any) => {

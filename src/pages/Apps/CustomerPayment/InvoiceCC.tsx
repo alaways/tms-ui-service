@@ -211,7 +211,7 @@ const InvoiceCC = () => {
                 {t('customer_payment_name')} :
               </div>
               <div>
-                {paymentPreview?.customer?.name ?? ''
+                {paymentPreview?.customer?.name ?? ''}
               </div>
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
