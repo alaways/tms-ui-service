@@ -447,7 +447,7 @@ const Index = () => {
               <div className="flex flex-wrap panel w-full bg-gradient-to-r from-[#4361ee] to-[#160f6b] min-h-[100px] text-white mx-2 my-2 h-[140px]">
                 <div className="flex-initial w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-xl font-semibold">
-                    ยอดเงินวันนี้
+                    {t('dashboard_today_amount')}
                   </div>
                 </div>
                 <div className="flex items-center mt-4 w-full">
@@ -461,7 +461,7 @@ const Index = () => {
                 <div className="flex flex-wrap w-[100%] mb-2 pb-2" style={{ borderBottom: '1px solid #eee' }}>
                   <div className="ltr:pr-4 rtl:pl-4">
                     <div className="flex items-baseline font-semibold">
-                      <div className="text-md ltr:mr-1 rtl:ml-1">ยอดเงินสัปดาห์</div>
+                      <div className="text-md ltr:mr-1 rtl:ml-1">{t('dashboard_week_amount')}</div>
                     </div>
                     <div className="flex items-center mt-2 text-success">
                       <div className="min-w-20 text-xl ltr:mr-3 rtl:ml-3">
@@ -473,7 +473,7 @@ const Index = () => {
                 <div className="flex flex-wrap w-[100%] mb-2 pb-2" style={{ borderBottom: '1px solid #eee' }}>
                   <div className="ltr:pr-4 rtl:pl-4">
                     <div className="items-baseline font-semibold">
-                      <div className="text-md ltr:mr-1 rtl:ml-1">ยอดเงินเดือนนี้</div>
+                      <div className="text-md ltr:mr-1 rtl:ml-1">{t('dashboard_month_amount')}</div>
                     </div>
                     <div className="items-center mt-2 text-success">
                       <div className="min-w-20 text-xl ltr:mr-3 rtl:ml-3">
@@ -485,7 +485,7 @@ const Index = () => {
                 <div className="flex flex-wrap w-[100%] mb-2 pb-2" style={{ borderBottom: '1px solid #eee' }}>
                   <div className="ltr:pr-4 rtl:pl-4">
                     <div className="flex items-baseline font-semibold">
-                      <div className="text-md ltr:mr-1 rtl:ml-1">ยอดเงินปีนี้</div>
+                      <div className="text-md ltr:mr-1 rtl:ml-1">{t('dashboard_year_amount')}</div>
                     </div>
                     <div className="flex items-center mt-2 text-success">
                       <div className="min-w-20 text-xl ltr:mr-3 rtl:ml-3">
@@ -497,7 +497,7 @@ const Index = () => {
                 <div className="flex flex-wrap w-[100%] pb-2" style={{ borderBottom: '1px solid #eee' }}>
                   <div className="ltr:pr-4 rtl:pl-4">
                     <div className="flex items-baseline font-semibold">
-                      <div className="text-md ltr:mr-1 rtl:ml-1">ยอดเงินทั้งหมด</div>
+                      <div className="text-md ltr:mr-1 rtl:ml-1">{t('dashboard_total_amount')}</div>
                     </div>
                     <div className="flex items-center mt-2 text-success">
                       <div className="min-w-20 text-xl ltr:mr-3 rtl:ml-3">
@@ -509,7 +509,7 @@ const Index = () => {
                 <div className="flex flex-wrap w-[100%] items-center pt-3">
                   <div className="w-[100%] text-center">
                     <a role="button" className="btn btn-sm btn-primary w-auto" style={{ display: 'inline-block' }} onClick={() => goToHistory()}>
-                      ดูเพิ่มเติม
+                      {t('dashboard_view_more')}
                     </a>
                   </div>
                 </div>
@@ -519,7 +519,7 @@ const Index = () => {
               <div className="flex flex-wrap w-full panel mx-2 my-2 h-[140px]">
                 <div className="flex-initial w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
-                    สัญญาที่อนุมัติ (รวมเป็นเงิน)
+                    {t('dashboard_approved_contracts_total')}
                   </div>
                 </div>
                 <div className="flex items-center mt-5 w-full">
@@ -535,7 +535,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      เดือนนี้
+                      {t('dashboard_this_month')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -545,7 +545,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      ทั้งหมด
+                      {t('dashboard_all')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -558,13 +558,13 @@ const Index = () => {
               <div className="flex flex-wrap w-full panel mx-2 my-2 h-[140px]">
                 <div className="flex-initial w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
-                    จำนวนสัญญาที่อนุมัติ
+                    {t('dashboard_approved_contracts_count')}
                   </div>
                 </div>
                 <div className="flex items-center mt-5 w-full">
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      ปีนี้
+                      {t('dashboard_this_year')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -574,7 +574,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      เดือนนี้
+                      {t('dashboard_this_month')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -584,7 +584,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      ทั้งหมด
+                      {t('dashboard_all')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -597,13 +597,13 @@ const Index = () => {
               <div className="flex flex-wrap w-full panel mx-2 my-2 h-[140px]">
                 <div className="flex-initial w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
-                    สัญญาค้างชำระ
+                    {t('dashboard_pending_payment')}
                   </div>
                 </div>
                 <div className="flex items-center mt-5 w-full">
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      ปีนี้
+                      {t('dashboard_this_year')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -613,7 +613,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      เดือนนี้
+                      {t('dashboard_this_month')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -623,7 +623,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-wrap w-[50%]">
                     <div className="text-sm">
-                      ทั้งหมด
+                      {t('dashboard_all')}
                     </div>
                     <div className="flex items-center mt-1 w-full">
                       <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
@@ -638,7 +638,7 @@ const Index = () => {
               <div className="flex flex-wrap w-full panel bg-gradient-to-r from-[#f5704a] to-[#da4a24] text-white mx-2 my-2 h-[140px]">
                 <div className="flex flex-wrap justify-center w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
-                    สัญญาที่อนุมัติวันนี้
+                    {t('dashboard_approved_today')}
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-full">
@@ -651,7 +651,7 @@ const Index = () => {
               <div className="flex flex-wrap w-full panel bg-gradient-to-r from-[#f5704a] to-[#da4a24] text-white mx-2 my-2  h-[140px]">
                 <div className="flex flex-wrap justify-center w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
-                    จำนวนสัญญาที่อนุมัติวันนี้
+                    {t('dashboard_approved_count_today')}
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-full">
@@ -663,7 +663,7 @@ const Index = () => {
               <div className="flex flex-wrap w-full panel bg-gradient-to-r from-[#f5704a] to-[#da4a24] text-white mx-2 my-2  h-[140px]">
                 <div className="flex flex-wrap justify-center w-full">
                   <div className="ltr:mr-1 rtl:ml-1 text-lg font-semibold">
-                    สัญญาค้างชำระวันนี้
+                    {t('dashboard_pending_today')}
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-full">
