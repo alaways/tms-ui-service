@@ -281,9 +281,6 @@ const SettingBU = () => {
                 {t('set_return')}
               </div>
               <div className="input-flex-row">
-                {/* <div className="input-container">
-                  <InputField label="ชื่อดอกเบี้ย" name="name" type="text" />
-                  </div> */}
                 {/* TODO: list group */}
                 <div className="input-container">
                   <SelectField
@@ -395,7 +392,7 @@ const SettingBU = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="input-flex-row"></div>
               <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                 {isLoading && <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>}

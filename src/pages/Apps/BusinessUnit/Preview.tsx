@@ -87,7 +87,7 @@ const Preview = () => {
   const SubmittedFormSG = Yup.object().shape({
     name: Yup.string().required(t('required_field')), // 已有 key
   })
-  
+
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -101,7 +101,7 @@ const Preview = () => {
     }, 500);
 
     return () => clearTimeout(delayDebounce);
-  }, [search, listData]); 
+  }, [search, listData]);
 
   const searchListData = () => {
     if (search.trim() !== "") {
@@ -125,8 +125,8 @@ const Preview = () => {
     }
   };
 
-  
-  
+
+
   const { mutate: fetchBusinessUnitsData, isLoading: isLoadingBusinessUnitsData } = useBusinessUnitFindMutation({
     async onSuccess(res: any) {
       const setFormValue = res.data
@@ -141,7 +141,7 @@ const Preview = () => {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         setSearch('')
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
         setActionModal2(false)
         buGetShopV2({ data: { id_business_unit: dataBusinessUnits.id } })
       } else {
@@ -157,7 +157,7 @@ const Preview = () => {
   const { mutate: buGetShopGroup,isLoading: isShopGroupBuLoading } = useGlobalMutation(url_api.buGetShopGroup, {
     onSuccess: (res: any) => {
       const uniqueRecords = res.data.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => t.id === item.id)).map((item: any) => item)
-      
+
       setShopGroupRecords(uniqueRecords)
       setShopGroupList(
         uniqueRecords.map((item: any) => ({
@@ -168,7 +168,7 @@ const Preview = () => {
       setOriginalShopGroupRecords(uniqueRecords)
     },
     onError: () => {
-      showErrorMessage('ไม่พบข้อมูล กลุ่มร้านในหน่วยธุรกิจ')
+      showErrorMessage(t('business_unit_no_shop_group_data'))
       setShopGroupRecords([])
       setOriginalShopGroupRecords([])
     },
@@ -181,7 +181,7 @@ const Preview = () => {
       setListDataFiltered(uniqueRecords)
     },
     onError: () => {
-      showErrorMessage('ไม่พบข้อมูล ร้านค้าในกลุ่มร้าน')
+      showErrorMessage(t('business_unit_no_shop_data'))
       setListData([])
       setListDataFiltered([])
     },
@@ -274,7 +274,7 @@ const Preview = () => {
   const { mutate: shopGroupCreate } = useGlobalMutation(url_api.shopGroupCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('add_success'), 'success')
         setActionModal(false)
         buGetShopGroup({ data: { id_business_unit: dataBusinessUnits.id } })
       } else {
@@ -289,7 +289,7 @@ const Preview = () => {
   const { mutate: shopGroupUpdate } = useGlobalMutation(url_api.shopGroupUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
         setActionModal(false)
         buGetShopGroup({ data: { id_business_unit: dataBusinessUnits.id } })
       } else {
@@ -306,7 +306,7 @@ const Preview = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกสำเร็จ',
+          title: t('save_success'),
           padding: '10px 20px',
         })
         // buGetShopV2({
@@ -459,11 +459,11 @@ const Preview = () => {
         <div className="flex">
           <a className="cursor-pointer btn btn-sm btn-primary mr-1" onClick={() => goEditPreview()}>
             <IconEdit className="w-4.5 h-4.5" /> &nbsp;
-            {t('edit')}  
+            {t('edit')}
           </a>
           <a className="cursor-pointer btn btn-sm btn-primary" onClick={() => goShopInterestRate()}>
             <IconSettings /> &nbsp;
-            {t('settings')}    
+            {t('settings')}
           </a>
         </div>
       </div>
@@ -523,14 +523,14 @@ const Preview = () => {
             <div className="panel px-6 flex-1 py-6 rtl:xl:ml-6">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                {t('shop_group')}    
+                {t('shop_group')}
                 </div>
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                   <div className="flex gap-3">
                     <div>
                       <button type="button" className="btn btn-primary" onClick={() => addEditShopGroup()}>
                         <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                        {t('add_shop_group')} 
+                        {t('add_shop_group')}
                       </button>
                     </div>
                   </div>
@@ -561,7 +561,7 @@ const Preview = () => {
                         </td>
                         <td>{item.name}</td>
                         <td><span className={`badge ${item.is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                          {item.is_active ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน'}
+                          {item.is_active ? t('available') : t('not_available')}
                         </span></td>
                         <td>
                           <div className="flex gap-4 items-center w-max mx-auto">
@@ -589,13 +589,13 @@ const Preview = () => {
             <div className="panel px-6 flex-1 py-6 rtl:xl:ml-6">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                {t('partner_shop')}  
+                {t('partner_shop')}
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
                   <input
                     type="text"
-                    placeholder={t('search_text')}  
+                    placeholder={t('search_text')}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="border rounded p-2"
@@ -609,10 +609,10 @@ const Preview = () => {
                       <div className="w-4/6" style={{ width: 'calc(100% - 210px)' }}>
                         <div className="input-flex-row">
                           <SelectField
-                            label={t('shop_group')}   
+                            label={t('shop_group')}
                             id="id_shop_group"
                             name="id_shop_group"
-                            placeholder={t('please_select')}   
+                            placeholder={t('please_select')}
                             options={shopGroupList}
                             isSearchable={true}
                             onChange={(e: any) => {
@@ -620,10 +620,10 @@ const Preview = () => {
                             }}
                           />
                           <SelectField
-                            label={t('shop')}       
+                            label={t('shop')}
                             id="id_shop"
                             name="id_shop"
-                            placeholder={t('please_select')}  
+                            placeholder={t('please_select')}
                             options={shopList}
                             isSearchable={true}
                             disabled={props.values.id_shop_group ? false : true}
@@ -637,7 +637,7 @@ const Preview = () => {
                         <div className="pt-10">
                           <button type="submit" className="btn btn-primary">
                             <IconPlus /> &nbsp;
-                            {t('add_partner_shop')} 
+                            {t('add_partner_shop')}
                           </button>
                         </div>
                       </div>
@@ -646,18 +646,18 @@ const Preview = () => {
                 )}
               </Formik>
               <br />
-              <div className='overflow-x-scroll'> 
+              <div className='overflow-x-scroll'>
                 <div className="table-responsive ">
                   <table className="table-striped table-hover">
                     <thead>
                       <tr>
-                        <th className="text-center" style={{ width: '100px' }}>{t('order')}</th> 
-                        <th style={{ minWidth: '180px' }}>{t('tax_id')}</th>       
-                        <th style={{ minWidth: '150px' }}>{t('shop_name')}</th>    
-                        <th style={{ minWidth: '90px' }}>{t('shop_group')}</th>    
-                        <th style={{ minWidth: '130px' }}>{t('status')}</th>       
-                        <th style={{ minWidth: '130px' }}>{t('main_group')}</th>  
-                        <th className="!text-center" style={{ width: '200px' }}>{t('actions')}</th> 
+                        <th className="text-center" style={{ width: '100px' }}>{t('order')}</th>
+                        <th style={{ minWidth: '180px' }}>{t('tax_id')}</th>
+                        <th style={{ minWidth: '150px' }}>{t('shop_name')}</th>
+                        <th style={{ minWidth: '90px' }}>{t('shop_group')}</th>
+                        <th style={{ minWidth: '130px' }}>{t('status')}</th>
+                        <th style={{ minWidth: '130px' }}>{t('main_group')}</th>
+                        <th className="!text-center" style={{ width: '200px' }}>{t('actions')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -672,14 +672,14 @@ const Preview = () => {
                           <td>{item.name}</td>
                           <td>{item?.shop_group_name}</td>
                           <td><span className={`badge ${item.is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                          {item.is_active ? t('available') : t('not_available')}   
+                          {item.is_active ? t('available') : t('not_available')}
                           </span></td>
                           <td className="text-center text-green">
                             {item?.is_main == true ? <IconChecks /> : ''}
                           </td>
                           <td>
                             <div className="flex gap-4 items-center w-max mx-auto">
-                              <Tippy content="แก้ไข" theme="Primary">
+                            <Tippy content={t('edit')} theme="Primary">
                                 <a className="flex hover:text-info cursor-pointer" onClick={() => editShop(item)}>
                                   <IconEdit className="w-4.5 h-4.5" />
                                 </a>
@@ -709,7 +709,7 @@ const Preview = () => {
                     <IconX />
                   </button>
                   <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                    {formSGData.id ? t('save') : t('add')}  
+                    {formSGData.id ? t('save') : t('add')}
                   </div>
                   <div className="p-5">
                     <Formik initialValues={formSGData} onSubmit={submitFormSG} enableReinitialize autoComplete="off" validationSchema={SubmittedFormSG}>
@@ -719,23 +719,23 @@ const Preview = () => {
                             label={t('shop_group_name')}
                             name="name"
                             type="text"
-                            placeholder={t('please_enter_info')}  
+                            placeholder={t('please_enter_info')}
                           />
                           <SelectField
-                            label={`${t('status')} *`} 
+                            label={`${t('status')} *`}
                             id="is_active"
                             name="is_active"
                             options={[
                               {
                                 value: true,
-                                label: t('open'),                                     
+                                label: t('open'),
                               },
                               {
                                 value: false,
-                                label: t('close'),                                     
+                                label: t('close'),
                               }
                             ]}
-                            placeholder={t('please_select')}      
+                            placeholder={t('please_select')}
                             onChange={(e: any) => {
                               props.setFieldValue('is_active', e.value)
                             }}
@@ -743,10 +743,10 @@ const Preview = () => {
                           />
                           <div className="flex justify-end items-center mt-8">
                             <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                              ยกเลิก
+                              {t('cancel')}
                             </button>
                             <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                              {formSGData.id ? 'บันทึก' : 'เพิ่ม'}
+                              {formSGData.id ? t('save') : t('add')}
                             </button>
                           </div>
                         </Form>
@@ -773,25 +773,25 @@ const Preview = () => {
                     <IconX />
                   </button>
                   <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                  {t('edit')}  
+                  {t('edit')}
                   </div>
                   <div className="p-5">
                     <Formik initialValues={formShopData} onSubmit={submitFormShop} enableReinitialize autoComplete="off">
                       {(props) => (
                         <Form className="space-y-5 mb-7 dark:text-white custom-select">
                           <InputField
-                            label={t('shop_name')} 
+                            label={t('shop_name')}
                             name="name"
                             type="text"
-                            placeholder={t('please_enter_info')}        
+                            placeholder={t('please_enter_info')}
                             disabled
                           />
                          {/* todo */}
                           <SelectField
-                            label={t('shop_group')}     
+                            label={t('shop_group')}
                             id="id_shop_group"
                             name="id_shop_group"
-                            placeholder={t('please_select')} 
+                            placeholder={t('please_select')}
                             options={shopGroupList}
                             isSearchable={true}
                             disabled
@@ -803,14 +803,14 @@ const Preview = () => {
                             options={[
                               {
                                 value: true,
-                                label: t('open'),                                      
+                                label: t('open'),
                               },
                               {
                                 value: false,
-                                label: t('close'),                                     
+                                label: t('close'),
                               },
                             ]}
-                            placeholder={t('please_select')}   
+                            placeholder={t('please_select')}
                             onChange={(e: any) => {
                               props.setFieldValue('is_active', e.value)
                             }}
@@ -818,20 +818,20 @@ const Preview = () => {
                           />
 
                           <SelectField
-                            label={`${t('status')} *`}         
+                            label={`${t('status')} *`}
                             id="is_active"
                             name="is_active"
                             options={[
                               {
                                 value: true,
-                                label: t('open'),                                      
+                                label: t('open'),
                               },
                               {
                                 value: false,
-                                label: t('close'),                                    
+                                label: t('close'),
                               },
                             ]}
-                            placeholder={t('please_select')}     
+                            placeholder={t('please_select')}
                             onChange={(e: any) => {
                               props.setFieldValue('is_active', e.value)
                             }}
@@ -839,10 +839,10 @@ const Preview = () => {
                           />
                           <div className="flex justify-end items-center mt-8">
                             <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal2(false)}>
-                            {t('cancel')} 
+                            {t('cancel')}
                             </button>
                             <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                            {t('save')} 
+                            {t('save')}
                             </button>
                           </div>
                         </Form>

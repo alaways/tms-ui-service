@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
@@ -29,6 +30,7 @@ const PermissionUser = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
 
@@ -36,7 +38,7 @@ const PermissionUser = () => {
 
   const role = storedUser ? JSON.parse(storedUser).role : null
   const access_level = storedUser ? JSON.parse(storedUser ?? '{}').access_level : null
-  
+
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0])
   const [totalItems, setTotalItems] = useState<number>(0)
@@ -44,9 +46,9 @@ const PermissionUser = () => {
   const [actionModal, setActionModal] = useState(false)
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { to: '/apps/permission/check', label: 'จัดการสิทธิ์ผู้ใช้งาน' },
-    { label: 'ผู้ใช้งาน', isCurrent: true }
+    { to: '/apps/employee/list', label: t('permission_employee_label') },
+    { to: '/apps/permission/check', label: t('permission_manage_rights') },
+    { label: t('permission_user_list'), isCurrent: true }
   ]
 
   if (role != 'admin' && role != 'business_unit') {
@@ -86,8 +88,8 @@ const PermissionUser = () => {
   const [formData, setFormData] = useState<any>(defaultForm)
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    price: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('please_fill_all_required_fields')),
+    price: Yup.string().required(t('please_fill_all_required_fields')),
   })
 
   const submitForm = useCallback((event: any) => {
@@ -104,7 +106,7 @@ const PermissionUser = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มผู้ใช้งาน'))
+    dispatch(setPageTitle(t('permission_add_user')))
     dispatch(setSidebarActive(['employee', '/apps/permission/check']))
   }, [])
 
@@ -121,7 +123,7 @@ const PermissionUser = () => {
             <div className="flex items-center gap-2">
               <a className="btn btn-primary gap-2" onClick={() => setActionModal(true)}>
                 <IconPlus />
-                เพิ่มสิทธิ์ผู้ใช้งาน
+                {t('permission_add_role')}
               </a>
             </div>
           </div>
@@ -132,7 +134,7 @@ const PermissionUser = () => {
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('order'),
                   sortable: false,
                   textAlignment: 'center',
                   render: (row, index) => (
@@ -141,7 +143,7 @@ const PermissionUser = () => {
                 },
                 {
                   accessor: 'name',
-                  title: 'ผู้ใช้งาน',
+                  title: t('permission_user_list'),
                   sortable: false,
                   render: (item) => (
                     <div className="flex items-center justify-start font-normal">
@@ -178,7 +180,7 @@ const PermissionUser = () => {
               sortStatus={sortStatus}
               onSortStatusChange={setSortStatus}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('pagination_showing')} ${from} ${t('pagination_to')} ${to} ${t('pagination_of')} ${totalRecords} ${t('pagination_total_pages')}`
               )}
             />
           </div>
@@ -216,7 +218,7 @@ const PermissionUser = () => {
                       <IconX />
                     </button>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                      {defaultForm.action == 'add' ? 'เพิ่ม' : 'แก้ไข'}ผู้ใช้งาน
+                      {defaultForm.action == 'add' ? t('add') : t('edit')}{t('permission_user_list')}
                     </div>
                     <div className="p-5">
                       <Formik
@@ -229,9 +231,9 @@ const PermissionUser = () => {
                         {(props) => (
                           <Form className="space-y-5 mb-2 dark:text-white custom-select">
                             <InputField
-                              label="ชื่อผู้ใช้งาน"
+                              label={t('permission_username')}
                               name="name"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_fill_in_data')}
                               value={defaultForm.name}
                               onChange={(e: any) => {
                                 props.setFieldValue("name", e.target.value)
@@ -239,9 +241,9 @@ const PermissionUser = () => {
                               }}
                             />
                             <InputField
-                              label="ราคา"
+                              label={t('permission_price')}
                               name="price"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_fill_in_data')}
                               value={defaultForm.price}
                               onChange={(e: any) => {
                                 let cleanedValue = e.target.value.replace(/\D/g, "");
@@ -260,7 +262,7 @@ const PermissionUser = () => {
                             />
                             <div className="flex justify-center items-center mt-5">
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {defaultForm.action == 'add' ? 'บันทึก' : 'อัพเดท'}
+                                {defaultForm.action == 'add' ? t('permission_save') : t('permission_update')}
                               </button>
                             </div>
                           </Form>

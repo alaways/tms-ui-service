@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { setPageTitle, setSidebarActive } from '../../../../store/themeConfigSlice';
 import { Form, Formik } from 'formik';
 import InputField from '../../../../components/HOC/InputField';
@@ -15,6 +16,7 @@ import PinField from "react-pin-field";
 import { toastAlert } from '../../../../helpers/constant';
 const mode = process.env.MODE || 'admin'
 const View = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [pinValue, setPinValue] = useState<any>('');
   const navigate = useNavigate();
@@ -24,8 +26,8 @@ const View = () => {
   const pinRef = useRef<HTMLInputElement[] | null>(null);
   const [dataTransfer, setDataTransfer] = useState<any>([])
   useEffect(() => {
-    dispatch(setPageTitle('ข้อมูลสินทรัพย์'));
-  }, [dispatch]);
+    dispatch(setPageTitle(t('finance_transfer_view_title')));
+  }, [dispatch, t]);
   const storedUser = localStorage.getItem(mode);
   const role = storedUser ? JSON.parse(storedUser).role : null;
   const [formData, setFormData] = useState<any>({
@@ -51,8 +53,8 @@ const View = () => {
   });
 
   const breadcrumbItems = [
-    { to: '/apps/finance/transfer-history', label: 'ประวัติการโอนเงิน' },
-    { label:'ข้อมูล', isCurrent: true },
+    { to: '/apps/finance/transfer-history', label: t('finance_transfer_view_breadcrumb_history') },
+    { label: t('finance_transfer_view_breadcrumb_info'), isCurrent: true },
   ];
 
   if(mode != 'admin') {
@@ -63,7 +65,7 @@ const View = () => {
       onSuccess: (res: any) => {
           setFormData({
               ...res?.data,
-              status_text: res?.data?.status === 'complete' ? 'สำเร็จ' : res?.data?.status === 'pending' ? 'รอชำระ' : 'ไม่สำเร็จ',
+              status_text: res?.data?.status === 'complete' ? t('finance_transfer_view_status_success') : res?.data?.status === 'pending' ? t('finance_transfer_view_status_pending') : t('finance_transfer_view_status_failed'),
               amount:res?.data?.amount?.toFixed(2),
               payed_at: res?.data?.payed_at ? convertDateTimeDbToClient(res?.data?.payed_at) : '',
               created_at: res?.data?.payed_at ? convertDateTimeDbToClient(res?.data?.created_at) : ''
@@ -73,17 +75,17 @@ const View = () => {
           console.error('Failed to fetch bu data');
       },
   });
-  
+
   const { mutate: bblConfirm ,isLoading:isLoadingConfirm } = useGlobalMutation(url_api.bblConfirm, {
       onSuccess: (res: any) => {
           if (res.statusCode === 200 || res.code === 200) {
-              
+
               Swal.fire({
                   icon: 'success',
-                  title: 'ชำระเงินสำเร็จ',
+                  title: t('finance_transfer_view_payment_success_title'),
                   padding: '10px 20px',
                   confirmButtonColor: themeInit.color.themePrimary,
-                  confirmButtonText: 'ยืนยัน',
+                  confirmButtonText: t('finance_transfer_view_confirm_button'),
                 }).then((result) => {
                   if (result.isConfirmed) {
                       navigate('/apps/finance/transfer-history');
@@ -107,7 +109,7 @@ const View = () => {
               //       window.location.reload();
               //     }
               // });
-              
+
           }
       },
       onError: () => {
@@ -133,7 +135,7 @@ const View = () => {
                 &times;
               </button>
 
-              <h2 className="text-xl font-semibold mb-4">Enter PIN Code</h2>
+              <h2 className="text-xl font-semibold mb-4">{t('finance_transfer_view_pin_title')}</h2>
 
               <PinField
                 ref={pinRef}
@@ -147,7 +149,7 @@ const View = () => {
                       setPinValue(value)
                       bblConfirm({data:{...dataTransfer,pin:value}})
                     }, 1000);
-                  
+
                 }}
                 inputMode="text"
                 autoFocus
@@ -163,43 +165,43 @@ const View = () => {
         <Formik initialValues={formData} onSubmit={()=>{}} enableReinitialize autoComplete="off" validationSchema={{}}>
           {(props) => (
             <Form className="space-y-5 dark:text-white custom-select">
-                <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">ข้อมูลผู้ชำระ</div>
+                <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('finance_transfer_view_payer_info')}</div>
                  <div className="flex gap-4">
                     <InputField name="p_reference" label="transactionID" disabled={true} />
-                    <InputField name="created_at" label="วันที่ดำเนินการ" disabled={true} />
+                    <InputField name="created_at" label={t('finance_transfer_view_transaction_date')} disabled={true} />
                 </div>
                 <div className="flex gap-4">
                     <InputField name="company" label="Company" disabled={true} />
-                    <InputField name="transfer_name" label="ชื่อผู้ชำระ" disabled={true} />
+                    <InputField name="transfer_name" label={t('finance_transfer_view_payer_name')} disabled={true} />
                 </div>
 
-                <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">ข้อมูลผู้รับชำระ</div>
+                <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">{t('finance_transfer_view_receiver_info')}</div>
                 <div className="flex gap-4">
-                    <InputField name="shop_phone" label="เบอร์โทรศัพท์" disabled={true} />
-                    <InputField name="shop_name" label="ร้านค้า" disabled={true} />
+                    <InputField name="shop_phone" label={t('finance_transfer_view_phone')} disabled={true} />
+                    <InputField name="shop_name" label={t('finance_transfer_view_shop_name')} disabled={true} />
                 </div>
                 <div className="flex gap-4">
-                    <InputField name="receiverValueType" label="ประเภทการโอน" disabled={true} />
-                    <InputField name="bank_name" label="ชื่อธนาคาร" disabled={true} />
+                    <InputField name="receiverValueType" label={t('finance_transfer_view_transfer_type')} disabled={true} />
+                    <InputField name="bank_name" label={t('finance_transfer_view_bank_name')} disabled={true} />
                 </div>
                 <div className="flex gap-4">
-                    <InputField name="receiverName" label="ชื่อบัญชี" disabled={true} />
-                    <InputField name="receiverValue" label="เลขบัญชี" disabled={true} />
+                    <InputField name="receiverName" label={t('finance_transfer_view_account_name')} disabled={true} />
+                    <InputField name="receiverValue" label={t('finance_transfer_view_account_number')} disabled={true} />
                 </div>
                 <div className="flex gap-4">
-                    <InputField name="amount" label="จำนวนเงิน" disabled={true} />
-                    <InputField name="status_text" label="สถานะ" disabled={true} />
+                    <InputField name="amount" label={t('finance_transfer_view_amount')} disabled={true} />
+                    <InputField name="status_text" label={t('finance_transfer_view_status')} disabled={true} />
                 </div>
 
                 <div className="flex gap-4">
-                    <InputField name="payed_at" label="วันที่ได้รับเงิน" disabled={true} />
-                    <InputField name="reference" label="หมายเลขอ้างอิง" disabled={true} />
+                    <InputField name="payed_at" label={t('finance_transfer_view_received_date')} disabled={true} />
+                    <InputField name="reference" label={t('finance_transfer_view_reference')} disabled={true} />
                 </div>
 
                 <div className="flex gap-4">
                     <div className="w-full">
                         <InputField
-                            label="บันทึกช่วยจำ"
+                            label={t('finance_transfer_view_note')}
                             name="note"
                             as="textarea"
                             rows="5"
@@ -208,15 +210,15 @@ const View = () => {
                             disabled={true}
                         />
                     </div>
-                    
-                </div> 
 
-                {formData.status === 'pending' && (  
+                </div>
+
+                {formData.status === 'pending' && (
                   <div className="text-center px-2 flex justify-around ">
-                    <p className="font-bold text-red-500 mr-2">ชำระได้ถึงเวลา : <span>{convertDateTimeDbToClient(formData.v_expired)}</span> </p>
-                  </div>   
+                    <p className="font-bold text-red-500 mr-2">{t('finance_transfer_view_pay_by_time')} <span>{convertDateTimeDbToClient(formData.v_expired)}</span> </p>
+                  </div>
                 )}
-             
+
                 <div className="text-center px-2 flex justify-around">
                 {formData.status == 'pending' && (
                   <>
@@ -225,22 +227,22 @@ const View = () => {
                             setModalPin(true)
                             setDataTransfer({reference:formData?.p_reference})
                           }}>
-                            โอนเงิน
+                            {t('finance_transfer_view_transfer_button')}
                           </button>
                       ): (
                         <button type="button" className="btn btn-info" disabled>
-                          หมดเวลาชำระเงิน
+                          {t('finance_transfer_view_expired_button')}
                         </button>
                       )}
-                 
+
                   </>
                 )}
               </div>
-              
+
             </Form>
           )}
         </Formik>
-        
+
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { Form, Formik } from 'formik';
 import { useEffect, useState,Fragment} from 'react';
+import { useTranslation } from 'react-i18next';
 import SelectField from '../../../../components/HOC/SelectField';
 import { useGlobalMutation } from '../../../../helpers/globalApi';
 import { url_api } from '../../../../services/endpoints';
@@ -38,6 +39,7 @@ const initFilter: initFilter = {
 };
 const mode = process.env.MODE || 'admin'
 const List = () => {
+    const { t } = useTranslation()
     const navigate = useNavigate();
     const [paymentLists, setPaymentLists] = useState<any[]>([]);
     const [filterParams, setFilterParams] = useState<initFilter>(initFilter);
@@ -54,7 +56,7 @@ const List = () => {
         responseMesg:'',
         bankRefNo:''
     })
-   
+
     if(mode != 'admin') {
         navigate('/apps/login')
     }
@@ -97,7 +99,7 @@ const List = () => {
             setActionModal(false)
             toast.fire({
                     icon: 'success',
-                    title: 'สำเร็จ',
+                    title: t('finance_transfer_list_status_success'),
                     padding: '10px 20px',
                 });
              fetchData({})
@@ -140,7 +142,7 @@ const List = () => {
         <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
             {(isLoading || iqrLoading || iqrUpdateLoading) && <PreLoading />}
             <div className="invoice-table">
-                <div className="ml-7 my-5 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">ประวัติการโอนเงิน</div>
+                <div className="ml-7 my-5 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('finance_transfer_list_title')}</div>
             </div>
             <div className="mb-4.5 px-5 md:items-center md:flex-row flex-col gap-5">
                 <Formik
@@ -161,16 +163,16 @@ const List = () => {
                 >
                     {({ setFieldValue, handleReset, values }) => (
                         <Form className="flex flex-col flex-auto gap-2">
-                            <NavLink to={'/apps/finance/transfer/add'}  className="btn btn-primary gap-2 w-28 mb-2">โอนเงิน</NavLink>
+                            <NavLink to={'/apps/finance/transfer/add'}  className="btn btn-primary gap-2 w-28 mb-2">{t('finance_transfer_list_title')}</NavLink>
                             <div className="flex flex-col sm:flex-row md:flex-row gap-5">
-                                <SelectField zIndex="z-9" id="id_business_unit" label="หน่วยธุรกิจ" name="id_business_unit" placeholder="เลือกหน่วยธุรกิจ" options={businessUnit} />
-                                <SelectField zIndex="z-9" id="status" label="สถานะการชำระเงิน" name="status" placeholder="กรุณาเลือก" options={statusPaymentType} />
+                                <SelectField zIndex="z-9" id="id_business_unit" label={t('finance_transfer_list_label_business_unit')} name="id_business_unit" placeholder={t('finance_transfer_list_placeholder_business_unit')} options={businessUnit} />
+                                <SelectField zIndex="z-9" id="status" label={t('finance_transfer_list_label_payment_status')} name="status" placeholder={t('finance_transfer_list_placeholder_status')} options={statusPaymentType} />
                             </div>
                             <div className="flex flex-col sm:flex-row md:flex-row gap-5">
-                                <InputField label="ค้นหา" placeholder="ค้นหา" name="query" type="text" />
-                                <DateRangeAntd label="วันที่ชำระ" name="date_at" />
+                                <InputField label={t('finance_transfer_list_label_search')} placeholder={t('finance_transfer_list_placeholder_search')} name="query" type="text" />
+                                <DateRangeAntd label={t('finance_transfer_list_label_date')} name="date_at" />
                                 <button type="submit" className="btn btn-primary gap-2 mt-5">
-                                    ค้นหา
+                                    {t('finance_transfer_list_btn_search')}
                                 </button>
                                 <button
                                     type="reset"
@@ -179,13 +181,8 @@ const List = () => {
                                         handleReset();
                                     }}
                                 >
-                                    ล้างค่า
+                                    {t('finance_transfer_list_btn_clear')}
                                 </button>
-                                <div className="flex flex-col pt-5">
-                                    <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => handleExport(`payment_history_${new Date().toLocaleString()}`, values)}>
-                                        Export
-                                    </button>
-                                </div>
                             </div>
                         </Form>
                     )}
@@ -193,15 +190,15 @@ const List = () => {
             </div>
             <div className="datatables pagination-padding">
                 {paymentLists.length === 0 ? (
-                    <div className="text-center text-gray-500">ไม่พบข้อมูล</div>
-                ) : ( 
+                    <div className="text-center text-gray-500">{t('finance_transfer_list_empty')}</div>
+                ) : (
                     <DataTable
                         className="whitespace-nowrap table-hover invoice-table"
                         records={paymentLists}
                         columns={[
                             {
                                 accessor: 'id',
-                                title: 'ลำดับ',
+                                title: t('finance_transfer_list_col_index'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -211,7 +208,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'company',
-                                title: 'โอนจาก',
+                                title: t('finance_transfer_list_col_from'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -220,7 +217,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'shop_name',
-                                title: 'ร้านค้า',
+                                title: t('finance_transfer_list_col_shop'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -229,7 +226,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'bank_name',
-                                title: 'ธนาคาร',
+                                title: t('finance_transfer_list_col_bank'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -238,7 +235,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'receiverValueType',
-                                title: 'ประเภทการโอน',
+                                title: t('finance_transfer_list_col_type'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -247,7 +244,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'receiverName',
-                                title: 'ชื่อผู้รับ',
+                                title: t('finance_transfer_list_col_receiver_name'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -256,7 +253,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'receiverValue',
-                                title: 'หมายเลขบัญชี',
+                                title: t('finance_transfer_list_col_receiver_account'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -265,7 +262,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'amount',
-                                title: 'จำนวนเงิน',
+                                title: t('finance_transfer_list_col_amount'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -274,7 +271,7 @@ const List = () => {
                             },
                           {
                             accessor: 'status',
-                            title: 'สถานะการชำระเงิน',
+                            title: t('finance_transfer_list_col_status'),
                             textAlignment: 'center',
                             sortable: false,
                             render: ({ status, isTotalRow }) =>
@@ -292,19 +289,19 @@ const List = () => {
                                     }`}
                                     >
                                     {status === 'complete'
-                                        ? 'สำเร็จ'
+                                        ? t('finance_transfer_list_status_success')
                                         : status === 'pending'
-                                        ? 'รอชำระ'
+                                        ? t('finance_transfer_list_status_pending')
                                         : status === 'wait_to_update'
-                                        ? 'รอตรวจสอบ'
-                                        : 'ไม่สำเร็จ'}
+                                        ? t('finance_transfer_list_status_wait_update')
+                                        : t('finance_transfer_list_status_failed')}
                                     </div>
                                 </div>
                                 ),
                             },
                             {
                                 accessor: 'payed_at',
-                                title: 'วันที่ชำระ',
+                                title: t('finance_transfer_list_col_payment_date'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -313,7 +310,7 @@ const List = () => {
                             },
                             {
                                 accessor: 'created_at',
-                                title: 'วันที่ดำเนินการ',
+                                title: t('finance_transfer_list_col_transaction_date'),
                                 textAlignment: 'center',
                                 sortable: false,
                                 render: (item, index) => {
@@ -337,18 +334,18 @@ const List = () => {
                                                 </a>
                                             </div>)
                                         }
-                                          
+
                                         <div className="bg-[#E5E4E2] w-8 h-8 rounded-full flex items-center justify-center text-white">
                                             <a className="flex cursor-pointer active" onClick={() => goPayment(item)}>
                                             <IconEye className="w-4.5 h-4.5" />
                                             </a>
                                         </div>
-                                      
+
                                         </>
                                     </div>
                                     ),
                                 },
-                           
+
                         ]}
                         page={page}
                         totalRecords={totalItems}
@@ -359,7 +356,7 @@ const List = () => {
                             setPage(1);
                             setPageSize(p);
                         }}
-                        paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                        paginationText={({ from, to, totalRecords }) => t('finance_transfer_list_pagination', { from, to, totalRecords })}
                     />
                 )}
             </div>
@@ -399,14 +396,14 @@ const List = () => {
                         >
                         <IconX />
                         </button>
-                        <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px] text-center">ตรวจสอบข้อมูล</div>
+                        <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px] text-center">{t('finance_transfer_list_modal_title_verify')}</div>
                         <div className="p-5">
-                        
+
                         <div className="p-5">
                             <div className="mb-5 space-y-1">
-                            
+
                             <div className="flex items-center justify-between">
-                                <p className="text-[#515365] font-semibold">สถานะการโอนเงิน </p>
+                                <p className="text-[#515365] font-semibold">{t('finance_transfer_list_modal_title_status')} </p>
                                 <p className="text-base">
                                 <span className="font-semibold">{confirmData?.responseMesg ?? ''}</span>
                                 </p>
@@ -417,19 +414,19 @@ const List = () => {
                                 <span className="font-semibold">{confirmData?.bankRefNo ?? '-'}</span>
                                 </p>
                             </div>
-                          
+
                             </div>
                             <div className="text-center px-2 flex justify-around">
 
-                            {confirmData?.bankRefNo ? 
+                            {confirmData?.bankRefNo ?
                                 <button type="button" className="btn btn-success" onClick={() => {
                                     inquiryUpdate({data:{reference:confirmData.p_reference,callback:true}})
                                 }}>
-                                    ปรับปรุงข้อมูล
+                                    {t('finance_transfer_list_btn_transfer')}
                                 </button>
                             :(
                                 <button type="button" className="btn btn-success" disabled>
-                                ปรับปรุงข้อมูล
+                                {t('finance_transfer_list_btn_transfer')}
                                 </button>
                             )}
                             </div>

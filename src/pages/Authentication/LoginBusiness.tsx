@@ -67,7 +67,7 @@ const LoginBusiness: React.FC = () => {
         const toast = Swal.mixin(toastAlert)
         toast.fire({
           icon: 'error',
-          title: res?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง !',
+          title: res?.message ?? t('auth_invalid_data'),
           padding: '10px 20px',
         })
       }
@@ -76,7 +76,7 @@ const LoginBusiness: React.FC = () => {
       const toast = Swal.mixin(toastAlert)
       toast.fire({
         icon: 'error',
-        title: err?.message ?? 'ข้อมูลไม่ถูกต้องโปรดลองอีกครั้ง',
+        title: err?.message ?? t('auth_invalid_data'),
         padding: '10px 20px',
       })
     },

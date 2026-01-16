@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import 'tippy.js/dist/tippy.css';
 import { url_api } from '../../../services/endpoints';
@@ -12,6 +13,7 @@ import themeConfig from '../../../theme.config';
 const mode = process.env.MODE || 'admin';
 
 const List = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const List = () => {
     const id_shop = storedUser ? JSON.parse(storedUser).id_shop : null;
 
     useEffect(() => {
-        dispatch(setPageTitle('การแจ้งเตือน'));
+        dispatch(setPageTitle(t('notification_title')));
     }, [dispatch]);
 
     const [notifications, setNotifications] = useState([]);
@@ -103,18 +105,18 @@ const List = () => {
             const diffInMonths = Math.floor(diffInDays / 30);
 
             if (diffInMinutes < 60) {
-                return `${diffInMinutes} นาทีที่ผ่านมา`;
+                return `${diffInMinutes} ${t('notification_minutes_ago')}`;
             } else if (diffInHours < 24) {
-                return `${diffInHours} ชั่วโมงที่ผ่านมา`;
+                return `${diffInHours} ${t('notification_hours_ago')}`;
             } else if (diffInDays < 7) {
-                return `${diffInDays} วันที่ผ่านมา`;
+                return `${diffInDays} ${t('notification_days_ago')}`;
             } else if (diffInWeeks < 4) {
-                return `${diffInWeeks} สัปดาห์ที่ผ่านมา`;
+                return `${diffInWeeks} ${t('notification_weeks_ago')}`;
             } else {
-                return `${diffInMonths} เดือนที่ผ่านมา`;
+                return `${diffInMonths} ${t('notification_months_ago')}`;
             }
         } else {
-            return "1 นาทีที่ผ่านมา";
+            return `1 ${t('notification_minutes_ago')}`;
         }
     };
 
@@ -129,7 +131,7 @@ const List = () => {
             <div className="panel px-0 ">
                 <div className="mb-4.5 px-5 md:items-center md:flex-row flex-col gap-5">
                     <div className={`notification-header px-5 py-4 flex items-center justify-between bg-themePrimary text-white`}>
-                        <h4 className="text-lg font-bold">การแจ้งเตือน</h4>
+                        <h4 className="text-lg font-bold">{t('notification_title')}</h4>
                         <div className="notification-tabs flex gap-4">
                             {/* Tabs for filtering notifications can be added here */}
                         </div>
@@ -172,7 +174,7 @@ const List = () => {
                                                         <span className="text-orange-500">อยู่ระหว่างการพิจารณา</span>
                                                     )}
                                                     {titleParts[1]} */}
-                                                    {titleParts[0] + ' ' + titleParts[1] + ' ' } 
+                                                    {titleParts[0] + ' ' + titleParts[1] + ' ' }
                                                     <span className="text-orange-500">{titleParts[2]}</span>
                                                 </span>
                                                 <span className="text-xs blue font-normal active">
@@ -187,7 +189,7 @@ const List = () => {
                             <div className="flex items-center justify-center py-8">
                                 <div className="flex flex-col items-center">
                                     <IconInfoCircle fill={true} className="w-10 h-10 text-primary mb-4" />
-                                    <p className="text-lg text-center">ไม่พบข้อมูล</p>
+                                    <p className="text-lg text-center">{t('notification_no_data')}</p>
                                 </div>
                             </div>
                         )}
@@ -195,7 +197,7 @@ const List = () => {
                     <div className="flex justify-center mt-4 p-4">
                         {hasMore && (
                             <button className="btn btn-primary" onClick={loadMoreNotifications} disabled={loading}>
-                                {loading ? 'กำลังโหลด...' : 'ดูการแจ้งเตือนก่อนหน้า'}
+                                {loading ? t('notification_loading') : t('notification_view_previous')}
                             </button>
                         )}
                     </div>

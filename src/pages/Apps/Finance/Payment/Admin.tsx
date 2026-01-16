@@ -86,7 +86,7 @@ const PaymentHistory = () => {
 
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0])
   const [totalItems, setTotalItems] = useState<number>(0)
-  
+
   const [statusData, setStatusData] = useState<any>()
   const [businessUnit, setBusinessUnit] = useState<any>([])
 
@@ -170,14 +170,14 @@ const PaymentHistory = () => {
             customer_name: item.customer_name,
             ins_no: item.ins_no,
             amount: item.amount,
-            status: item.status === 'complete' ? 'สำเร็จ' : 'ค้างชำระ',
+            status: item.status === 'complete' ? t('finance_payment_status_success') : t('finance_payment_status_pending'),
             channel: item.channel,
             payed_at: item.payed_at,
             payment_method: item.payment_method,
             reference: item.reference,
             tracking_fee: item.tracking_fee,
             unlock_fee: item.unlock_fee,
-            penalty_fee: item.penalty_fee, 
+            penalty_fee: item.penalty_fee,
             discount: item.discount,
             total: item.total
           }
@@ -205,7 +205,7 @@ const PaymentHistory = () => {
   }
 
   const checkPayment = (item: any = null) => {
-   
+
     if(item?.payment_method == 'tqr') {
       // todo
       const data = {
@@ -219,7 +219,7 @@ const PaymentHistory = () => {
     } else {
       fetchInquiryPS({data: {refno: item.reference}})
     }
-    
+
     setSelectedPayment(item)
     setActionModal(true)
   }
@@ -255,7 +255,7 @@ const PaymentHistory = () => {
           Total:res?.data?.Total,
           StatusName:res?.data?.StatusName,
           OrderDateTime:convertDateTimeDbToClient(res?.data?.OrderDateTime)
-        }) 
+        })
       } else {
       }
     },
@@ -270,9 +270,9 @@ const PaymentHistory = () => {
           Total:res?.data?.amount,
           StatusName:'Paid',
           OrderDateTime:`${toThaiDate(res?.data?.transDate)} ${res?.data?.transTime}`
-        }) 
+        })
       } else {
-        
+
       }
     },
     onError: () => {
@@ -338,7 +338,7 @@ const PaymentHistory = () => {
     if(filterParams?.id_business_unit) {
       fetchPaymentData({data:{...filterParams, page:1, page_size: pageSize}})
     }
-    
+
   }, [pageSize])
 
   useEffect(() => {
@@ -465,7 +465,7 @@ const PaymentHistory = () => {
                     name="start_at"
                     onChange={(value: any) => {
                       setFieldValue('start_at', convertDateClientToDb(value))
-                    }} 
+                    }}
                   />
                   <DatePicker
                     label="วันที่สิ้นสุด"
@@ -811,9 +811,9 @@ const PaymentHistory = () => {
                           </div>
                         </div>
                         <div className="text-center px-2 flex justify-around">
-                          {statusData?.Total || deployMode == "dev" ? 
+                          {statusData?.Total || deployMode == "dev" ?
                              <button type="button" className="btn btn-success" onClick={() => {
-                            
+
                               resubmitPayment({
                                 data: {
                                   id_contract: selectedPayment?.contract_uuid,
@@ -828,9 +828,9 @@ const PaymentHistory = () => {
                             <button type="button" className="btn btn-success" disabled>
                               {t('update_info')}
                             </button>
-                            
+
                           )}
-                         
+
                         </div>
                       </div>
                     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { useDispatch } from 'react-redux'
 import { setPageTitle, setSidebarActive } from '../../../store/themeConfigSlice'
@@ -10,6 +11,7 @@ const mode = process.env.MODE || 'admin'
 
 const Camera = () => {
 
+  const { t } = useTranslation();
   const { returnUrl } = useParams()
 
   const dispatch = useDispatch()
@@ -37,7 +39,7 @@ const Camera = () => {
   const cropRef: any = useRef<HTMLImageElement | null>(null)
 
   const takeRef: any = useRef<HTMLDivElement | null>(null)
-  const ratio = 1010 / 638 // ขนาดบัตรประชาชนไทย: 1010 x 638
+  const ratio = 1010 / 638 // Thai ID card size: 1010 x 638
 
   const [xy, setXY] = useState({
     left: 0, top: 0,
@@ -80,7 +82,7 @@ const Camera = () => {
             borderRef.current.style.borderBottom = `${window.innerHeight - cropRef.current.clientHeight - (window.innerWidth > 600 ? 60 : leftCrop)}px solid #fff`
             // takeRef.current.style.top = `${cropRef.current.clientHeight + leftCrop}px`
             takeRef.current.style.height = `${window.innerHeight - cropRef.current.clientHeight}px`
-            takeRef.current.style.display = 'none' 
+            takeRef.current.style.display = 'none'
             canvasRef.current.style.marginTop = `20px`
             canvasRef.current.style.marginLeft = `${leftCrop}px`
             canvasRef.current.style.marginBottom = `30px`
@@ -144,15 +146,15 @@ const Camera = () => {
 
     const context: any = canvas.getContext("2d")
     const scale = (video.videoWidth / xy.videoWidth)
- 
+
     context.drawImage(
-      video, 
-      xy.left * scale, 
-      xy.top * scale, 
+      video,
+      xy.left * scale,
+      xy.top * scale,
       xy.cropWidth * scale,
       xy.cropHeight * scale,
-      0, 
-      0, 
+      0,
+      0,
       xy.cropWidth,
       xy.cropHeight,
     )
@@ -178,7 +180,7 @@ const Camera = () => {
     const fileName = `${(new Date()).getTime()}.jpeg`
     const file: File = new File([blob], fileName, { type: contentType })
 
-    takeRef.current.style.display = 'block' 
+    takeRef.current.style.display = 'block'
 
     uploadFile({ data: { file: file ?? null, type: 'customer' }})
 
@@ -212,7 +214,7 @@ const Camera = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('ถ่ายภาพ'))
+    dispatch(setPageTitle(t('camera_take_photo')))
     dispatch(setSidebarActive(['services', '/apps/services/camera']))
   })
 
@@ -235,7 +237,7 @@ const Camera = () => {
               <div ref={borderRef} style={{ zIndex: 2, position: "absolute", top: 0, left: 0, right: 0, width: '100%' }}>
                 <img ref={cropRef} src="/assets/images/frame-crop.png" style={{ width: '100%' }} />
                 <button className="btn btn-primary" style={{ zIndex: 3, position: "absolute", bottom: 10, left: viewImage ? 'calc(50% - 80px)' : 'calc(50% - 40px)', right: 0, display: 'block', width: '70px', height: '70px', borderRadius: '999px', fontSize: '14px', border: 'none', backgroundColor: 'rgba(0,0,0, 0.7)' }} onClick={capture}>
-                  ถ่าย
+                  {t('camera_take_photo')}
                 </button>
               </div>
             </div>
@@ -243,13 +245,13 @@ const Camera = () => {
           <div ref={takeRef} style={{ zIndex: 200, display: 'none', position: "absolute", top: 0, left: 0, right: 0, width: '100%', height: '100vh',  backgroundColor: '#FFF', textAlign: 'center' }}>
             <canvas ref={canvasRef} style={{ maxWidth: '100%', borderRadius: '20px' }}></canvas>
             <button className="btn btn-primary" style={{ zIndex: 3, position: "absolute", bottom: 50, left: viewImage ? 'calc(50% - 80px)' : 'calc(50% - 40px)', right: 0, display: 'block', width: '70px', height: '70px', borderRadius: '999px', fontSize: '14px', border: 'none', backgroundColor: 'rgba(0,0,0, 0.7)' }} onClick={() => {
-              takeRef.current.style.display = 'none' 
+              takeRef.current.style.display = 'none'
               setViewImage(null)
             }}>
-              ถ่ายใหม่
+              {t('camera_retake')}
             </button>
             <button className="btn btn-primary" style={{ zIndex: 3, position: "absolute", bottom: 50, left: 'calc(50% + 10px)', right: 0, display: 'block', width: '70px', height: '70px', borderRadius: '999px', fontSize: '12px' }} onClick={checkData}>
-              ยืนยัน
+              {t('camera_confirm')}
             </button>
           </div>
         </>

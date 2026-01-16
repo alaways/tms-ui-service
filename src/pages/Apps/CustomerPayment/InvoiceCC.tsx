@@ -19,7 +19,7 @@ const InvoiceCC = () => {
   const location = useLocation()
   const { id } = useParams()
   const toast = Swal.mixin(toastAlert);
-    
+
   const [paymentPreview, setPaymentPreview] = useState<any>()
   const { installmentLast, contractID, ins_no } = location.state || {}
 
@@ -59,7 +59,7 @@ const InvoiceCC = () => {
           if (res.statusCode === 400 || res.code === 400) {
               showNotification(res.message, 'error');
           } else {
-              
+
             toast.fire({
                 icon: 'success',
                 title: t('cancel_close_contract_success'),
@@ -95,10 +95,10 @@ const InvoiceCC = () => {
       }).then((result) => {
           if (result.isConfirmed) {
               cancelQrcode({data: { id_payment:paymentPreview.id_payment }})
-              
+
           }
       });
-  
+
   }
 
   const showNotification = (message: string, type: 'success' | 'error') => {
@@ -159,7 +159,7 @@ const InvoiceCC = () => {
 
         <div className="panel !px-0">
 
-         
+
           <div className="flex justify-between flex-wrap gap-4 px-4">
             <div className="text-2xl font-semibold uppercase">
               {t('close_contract_invoice')}
@@ -177,7 +177,7 @@ const InvoiceCC = () => {
           <div className="ltr:text-left rtl:text-left px-6">
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ชื่อธุรกิจ :
+                {t('customer_payment_business_name')} :
               </div>
               <div>
                 {paymentPreview?.business_unit?.name}
@@ -185,7 +185,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ที่อยู่ :
+                {t('customer_payment_address')} :
               </div>
               <div>
                 {paymentPreview?.business_unit?.address}
@@ -197,7 +197,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between data-responsive">
               <div className="text-white-dark">
-                โทรศัพท์ :
+                {t('customer_payment_phone')} :
               </div>
               <div>
                 {paymentPreview?.business_unit?.phone ?? ''}
@@ -208,15 +208,15 @@ const InvoiceCC = () => {
           <div className="ltr:text-left rtl:text-left px-6">
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ชื่อ :
+                {t('customer_payment_name')} :
               </div>
               <div>
-                {paymentPreview?.customer?.name ?? ''}
+                {paymentPreview?.customer?.name ?? ''
               </div>
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                เลขบัตรประจำตัวประชาชน :
+                {t('customer_payment_id_card')} :
               </div>
               <div>
                 {formatIDNumber(paymentPreview?.customer?.citizen_id ?? '')}
@@ -224,7 +224,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                เบอร์หลัก :
+                {t('customer_payment_main_phone')} :
               </div>
               <div>
                 {formatPhoneNumber(paymentPreview?.customer?.phone_number ?? '')}
@@ -232,7 +232,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                เบอร์อ้างอิง :
+                {t('customer_payment_ref_phone')} :
               </div>
               <div>
                 {formatPhoneNumber(paymentPreview?.customer?.phone_number_ref ?? '')}
@@ -240,7 +240,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ที่อยู่ปัจจุบัน :
+                {t('customer_payment_current_address')} :
               </div>
               <div>
                 {paymentPreview?.customer?.full_current_address}
@@ -248,7 +248,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ที่อยู่ที่ทำงาน :
+                {t('customer_payment_work_address')} :
               </div>
               <div>
                 {paymentPreview?.customer?.full_work_address ?? ''}
@@ -259,7 +259,7 @@ const InvoiceCC = () => {
           <div className="ltr:text-left rtl:text-left px-6">
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ชื่อสินทรัพย์ :
+                {t('customer_payment_asset_name')} :
               </div>
               <div>
                 {paymentPreview?.asset?.name ?? ''}
@@ -275,7 +275,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                รหัสรุ่น :
+                {t('customer_payment_model_code')} :
               </div>
               <div>
                 {paymentPreview?.asset?.serial_number ?? ''}
@@ -283,7 +283,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                สี :
+                {t('color')} :
               </div>
               <div>
                 {paymentPreview?.asset?.color ?? ''}
@@ -291,7 +291,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ความจุ :
+                {t('customer_payment_capacity')} :
               </div>
               <div>
                 {paymentPreview?.asset?.capacity ?? ''}
@@ -299,7 +299,7 @@ const InvoiceCC = () => {
             </div>
             <div className="flex items-center w-full justify-between mb-2 data-responsive">
               <div className="text-white-dark">
-                ข้อสังเกตุ :
+                {t('customer_payment_note')} :
               </div>
               <div>
                 {paymentPreview?.asset?.note ?? ''}
@@ -364,8 +364,8 @@ const InvoiceCC = () => {
             </div>
             ): null}
             {/* <div className="flex justify-between mb-2">
-              <div className="text-white-dark">ค่าธรรมเนียม</div>
-              <div>{numberWithCommas(paymentPreview?.fee)} บาท</div>
+              <div className="text-white-dark">Fee</div>
+              <div>{numberWithCommas(paymentPreview?.fee)} Baht</div>
             </div> */}
             <div className="flex justify-between font-bold text-[22px] mt-4 data-responsive">
               <div className="text-white-dark">

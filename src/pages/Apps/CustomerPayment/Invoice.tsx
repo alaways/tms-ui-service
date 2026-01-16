@@ -271,8 +271,8 @@ const Invoice = () => {
               </div>
             ) : null}
             {/* <div className="flex justify-between mb-2">
-              <div className="text-white-dark">ค่าธรรมเนียม</div>
-              <div>{numberWithCommas(paymentPreview?.fee)} บาท</div>
+              <div className="text-white-dark">Fee</div>
+              <div>{numberWithCommas(paymentPreview?.fee)} Baht</div>
             </div> */}
             <div className="flex justify-between font-bold text-[22px] mt-4 data-responsive">
               <div className="text-white-dark">

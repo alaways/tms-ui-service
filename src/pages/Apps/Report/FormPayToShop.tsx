@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import moment from 'moment-timezone';
 import Select from 'react-select';
 import IconCaretDown from '../../../components/Icon/IconCaretDown';
+import { useTranslation } from 'react-i18next';
 import { resizeImage } from '../../../helpers/helpFunction';
 import ImageUploading, { ImageListType } from 'react-images-uploading';
 import { useEffect, useState } from 'react';
@@ -23,6 +24,7 @@ import { url_api } from '../../../services/endpoints';
 const mode = process.env.MODE || 'admin';
 
 const FormPayToShop = () => {
+    const { t } = useTranslation();
     const toast = Swal.mixin(toastAlert);
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +39,7 @@ const FormPayToShop = () => {
 
     const breadcrumbItems = [
         { to: `/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id_shop}`, label: 'บัญชีเจ้าหนี้ร้านค้า' },
-        { label: 'ชำระเงินให้ร้านค้า', isCurrent: true },
+        { label: t('report_pay_to_shop_title'), isCurrent: true },
     ];
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,11 +63,11 @@ const FormPayToShop = () => {
         bank_account_number: Yup.object()
             .nullable()
             .shape({
-                value: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+                value: Yup.string().required(t('report_pay_to_shop_validation_required')),
             })
-            .required('กรุณาใส่ข้อมูลให้ครบ'),
-        amount: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-        payed_at: Yup.date().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+            .required(t('report_pay_to_shop_validation_required')),
+        amount: Yup.string().required(t('report_pay_to_shop_validation_required')),
+        payed_at: Yup.date().nullable().required(t('report_pay_to_shop_validation_required')),
     });
 
     const CustomSelect = ({ field, form, options, className }: any) => {
@@ -83,7 +85,7 @@ const FormPayToShop = () => {
                     value={field.value}
                     onChange={onChange}
                     components={{ DropdownIndicator: IconCaretDown }}
-                    placeholder="เลือกธนาคาร"
+                    placeholder={t('report_pay_to_shop_select_bank')}
                     isSearchable={false}
                     className={`w-full ${className}`}
                     classNames={{
@@ -112,15 +114,15 @@ const FormPayToShop = () => {
                         label: (
                             <div className="flex items-center gap-10">
                                 <div className="">
-                                    <p>ธนาคาร</p>
+                                    <p>{t('report_pay_to_shop_bank')}</p>
                                     <p className="text-gray-800 font-medium">{bank}</p>
                                 </div>
                                 <div>
-                                    <p>เลขที่บัญชี</p>
+                                    <p>{t('report_pay_to_shop_account_number')}</p>
                                     <p className="text-sm text-gray-800">{noBank}</p>
                                 </div>
                                 <div>
-                                    <p>ชื่อบัญชี</p>
+                                    <p>{t('report_pay_to_shop_account_name')}</p>
                                     <p className="text-sm text-gray-800">{nameBank}</p>
                                 </div>
                             </div>
@@ -154,7 +156,7 @@ const FormPayToShop = () => {
          onSuccess: (res:any) => {
             toast.fire({
                 icon: 'success',
-                title: 'ชำระเงินสำเร็จ',
+                title: t('report_pay_to_shop_payment_success'),
                 padding: '10px 20px',
             });
             navigate(`/apps/report/account-creditor?id_business_unit=${id_business_unit}&id_shop=${id_shop}`);
@@ -181,7 +183,7 @@ const FormPayToShop = () => {
     const onError = () => {
         toast.fire({
             icon: 'error',
-            title: 'รูปภาพเกิน 10 รูป',
+            title: t('report_pay_to_shop_image_limit'),
             padding: '10px 20px',
         });
     };
@@ -190,7 +192,7 @@ const FormPayToShop = () => {
         if (images.length == 0) {
             toast.fire({
                 icon: 'error',
-                title: 'กรุณาเพิ่มหลักฐานการโอนเงิน',
+                title: t('report_pay_to_shop_add_proof'),
                 padding: '10px 20px',
             });
         } else {
@@ -227,25 +229,25 @@ const FormPayToShop = () => {
             <Breadcrumbs items={breadcrumbItems} />
             {(isLoading || isDownloading) && <PreLoading />}
             <div className="panel px-0 border-white-light dark:border-[#1b2e4b] mt-3 px-10">
-                <h5 className="my-3 text-2xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">แบบฟอร์มชำระเงินให้ร้านค้า</h5>
+                <h5 className="my-3 text-2xl font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">{t('report_pay_to_shop_form_title')}</h5>
                 <Formik initialValues={defaultForm} onSubmit={onSubmit} validationSchema={SubmittedForm} enableReinitialize>
                     {({ setFieldValue }) => (
                         <Form className="flex flex-col gap-4">
                             <div className="flex gap-4">
-                                <InputField name="shop_name" label="ร้านค้า" disabled={true} />
+                                <InputField name="shop_name" label={t('shop')} disabled={true} />
                                 {/* <InputField name="id_payment" label="เลขที่ชำระเงิน" /> */}
                             </div>
                             <div className="flex gap-4">
-                                <InputField name="userChanged" label="ผู้ดำเนินการ" disabled={true} />
-                                <InputField name="created_at" label="วันที่สร้าง" disabled={true} />
+                                <InputField name="userChanged" label={t('operator')} disabled={true} />
+                                <InputField name="created_at" label={t('created_date')} disabled={true} />
                             </div>
                             <hr />
-                            <h5 className="text-lg font-semibold">รับชำระเงิน</h5>
+                            <h5 className="text-lg font-semibold">{t('report_pay_to_shop_receive_payment')}</h5>
                             <div className="flex gap-4">
                                 <InputField
                                     require={true}
                                     name="amount"
-                                    label="ยอดชำระเงิน"
+                                    label={t('report_pay_to_shop_payment_amount')}
                                     onKeyDown={(e: any) => {
                                         if (e.ctrlKey && e.key === 'a') {
                                             return;

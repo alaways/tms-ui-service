@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 
 import Swal from 'sweetalert2';
@@ -35,7 +36,7 @@ const TestPaymentCallBack = () => {
        onSuccess: (res: any) => {
         if (res.statusCode === 200 || res.code === 200) {
           showNotification('Success', 'success')
-      
+
         } else {
           showNotification(res.message, 'error')
         }
@@ -53,8 +54,10 @@ const TestPaymentCallBack = () => {
         [postCallBack]
     )
     const SubmittedForm = Yup.object().shape({
-       // message: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+       // message: Yup.string().required('Please fill in all required fields'),
     });
+
+    const { t } = useTranslation();
 
     return (
         <div className="flex xl:flex-col flex-col gap-2.5">
@@ -63,10 +66,10 @@ const TestPaymentCallBack = () => {
                     {({ setFieldValue }) => (
                         <Form className="space-y-5 dark:text-white ">
                             <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                                ทดสอบการชำระเงิน
+                                {t('test_payment')}
                             </div>
                             <div>
-                                
+
                                  <InputField
                                         required={false}
                                         label="Ref No"
@@ -75,7 +78,7 @@ const TestPaymentCallBack = () => {
                                   />
 
                                 <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
-                                ทดสอบ
+                                {t('test')}
                                 </button>
                             </div>
                         </Form>

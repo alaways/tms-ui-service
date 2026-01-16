@@ -23,7 +23,7 @@ const List = () => {
             setNoteList(res.data);
         },
         onError: (err: any) => {
-         
+
         },
     });
 
@@ -32,7 +32,7 @@ const List = () => {
             fetchMemo({ data: { id_customer: id } });
         },
         onError: (err: any) => {
-         
+
         },
     });
 
@@ -85,19 +85,19 @@ const List = () => {
                     columns={[
                         {
                             accessor: 'id',
-                            title: 'ลำดับ',
+                            title: t('customer_order_label'),
                             sortable: false,
                             textAlignment: 'center',
                             render: (row, index) => <div>{index + 1}</div>,
                         },
                         {
                             accessor: 'admin_name',
-                            title: 'ผู้ดำเนินการ',
+                            title: t('customer_operator_label'),
                             sortable: false,
                         },
                         {
                             accessor: 'created_at',
-                            title: 'วันที่ - เวลา',
+                            title: t('customer_datetime_label'),
                             sortable: false,
                             render: (item: any) => <p>{convertDateTimeDbToClient(item?.created_at)}</p>,
                         },
@@ -110,7 +110,7 @@ const List = () => {
                                 <div className="flex gap-4 items-center w-max mx-auto">
                                     <p className="flex cursor-pointer items-center relative group" onClick={() => onEdit(item)}>
                                         <IconEye className="w-4.5 h-4.5 flex items-center transition-opacity duration-200 group-hover:opacity-0" />
-                                        <p className="absolute left-[-10px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">ดูข้อมูล</p>
+                                        <p className="absolute left-[-10px] text-center text-blue-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100">{t('customer_view_data')}</p>
                                     </p>
                                 </div>
                             ),

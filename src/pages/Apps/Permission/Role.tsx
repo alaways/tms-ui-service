@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import * as Yup from 'yup'
 import Swal from 'sweetalert2'
@@ -29,6 +30,7 @@ const PermissionRole = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const [selectedRecords, setSelectedRecords] = useState<any[]>([]);
 
@@ -36,7 +38,7 @@ const PermissionRole = () => {
 
   const role = storedUser ? JSON.parse(storedUser).role : null
   const access_level = storedUser ? JSON.parse(storedUser ?? '{}').access_level : null
-  
+
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZES[2])
   const [totalItems, setTotalItems] = useState<number>(0)
@@ -44,9 +46,9 @@ const PermissionRole = () => {
   const [actionModal, setActionModal] = useState(false)
 
   const breadcrumbItems = [
-    { to: '/apps/employee/list', label: 'พนักงาน' },
-    { to: '/apps/permission/check', label: 'จัดการสิทธิ์ผู้ใช้งาน' },
-    { label: 'สิทธิ์ผู้ใช้งาน', isCurrent: true }
+    { to: '/apps/employee/list', label: t('permission_employee_label') },
+    { to: '/apps/permission/check', label: t('permission_manage_rights') },
+    { label: t('permission_role_list'), isCurrent: true }
   ]
 
   if (role != 'admin' && role != 'business_unit') {
@@ -62,47 +64,47 @@ const PermissionRole = () => {
   const [roleLists, setRoleLists] = useState<any[]>([
     {
       key: 'menu_count',
-      title: 'จำนวนเมนู (เมนูหลัก)',
+      title: t('permission_menu_count'),
     },
     {
       key: 'design_slide',
-      title: 'ออกแบบภาพสไลด์หน้าแรก',
+      title: t('permission_design_homepage'),
     },
     {
       key: 'design_cover',
-      title: 'ออกแบบภาพนิ่งหน้าใน',
+      title: t('permission_design_inner_page'),
     },
     {
       key: 'limit_editor',
-      title: 'ปรับแก้แบบดีไซน์',
+      title: t('permission_edit_design'),
     },
     {
       key: 'support_mobile',
-      title: 'รองรับ Desktop, Mobile, Tablet',
+      title: t('permission_responsive'),
     },
     {
       key: 'add_data',
-      title: 'ลงข้อมูล',
+      title: t('permission_data_entry'),
     },
     {
       key: 'add_product',
-      title: 'ลงข้อมูลสินค้า/บทความ',
+      title: t('permission_product_article'),
     },
     {
       key: 'contact_form',
-      title: 'ฟอร์มติดต่อ (Contract Form)',
+      title: t('permission_contact_form'),
     },
     {
       key: 'support_language',
-      title: 'รองรับภาษา',
+      title: t('permission_language_support'),
     },
     {
       key: 'free_domain',
-      title: 'ฟรี จดโดเมนเว็บไซต์ + โฮสติ้ง',
+      title: t('permission_free_domain_hosting'),
     },
     {
       key: 'free_ssl',
-      title: 'ฟรี ตืดตั้ง SSL',
+      title: t('permission_free_ssl'),
     },
   ])
 
@@ -114,8 +116,8 @@ const PermissionRole = () => {
   const [formData, setFormData] = useState<any>(defaultForm)
 
   const SubmittedForm = Yup.object().shape({
-    key: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    key: Yup.string().required(t('please_fill_all_required_fields')),
+    title: Yup.string().required(t('please_fill_all_required_fields')),
   })
 
   const submitForm = useCallback((event: any) => {
@@ -132,7 +134,7 @@ const PermissionRole = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มสิทธิ์ผู้ใช้งาน'))
+    dispatch(setPageTitle(t('permission_add_role')))
     dispatch(setSidebarActive(['employee', '/apps/permission/check']))
   }, [])
 
@@ -149,7 +151,7 @@ const PermissionRole = () => {
             <div className="flex items-center gap-2">
               <a className="btn btn-primary gap-2" onClick={() => setActionModal(true)}>
                 <IconPlus />
-                เพิ่มสิทธิ์ผู้ใช้งาน
+                {t('permission_add_role')}
               </a>
             </div>
           </div>
@@ -160,7 +162,7 @@ const PermissionRole = () => {
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('order'),
                   sortable: false,
                   textAlignment: 'center',
                   render: (row, index) => (
@@ -169,7 +171,7 @@ const PermissionRole = () => {
                 },
                 {
                   accessor: 'title',
-                  title: 'หัวข้อ',
+                  title: t('permission_title'),
                   sortable: false,
                   render: (item) => (
                     <div className="flex items-center justify-start font-normal">
@@ -181,7 +183,7 @@ const PermissionRole = () => {
                 },
                 {
                   accessor: 'key',
-                  title: 'คีย์',
+                  title: t('permission_key'),
                   sortable: false,
                   render: (item) => (
                     <div className="flex items-center justify-start font-normal">
@@ -216,7 +218,7 @@ const PermissionRole = () => {
               sortStatus={sortStatus}
               onSortStatusChange={setSortStatus}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('pagination_showing')} ${from} ${t('pagination_to')} ${to} ${t('pagination_of')} ${totalRecords} ${t('pagination_total_pages')}`
               )}
             />
           </div>
@@ -254,7 +256,7 @@ const PermissionRole = () => {
                       <IconX />
                     </button>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                      {defaultForm.action == 'add' ? 'เพิ่ม' : 'แก้ไข'}สิทธิ์ผู้ใช้งาน
+                      {defaultForm.action == 'add' ? t('add') : t('edit')}{t('permission_role_list')}
                     </div>
                     <div className="p-5">
                       <Formik
@@ -267,9 +269,9 @@ const PermissionRole = () => {
                         {(props) => (
                           <Form className="space-y-5 mb-2 dark:text-white custom-select">
                             <InputField
-                              label="หัวข้อ"
+                              label={t('permission_title')}
                               name="title"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_fill_in_data')}
                               value={props.values.title !== '' ? props.values.title : defaultForm.title}
                               onChange={(e: any) => {
                                 props.setFieldValue("title", e.target.value)
@@ -277,9 +279,9 @@ const PermissionRole = () => {
                               }}
                             />
                             <InputField
-                              label="คีย์"
+                              label={t('permission_key')}
                               name="key"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_fill_in_data')}
                               value={props.values.key !== '' ? props.values.key : defaultForm.key}
                               onChange={(e: any) => {
                                 props.setFieldValue("title", e.target.value)
@@ -294,7 +296,7 @@ const PermissionRole = () => {
                             />
                             <div className="flex justify-center items-center mt-5">
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {defaultForm.action == 'add' ? 'บันทึก' : 'อัพเดท'}
+                                {defaultForm.action == 'add' ? t('permission_save') : t('permission_update')}
                               </button>
                             </div>
                           </Form>

@@ -108,7 +108,7 @@ const List = () => {
         }
         const data: any = await fetchCustomerData({data: query})
         const convertData = data.data.list.map((item:any) => ({
-          created_at: item.created_at ? convertDateDbToClient(item?.created_at) : 'อนุมัติ-',
+          created_at: item.created_at ? convertDateDbToClient(item?.created_at) : t('customer_approved_dash'),
           shop_name: item.shop_name,
           name: item.name,
           phone_number: item.phone_number,
@@ -352,7 +352,7 @@ const List = () => {
                     },
                     {
                       accessor: 'shop_name',
-                      title: 'ร้านค้า',
+                      title: t('customer_list_shop_label'),
                       //textAlignment: 'left',
                       sortable: false,
                       render: (item:any) => (
@@ -367,7 +367,7 @@ const List = () => {
 
                 {
                   accessor: 'name',
-                  title: 'ชื่อ-นามสกุล',
+                  title: t('customer_name_label'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item) =>

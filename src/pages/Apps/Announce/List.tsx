@@ -439,7 +439,7 @@ const List = () => {
                                                     )}
                                                     {/*
                                                     <SelectField
-                                                        label="ร้านค้า"
+                                                        label="Shop"
                                                         isMulti={true}
                                                         id="shop_list"
                                                         name="shop_list"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as XLSX from 'xlsx'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { setPageTitle, setSidebarActive } from '../../../store/themeConfigSlice'
 import { url_api } from '../../../services/endpoints'
 import { useGlobalMutation } from '../../../helpers/globalApi'
@@ -26,6 +27,7 @@ const PaymentInvoice = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const apiUrl = process.env.BACKEND_URL
 
@@ -88,7 +90,7 @@ const PaymentInvoice = () => {
         setIsDownloading(false)
         toast.fire({
           icon: 'warning',
-          title: 'กรุณาเลือกข้อมูลวันที่ให้ครบเพื่อดาวน์โหลด',
+          title: t('finance_invoice_error_date_required'),
           padding: '10px 20px',
         })
       }
@@ -96,7 +98,7 @@ const PaymentInvoice = () => {
         setIsDownloading(false)
         toast.fire({
           icon: 'warning',
-          title: 'กรุณาเลือกข้อมูลวันที่ให้ครบเพื่อดาวน์โหลด',
+          title: t('finance_invoice_error_date_required'),
           padding: '10px 20px',
         })
       }
@@ -109,7 +111,7 @@ const PaymentInvoice = () => {
             date: convertDateDbToClient(item?.date),
             amount: numberWithCommas(item?.amount),
             payed_at: convertDateTimeDbToClient(item?.payed_at),
-            status: item.status === 'complete' ? 'สำเร็จ' : item.status === 'pending' ? 'รอชำระ' : 'ยกเลิก',
+            status: item.status === 'complete' ? t('finance_invoice_status_success') : item.status === 'pending' ? t('finance_invoice_status_pending') : t('finance_invoice_status_cancel'),
           }
         }),
         {
@@ -164,7 +166,7 @@ const PaymentInvoice = () => {
     if (values.id_business_unit === null) {
       toast.fire({
         icon: 'warning',
-        title: 'กรุณาเลือกหน่วยธุรกิจเพื่อค้นหา',
+        title: t('finance_invoice_error_bu_required'),
         padding: '10px 20px',
       })
     } else {
@@ -216,7 +218,7 @@ const PaymentInvoice = () => {
         },
       })
     }
-    dispatch(setPageTitle('ใบแจ้งหนี้'))
+    dispatch(setPageTitle(t('finance_invoice_title')))
     dispatch(setSidebarActive(['finance', '/apps/finance/invoice']))
 
   }, [dispatch, mode, navigate])
@@ -227,7 +229,7 @@ const PaymentInvoice = () => {
 
       <div className="invoice-table">
         <div className="ml-7 my-5 text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center flex flex-row justify-between">
-          ใบแจ้งหนี้
+          {t('finance_invoice_title')}
         </div>
         <div className="mb-4.5 px-5 md:items-center md:flex-row flex-col gap-5">
           <Formik initialValues={filterParams}
@@ -244,9 +246,9 @@ const PaymentInvoice = () => {
                   <div className="flex-1 z-10">
                     <SelectField
                       id='id_business_unit'
-                      label='หน่วยธุรกิจ'
+                      label={t('finance_invoice_label_business_unit')}
                       name='id_business_unit'
-                      placeholder='เลือก หน่วยธุรกิจ'
+                      placeholder={t('finance_invoice_placeholder_business_unit')}
                       options={businessUnit}
                       disabled={mode !== 'admin'}
                     />
@@ -254,36 +256,36 @@ const PaymentInvoice = () => {
                   <div className='flex-1 z-10'>
                     <SelectField
                       id='status'
-                      label='สถานะการชำระเงิน'
+                      label={t('finance_invoice_label_payment_status')}
                       name='status'
                       options={statusPaymentType}
                     />
                   </div>
                   <div className="flex-1">
-                    <InputField label="ค้นหา" placeholder="ค้นหา" name="query" type="text" />
+                    <InputField label={t('finance_invoice_label_search')} placeholder={t('finance_invoice_label_search')} name="query" type="text" />
                   </div>
                 </div>
                 <div className='flex flex-col sm:flex-row md:flex-row gap-5'>
 
                   <DatePicker
-                    label="วันที่เริ่ม"
+                    label={t('finance_invoice_label_start_date')}
                     name="start_at"
                     onChange={(value: any) => {
                         setFieldValue('start_at', convertDateClientToDb(value))
                     }}
                   />
                   <DatePicker
-                    label="วันที่สิ้นสุด"
+                    label={t('finance_invoice_label_end_date')}
                     name="end_at"
                     onChange={(value: any) => {
                       setFieldValue('end_at', convertDateClientToDb(value))
                     }}
                   />
                   <button type="submit" className="btn btn-primary gap-2 mt-5">
-                    ค้นหา
+                    {t('finance_invoice_btn_search')}
                   </button>
                   <button type="reset" className="btn btn-info gap-2 mt-5" onClick={handleReset}>
-                    ล้างค่า
+                    {t('finance_invoice_btn_clear')}
                   </button>
                   <div className="flex flex-col pt-5">
                     <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => handleExport(`invoice_history_${new Date().toLocaleString()}`, values)}>
@@ -298,7 +300,7 @@ const PaymentInvoice = () => {
         </div>
         <div className="datatables pagination-padding">
           {invoiceLists.length === 0 ? (
-            <div className="text-center text-gray-500">ไม่พบข้อมูล</div>
+            <div className="text-center text-gray-500">{t('finance_invoice_empty')}</div>
           ) : (
             <DataTable
               className="whitespace-nowrap table-hover invoice-table"
@@ -306,7 +308,7 @@ const PaymentInvoice = () => {
               columns={[
                 {
                   accessor: 'index',
-                  title: 'ลำดับ',
+                  title: t('finance_invoice_col_index'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -315,7 +317,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'id',
-                  title: 'เลขที่',
+                  title: t('finance_invoice_col_number'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -324,7 +326,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'invoice_date',
-                  title: 'วันที่',
+                  title: t('finance_invoice_col_date'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -333,7 +335,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'invoice_type',
-                  title: 'ประเภทใบแจ้งหนี้',
+                  title: t('finance_invoice_col_type'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -342,7 +344,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'contract_reference',
-                  title: 'สัญญาเลขที่',
+                  title: t('finance_invoice_col_contract'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -351,7 +353,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'ins_no',
-                  title: 'งวดที่',
+                  title: t('finance_invoice_col_installment'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any) => (
@@ -360,7 +362,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'amount',
-                  title: 'จำนวนเงิน',
+                  title: t('finance_invoice_col_amount'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any) => (
@@ -369,7 +371,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'payment_method',
-                  title: 'ช่องทางชำระเงิน',
+                  title: t('finance_invoice_col_payment_method'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -378,7 +380,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'payed_at',
-                  title: 'วันที่ชำระเงิน',
+                  title: t('finance_invoice_col_payment_date'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
@@ -387,7 +389,7 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'payment_reference',
-                  title: 'เลขที่อ้างอิง',
+                  title: t('finance_invoice_col_reference'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any) => (
@@ -396,13 +398,13 @@ const PaymentInvoice = () => {
                 },
                 {
                   accessor: 'status',
-                  title: 'สถานะชำระเงิน',
+                  title: t('finance_invoice_col_status'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any, index: number) => (
                     <div className="flex text-center justify-center font-normal">
                       <div className={`badge ${item.payment_status === 'complete' ? 'badge-outline-success' : item.payment_status === 'pending' ? 'badge-outline-warning' : 'badge-outline-danger'}`}>
-                        {item.payment_status === 'complete' ? 'สำเร็จ' : item.payment_status === 'pending' ? 'รอชำระ' : 'ไม่สำเร็จ'}
+                        {item.payment_status === 'complete' ? t('finance_invoice_status_success') : item.payment_status === 'pending' ? t('finance_invoice_status_pending') : t('finance_invoice_status_failed')}
                       </div>
                     </div>
                   ),
@@ -419,7 +421,7 @@ const PaymentInvoice = () => {
                 setPageSize(p)
               }}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                t('finance_invoice_pagination', { from, to, totalRecords })
               )}
             />
           )}

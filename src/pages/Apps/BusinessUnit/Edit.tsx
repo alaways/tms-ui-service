@@ -109,7 +109,7 @@ const Edit = () => {
       if (setFormValue?.signature) {
         setSignature([{ dataURL: setFormValue.signature }])
       }
-      
+
       if (setFormValue.tax_id?.length == 13) {
         var format_card = setFormValue.tax_id.replace(/(\d{1})(\d{4})(\d{5})(\d{3})/, "$1-$2-$3-$4")
         setFormValue.tax_id = format_card
@@ -176,10 +176,10 @@ const Edit = () => {
 
   const { mutateAsync: uploadFile } = useUploadMutation({
     onSuccess: (res: any) => {
-   
+
     },
     onError: (err: any) => {
-     
+
     },
   })
 
@@ -250,7 +250,7 @@ const Edit = () => {
           uploadPromises.push(Promise.resolve({}))
         }
 
-       
+
         if (signature[0]?.file) {
           uploadPromises.push(uploadFile({ data: { file: signature[0].file, type: 'business_unit' } }))
         } else {
@@ -311,15 +311,15 @@ const Edit = () => {
                   <Form className="space-y-5 dark:text-white custom-select">
                     <>
                       <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                        หน่วยธุรกิจ
+                        {t('business_unit')}
                       </div>
                       <div className='input-flex-row'>
                         <InputField
                           require={true}
-                          label="เลขประจำตัวผู้เสียภาษี"
+                          label={t('business_unit_tax_id')}
                           name="tax_id"
                           type="text"
-                          placeholder="กรุณาใส่ข้อมูล"
+                          placeholder={t('please_enter_info')}
                           onKeyPress={(e: any) => {
                             if (!/[0-9]/.test(e.key)) {
                               e.preventDefault()
@@ -345,14 +345,14 @@ const Edit = () => {
                           label={t('business_name')}
                           name="name"
                           type="text"
-                          placeholder="กรุณาใส่ข้อมูล"
+                          placeholder={t('please_enter_info')}
                         />
                         <InputField
                           require={true}
                           label={t('phone_number')}
                           name="phone"
                           type="text"
-                          placeholder="กรุณาใส่ข้อมูล"
+                          placeholder={t('please_enter_info')}
                           maxLength={10}
                           onKeyPress={(e: any) => {
                             if (!/[0-9]/.test(e.key)) {
@@ -381,13 +381,13 @@ const Edit = () => {
                           label={t('email')}
                           name="email"
                           type="text"
-                          placeholder="กรุณาใส่ข้อมูล"
+                          placeholder={t('please_enter_info')}
                         />
                         <InputField
                           label={t('contract_email')}
                           name="contract_email"
                           type="text"
-                          placeholder="กรุณาใส่ข้อมูล"
+                          placeholder={t('please_enter_info')}
                         />
                       </div>
                       <div className="input-flex-row">
@@ -395,7 +395,7 @@ const Edit = () => {
                           label={t('website')}
                           name="website"
                           type="text"
-                          placeholder="กรุณาใส่ข้อมูล"
+                          placeholder={t('please_enter_info')}
                         />
                         <InputField
                           require={true}
@@ -412,7 +412,7 @@ const Edit = () => {
                           id="id_province"
                           name="id_province"
                           options={dataStoredProvinces}
-                          placeholder="กรุณาเลือก"
+                          placeholder={t('please_select')}
                           onChange={(e) => handleChangeSelect(props, e, 'id_province')}
                           isSearchable={true}
                         />
@@ -422,7 +422,7 @@ const Edit = () => {
                           id="id_district"
                           name="id_district"
                           options={districtIdList}
-                          placeholder="กรุณาเลือก"
+                          placeholder={t('please_select')}
                           onChange={(e) => handleChangeSelect(props, e, 'id_district')}
                           isSearchable={true}
                         />
@@ -435,7 +435,7 @@ const Edit = () => {
                           id="id_subdistrict"
                           name="id_subdistrict"
                           options={subDistrictIdList}
-                          placeholder="กรุณาเลือก"
+                          placeholder={t('please_select')}
                           onChange={(e) => handleChangeSelect(props, e, 'id_subdistrict')}
                           isSearchable={true}
                         />
@@ -458,7 +458,7 @@ const Edit = () => {
                           label={t('has_vat')}
                           id="has_vat"
                           name="has_vat"
-                          placeholder="กรุณาเลือก"
+                          placeholder={t('please_select')}
                           options={vatTypes}
                           onChange={(e) => {
                             handleChangeSelect(props, e, 'has_vat')
@@ -490,7 +490,7 @@ const Edit = () => {
                               {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                                 <div className="upload__image-wrapper">
                                   <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                                    เลือกไฟล์...
+                                    {t('select_file')}
                                   </button>
                                   &nbsp;
                                   {imageList.map((image, index) => (
@@ -527,7 +527,7 @@ const Edit = () => {
                                 <div className="upload__image-wrapper">
                                   {
                                     <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                                      เลือกไฟล์...
+                                      {t('select_file')}
                                     </button>
                                   }
                                   &nbsp;
@@ -547,7 +547,7 @@ const Edit = () => {
                         <div className="input-container">
                           <div className="custom-file-container" data-upload-id="myFirstImage">
                             <div className="label-container">
-                              ลายเซ็นต์
+                              {t('business_unit_signature')}
                               <button
                                 type="button"
                                 className="custom-file-container__image-clear"
@@ -567,7 +567,7 @@ const Edit = () => {
                               {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                                 <div className="upload__image-wrapper">
                                   <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                                    เลือกไฟล์...
+                                    {t('select_file')}
                                   </button>
                                   &nbsp;
                                   {imageList.map((image, index) => (

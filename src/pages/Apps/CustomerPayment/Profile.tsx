@@ -359,19 +359,19 @@ const Profile = () => {
             </div>
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="name">ชื่อ</label>
+                <label htmlFor="name">Name</label>
                 <input id="name" type="text" className="form-input disabled:pointer-events-none disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b] cursor-not-allowed" disabled value={storedUser?.name} />
               </div>
               <div />
               <div>
-                <label htmlFor="email">อีเมล</label>
+                <label htmlFor="email">Email</label>
                 <input id="email" type="email" className="form-input disabled:pointer-events-none disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b] cursor-not-allowed" disabled value={storedUser?.email} />
               </div>
               <div />
               <div className="sm:col-span-2 mt-3">
                 <a onClick={() => onLogout({})} className="btn btn-danger w-36">
                   <IconLogout className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 rotate-90 shrink-0" />
-                  ล็อคเอ้าท์
+                  Logout
                 </a>
               </div>
             </div>

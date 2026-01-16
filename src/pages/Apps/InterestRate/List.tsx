@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useCallback, Fragment, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import * as Yup from 'yup'
 
@@ -53,11 +54,12 @@ const mode = process.env.MODE || 'admin'
 
 const List = () => {
 
+  const { t } = useTranslation();
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการผลตอบแทน'))
+    dispatch(setPageTitle(t('interest_rate_list')))
     dispatch(setSidebarActive(['bu', '/apps/shop-group/list']))
   }, [dispatch])
 
@@ -82,7 +84,7 @@ const List = () => {
 
   const SubmittedForm = Yup.object().shape({
     id_business_unit: Yup.string(),
-    id_shop_group: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
+    id_shop_group: Yup.string().nullable().required(t('please_fill_all_required_fields')),
   })
 
   const { mutate: fetchShopGroupData } = useGlobalMutation(url_api.shopGroupFindAll, {
@@ -137,7 +139,7 @@ const List = () => {
   const { mutate: interestRateCreate } = useGlobalMutation(url_api.interestRateCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('เพิ่มข้อมูลสำเร็จ', 'success')
+        showNotification(t('data_added_successfully'), 'success')
         setActionModal(false)
         fetchInterestRateData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -152,7 +154,7 @@ const List = () => {
   const { mutate: interestRateUpdate } = useGlobalMutation(url_api.interestRateUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('data_updated_successfully'), 'success')
         setActionModal(false)
         fetchInterestRateData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -195,11 +197,11 @@ const List = () => {
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
         <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
           <h2 className="text-xl">
-            ผลตอบแทน
+            {t('interest_rate_returns')}
           </h2>
           <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
             <div className="relative">
-              <input type="text" placeholder="ค้นหา" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input type="text" placeholder={t('search')} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
               <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
                 <IconSearch className="mx-auto" />
               </button>
@@ -214,7 +216,7 @@ const List = () => {
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('order'),
                   sortable: false,
                   render: (row, index) => (
                     <div>{index + 1}</div>
@@ -222,7 +224,7 @@ const List = () => {
                 },
                 {
                   accessor: 'shop_group.name',
-                  title: 'กลุ่มร้าน',
+                  title: t('shop_group'),
                   sortable: false,
                   render: ({ shop_group }) => (
                     <div className="flex items-center font-normal">
@@ -232,7 +234,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_1',
-                  title: '1 เดือน',
+                  title: t('interest_rate_1_month'),
                   sortable: false,
                   render: ({ inr_1 }) => (
                     <div className="flex items-center font-normal">
@@ -242,7 +244,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_2',
-                  title: '2 เดือน',
+                  title: t('interest_rate_2_month'),
                   sortable: false,
                   render: ({ inr_2 }) => (
                     <div className="flex items-center font-normal">
@@ -252,7 +254,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_3',
-                  title: '3 เดือน',
+                  title: t('interest_rate_3_month'),
                   sortable: false,
                   render: ({ inr_3 }) => (
                     <div className="flex items-center font-normal">
@@ -262,7 +264,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_4',
-                  title: '4 เดือน',
+                  title: t('interest_rate_4_month'),
                   sortable: false,
                   render: ({ inr_4 }) => (
                     <div className="flex items-center font-normal">
@@ -272,7 +274,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_5',
-                  title: '5 เดือน',
+                  title: t('interest_rate_5_month'),
                   sortable: false,
                   render: ({ inr_5 }) => (
                     <div className="flex items-center font-normal">
@@ -282,7 +284,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_6',
-                  title: '6 เดือน',
+                  title: t('interest_rate_6_month'),
                   sortable: false,
                   render: ({ inr_6 }) => (
                     <div className="flex items-center font-normal">
@@ -292,7 +294,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_7',
-                  title: '7 เดือน',
+                  title: t('interest_rate_7_month'),
                   sortable: false,
                   render: ({ inr_7 }) => (
                     <div className="flex items-center font-normal">
@@ -302,7 +304,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_8',
-                  title: '8 เดือน',
+                  title: t('interest_rate_8_month'),
                   sortable: false,
                   render: ({ inr_8 }) => (
                     <div className="flex items-center font-normal">
@@ -312,7 +314,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_9',
-                  title: '9 เดือน',
+                  title: t('interest_rate_9_month'),
                   sortable: false,
                   render: ({ inr_9 }) => (
                     <div className="flex items-center font-normal">
@@ -322,7 +324,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_10',
-                  title: '10 เดือน',
+                  title: t('interest_rate_10_month'),
                   sortable: false,
                   render: ({ inr_10 }) => (
                     <div className="flex items-center font-normal">
@@ -332,7 +334,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_11',
-                  title: '11 เดือน',
+                  title: t('interest_rate_11_month'),
                   sortable: false,
                   render: ({ inr_11 }) => (
                     <div className="flex items-center font-normal">
@@ -342,7 +344,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_12',
-                  title: '12 เดือน',
+                  title: t('interest_rate_12_month'),
                   sortable: false,
                   render: ({ inr_12 }) => (
                     <div className="flex items-center font-normal">
@@ -357,7 +359,7 @@ const List = () => {
                   textAlignment: 'center',
                   render: (item) => (
                     <div className="flex gap-4 items-center w-max mx-auto">
-                      <Tippy content="แก้ไข" theme="Primary">
+                      <Tippy content={t('interest_rate_edit')} theme="Primary">
                         <a className="flex hover:text-info cursor-pointer active" onClick={() => addEditInterestRate(item)}>
                           <IconEdit className="w-4.5 h-4.5" />
                         </a>
@@ -377,7 +379,7 @@ const List = () => {
                 setPageSize(p)
               }}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('pagination_showing')} ${from} ${t('pagination_to')} ${to} ${t('pagination_of')} ${totalRecords} ${t('pagination_total_pages')}`
               )}
             />
           )}
@@ -388,7 +390,7 @@ const List = () => {
               columns={[
                 {
                   accessor: 'id',
-                  title: 'ลำดับ',
+                  title: t('order'),
                   sortable: false,
                   render: (row, index) => (
                     <div>{index + 1}</div>
@@ -396,7 +398,7 @@ const List = () => {
                 },
                 {
                   accessor: 'shop_group.name',
-                  title: 'กลุ่มร้าน',
+                  title: t('shop_group'),
                   sortable: false,
                   render: ({ shop_group }) => (
                     <div className="flex items-center font-normal">
@@ -406,7 +408,7 @@ const List = () => {
                 },
                 {
                   accessor: 'shop_group.business_unit.name',
-                  title: 'หน่วยธุรกิจ',
+                  title: t('business_unit'),
                   sortable: false,
                   render: ({ shop_group }) => (
                     <div className="flex items-center font-normal">
@@ -416,7 +418,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_1',
-                  title: '1 เดือน',
+                  title: t('interest_rate_1_month'),
                   sortable: false,
                   render: ({ inr_1 }) => (
                     <div className="flex items-center font-normal">
@@ -426,7 +428,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_2',
-                  title: '2 เดือน',
+                  title: t('interest_rate_2_month'),
                   sortable: false,
                   render: ({ inr_2 }) => (
                     <div className="flex items-center font-normal">
@@ -436,7 +438,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_3',
-                  title: '3 เดือน',
+                  title: t('interest_rate_3_month'),
                   sortable: false,
                   render: ({ inr_3 }) => (
                     <div className="flex items-center font-normal">
@@ -446,7 +448,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_4',
-                  title: '4 เดือน',
+                  title: t('interest_rate_4_month'),
                   sortable: false,
                   render: ({ inr_4 }) => (
                     <div className="flex items-center font-normal">
@@ -456,7 +458,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_5',
-                  title: '5 เดือน',
+                  title: t('interest_rate_5_month'),
                   sortable: false,
                   render: ({ inr_5 }) => (
                     <div className="flex items-center font-normal">
@@ -466,7 +468,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_6',
-                  title: '6 เดือน',
+                  title: t('interest_rate_6_month'),
                   sortable: false,
                   render: ({ inr_6 }) => (
                     <div className="flex items-center font-normal">
@@ -476,7 +478,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_7',
-                  title: '7 เดือน',
+                  title: t('interest_rate_7_month'),
                   sortable: false,
                   render: ({ inr_7 }) => (
                     <div className="flex items-center font-normal">
@@ -486,7 +488,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_8',
-                  title: '8 เดือน',
+                  title: t('interest_rate_8_month'),
                   sortable: false,
                   render: ({ inr_8 }) => (
                     <div className="flex items-center font-normal">
@@ -496,7 +498,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_9',
-                  title: '9 เดือน',
+                  title: t('interest_rate_9_month'),
                   sortable: false,
                   render: ({ inr_9 }) => (
                     <div className="flex items-center font-normal">
@@ -506,7 +508,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_10',
-                  title: '10 เดือน',
+                  title: t('interest_rate_10_month'),
                   sortable: false,
                   render: ({ inr_10 }) => (
                     <div className="flex items-center font-normal">
@@ -516,7 +518,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_11',
-                  title: '11 เดือน',
+                  title: t('interest_rate_11_month'),
                   sortable: false,
                   render: ({ inr_11 }) => (
                     <div className="flex items-center font-normal">
@@ -526,7 +528,7 @@ const List = () => {
                 },
                 {
                   accessor: 'inr_12',
-                  title: '12 เดือน',
+                  title: t('interest_rate_12_month'),
                   sortable: false,
                   render: ({ inr_12 }) => (
                     <div className="flex items-center font-normal">
@@ -541,7 +543,7 @@ const List = () => {
                   textAlignment: 'center',
                   render: (item) => (
                     <div className="flex gap-4 items-center w-max mx-auto">
-                      <Tippy content="แก้ไข" theme="Primary">
+                      <Tippy content={t('interest_rate_edit')} theme="Primary">
                         <a className="flex hover:text-info cursor-pointer active" onClick={() => addEditInterestRate(item)}>
                           <IconEdit className="w-4.5 h-4.5" />
                         </a>
@@ -561,7 +563,7 @@ const List = () => {
                 setPageSize(p)
               }}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('pagination_showing')} ${from} ${t('pagination_to')} ${to} ${t('pagination_of')} ${totalRecords} ${t('pagination_total_pages')}`
               )}
             />
           )}
@@ -579,14 +581,14 @@ const List = () => {
                       <IconX />
                     </button>
                     <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                      {formData.id ? 'แก้ไข' : 'เพิ่ม'}
+                      {formData.id ? t('interest_rate_edit') : t('interest_rate_add')}
                     </div>
                     <div className="p-5">
                       <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedForm}>
                         {(props) => (
                           <Form className="space-y-5 mb-7 dark:text-white custom-select">
                             <SelectField
-                              label="หน่่วยธุรกิจ"
+                              label={t('interest_rate_business_unit')}
                               id="id_business_unit"
                               name="id_business_unit"
                               options={[
@@ -595,60 +597,60 @@ const List = () => {
                                   value: props.values.business_unit.id,
                                 }
                               ]}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               isSearchable={true}
                               disabled={true}
                             />
                             <SelectField
-                              label="กลุ่มร้าน"
+                              label={t('shop_group')}
                               id="id_shop_group"
                               name="id_shop_group"
                               options={shopGroup}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => handleChangeSelect(props, e, 'id_shop_group')}
                               onInputChange={(event: any) => handleSearch(props, event)}
                               isSearchable={true}
                             />
                             <div className="input-flex-row">
-                              <InputField label="1 เดือน" name="inr_1" type="number" />
-                              <InputField label="2 เดือน" name="inr_2" type="number" />
+                              <InputField label={t('interest_rate_1_month')} name="inr_1" type="number" />
+                              <InputField label={t('interest_rate_2_month')} name="inr_2" type="number" />
                             </div>
                             <div className="input-flex-row">
-                              <InputField label="3 เดือน" name="inr_3" type="number" />
-                              <InputField label="4 เดือน" name="inr_4" type="number" />
+                              <InputField label={t('interest_rate_3_month')} name="inr_3" type="number" />
+                              <InputField label={t('interest_rate_4_month')} name="inr_4" type="number" />
                             </div>
                             <div className="input-flex-row">
-                              <InputField label="5 เดือน" name="inr_5" type="number" />
-                              <InputField label="6 เดือน" name="inr_6" type="number" />
+                              <InputField label={t('interest_rate_5_month')} name="inr_5" type="number" />
+                              <InputField label={t('interest_rate_6_month')} name="inr_6" type="number" />
                             </div>
                             <div className="input-flex-row">
-                              <InputField label="7 เดือน" name="inr_7" type="number" />
-                              <InputField label="8 เดือน" name="inr_8" type="number" />
+                              <InputField label={t('interest_rate_7_month')} name="inr_7" type="number" />
+                              <InputField label={t('interest_rate_8_month')} name="inr_8" type="number" />
                             </div>
                             <div className="input-flex-row">
-                              <InputField label="9 เดือน" name="inr_9" type="number" />
-                              <InputField label="10 เดือน" name="inr_10" type="number" />
+                              <InputField label={t('interest_rate_9_month')} name="inr_9" type="number" />
+                              <InputField label={t('interest_rate_10_month')} name="inr_10" type="number" />
                             </div>
                             <div className="input-flex-row">
-                              <InputField label="11 เดือน" name="inr_11" type="number" />
-                              <InputField label="12 เดือน" name="inr_12" type="number" />
+                              <InputField label={t('interest_rate_11_month')} name="inr_11" type="number" />
+                              <InputField label={t('interest_rate_12_month')} name="inr_12" type="number" />
                             </div>
                             <SelectField
                               require={true}
-                              label="สถานะ"
+                              label={t('interest_rate_status')}
                               id="is_active"
                               name="is_active"
                               options={[
                                 {
                                   value: true,
-                                  label: 'เปิด',
+                                  label: t('interest_rate_status_open'),
                                 },
                                 {
                                   value: false,
-                                  label: 'ปิด',
+                                  label: t('interest_rate_status_closed'),
                                 },
                               ]}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => {
                                 props.setFieldValue('is_active', e.value)
                               }}
@@ -656,10 +658,10 @@ const List = () => {
                             />
                             <div className="flex justify-end items-center mt-8">
                               <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                                ยกเลิก
+                                {t('interest_rate_cancel')}
                               </button>
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {formData.id ? 'บันทึก' : 'เพิ่ม'}
+                                {formData.id ? t('interest_rate_save') : t('interest_rate_add')}
                               </button>
                             </div>
                           </Form>
