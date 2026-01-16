@@ -48,7 +48,7 @@
         "@types/react-text-mask": "^5.4.11",
         "@x1mrdonut1x/nouislider-react": "^3.4.3",
         "antd": "^5.24.6",
-        "apexcharts": "^3.37.1",
+        "apexcharts": "^4.0.0",
         "axios": "^1.7.2",
         "browser-image-compression": "^2.0.2",
         "date-fns": "^4.1.0",
