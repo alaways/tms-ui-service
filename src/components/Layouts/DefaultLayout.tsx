@@ -80,7 +80,11 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     const localProvinces = localStorage.getItem('provinces')
     if (localProvinces) {
       const provinces = JSON.parse(localProvinces)
-      dispatch(setProvinces(provinces))
+      if (provinces && provinces.length > 0) {
+        dispatch(setProvinces(provinces))
+      } else {
+        fetchProvincesData({})
+      }
     } else {
       fetchProvincesData({})
     }
