@@ -59,18 +59,18 @@ const DashboardCEOPV = () => {
     s20ContractCount: 0,
     s21ContractCount: 0,
     s22ContractCount: 0,
-    total_amount_shop: 0,  //ต้องโอน   จ่ายคืนให้ร้านค้า
-    total_payment_com: 0, //จ่ายจริง (45%+คอม)
-    total_transfer_down: 0,  //โอนดาวน์
-    total_payment_notcom: 0,  // ยอดจ่าย(ไม่รวมคอม)
-    total_commission: 0, // ค่าคอม
-    total_contract_fee: 0, //ค่่าทำสัญญา
-    total_asset: 0, // จำนวนเครื่อง
-    total_down_payment: 0, //ยอดดาวน์
-    collect_money: 0,  //ยอดเก็บ
-    profit_withcom: 0, //กำไร(ยังไม่หักคอม)
-    profit_real: 0,  //กำไรจริง
-    total_cost_product: 0, // ต้้นทุนสินค้า // ต้องโอน+ยอดดาวน์
+    total_amount_shop: 0,  // 需转付（返还给店铺）
+    total_payment_com: 0, // 实际付款（45%+佣金）
+    total_transfer_down: 0,  // 转付首付
+    total_payment_notcom: 0,  // 付款总额（不含佣金）
+    total_commission: 0, // 佣金
+    total_contract_fee: 0, // 合同手续费
+    total_asset: 0, // 设备数量
+    total_down_payment: 0, // 首付金额
+    collect_money: 0,  // 已收款
+    profit_withcom: 0, // 利润（未扣佣金）
+    profit_real: 0,  // 实际利润
+    total_cost_product: 0, // 商品成本（需转付+首付）
   }
   )
 
@@ -258,7 +258,7 @@ const DashboardCEOPV = () => {
               <div className="flex flex-wrap">
               </div>
             </div>
-            
+
             {themeInit.paymentGateway.tqr && (
                <div className="flex flex-wrap flex-col pt-5 "style={{ width: 'calc(25% - 10px)' }}>
                 <div className="flex flex-wrap w-full">
@@ -287,7 +287,7 @@ const DashboardCEOPV = () => {
                 </div>
               </div>
             )}
-           
+
 
             <div className="flex flex-wrap flex-col pt-5 pl-5" style={{width:'50%'}}>
               <div className="flex flex-wrap w-full text-[#113144]">
@@ -322,47 +322,47 @@ const DashboardCEOPV = () => {
             <div className="col-span-1 md:col-span-1">
               <div className="border border-gray-300 rounded-lg shadow-lg">
                 <div className="bg-gradient-to-r from-[#03263a] to-[#0069a1] text-white p-4 rounded-t-lg">
-                  <h2 className="text-lg font-bold text-center">สัญญา</h2>
+                  <h2 className="text-lg font-bold text-center">{t('dashboard_ceo_pv_contracts_title')}</h2>
                 </div>
                 <div className="p-4">
                   <div className="space-y-6">
                     <div className="flex justify-between">
-                      <span className="font-bold">รายการ</span>
-                      <span className="font-bold">จำนวนสัญญา</span>
+                      <span className="font-bold">{t('item')}</span>
+                      <span className="font-bold">{t('dashboard_ceo_pv_contract_count_label')}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาที่อนุมัติแล้วทั้งหมด</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_approved_total')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.appContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาที่ยกเลิก</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_cancelled')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.canContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาที่เสร็จสิ้น (11-13)</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_completed_11_13')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.comContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาสถานะปกติ (10)</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_10')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s10ContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาสถานะเกินชำระ (20)</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_20')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s20ContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาสถานะเกินชำระ (21)</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_21')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s21ContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>สัญญาสถานะเกินชำระ (22)</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_22')}</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s22ContractCount)}</span>
                     </div>
                   </div>
@@ -373,19 +373,19 @@ const DashboardCEOPV = () => {
             <div className="col-span-1 md:col-span-1 grid grid-rows-2 gap-2">
               <div className="border border-gray-300 rounded-lg shadow-lg">
                 <div className="bg-gradient-to-r from-[#f69e13] to-[#e75701] text-white p-4 rounded-t-lg">
-                  <h2 className="text-lg font-bold text-center">จำนวนเงินในสัญญา</h2>
+                  <h2 className="text-lg font-bold text-center">{t('dashboard_ceo_pv_contract_amount_title')}</h2>
                 </div>
                 <div className="p-4">
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="font-bold">รายการ</span>
+                      <span className="font-bold">{t('item')}</span>
                       <span className="font-bold">฿</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
                                           <span className='text-[#ababab] flex items-center'>
-                            จำนวนเงินในสัญญา
-                                              <Tippy content="จำนวนเงินเช่าซื้อที่ไม่รวมเงินดาวน์" placement="right">
+                            {t('dashboard_ceo_pv_contract_amount_label')}
+                                              <Tippy content={t('dashboard_ceo_pv_contract_amount_tooltip')} placement="right">
                                                   <img
                                                       src="/assets/images/information.png"
                                                       alt="Info"
@@ -401,8 +401,9 @@ const DashboardCEOPV = () => {
 
                     <hr />
                     <div className="flex justify-between">
-                                          <span className='text-[#ababab] flex items-center'>รับชำระแล้ว
-                                              <Tippy content="เงินที่ลูกค้าชำระแล้วในงวด" placement="right">
+                                <span className='text-[#ababab] flex items-center'>
+                                  {t('dashboard_ceo_pv_paid_label')}
+                                  <Tippy content={t('dashboard_ceo_pv_paid_tooltip')} placement="right">
                                                   <img
                                                       src="/assets/images/information.png"
                                                       alt="Info"
@@ -416,8 +417,9 @@ const DashboardCEOPV = () => {
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                                          <span className='text-[#ababab] flex items-center'>รอรับชำระ
-                                              <Tippy content="จำนวนเงินในสัญญา - รับชำระแล้ว" placement="right">
+                                <span className='text-[#ababab] flex items-center'>
+                                  {t('dashboard_ceo_pv_receivable_label')}
+                                  <Tippy content={t('dashboard_ceo_pv_receivable_tooltip')} placement="right">
                                                   <img
                                                       src="/assets/images/information.png"
                                                       alt="Info"
@@ -436,18 +438,19 @@ const DashboardCEOPV = () => {
 
               <div className="border border-gray-300 rounded-lg shadow-lg">
                 <div className="bg-gradient-to-r from-[#a202fe] to-[#6578ff] text-white p-4 rounded-t-lg">
-                  <h2 className="text-lg font-bold text-center">หนี้เกินกำหนดชำระ</h2>
+                  <h2 className="text-lg font-bold text-center">{t('dashboard_ceo_pv_overdue_title')}</h2>
                 </div>
                 <div className="p-4">
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="font-bold">รายการ</span>
+                      <span className="font-bold">{t('item')}</span>
                       <span className="font-bold">฿</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                                          <span className='text-[#ababab] flex items-center'>หนี้เกินกำหนดชำระ (20)
-                                              <Tippy content="จำนวนเงินค้างชำระที่ลูกค้ามีหนี้เกินกำหนด 3 - 10วัน" placement="right">
+                                          <span className='text-[#ababab] flex items-center'>
+                                              {t('dashboard_ceo_pv_overdue_20_label')}
+                                              <Tippy content={t('dashboard_ceo_pv_overdue_20_tooltip')} placement="right">
                                                   <img
                                                       src="/assets/images/information.png"
                                                       alt="Info"
@@ -462,8 +465,9 @@ const DashboardCEOPV = () => {
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                                          <span className='text-[#ababab] flex items-center'>หนี้เกินกำหนดชำระ (21)
-                                              <Tippy content="จำนวนเงินค้างชำระที่ลูกค้ามีหนี้เกินกำหนด 10 - 15วัน" placement="right">
+                                <span className='text-[#ababab] flex items-center'>
+                                  {t('dashboard_ceo_pv_overdue_21_label')}
+                                  <Tippy content={t('dashboard_ceo_pv_overdue_21_tooltip')} placement="right">
                                                   <img
                                                       src="/assets/images/information.png"
                                                       alt="Info"
@@ -478,8 +482,9 @@ const DashboardCEOPV = () => {
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                                          <span className='text-[#ababab] flex items-center'>หนี้เกินกำหนดชำระ (22)
-                                              <Tippy content="จำนวนเงินค้างชำระที่ลูกค้ามีหนี้เกินกำหนด 15วันขึ้นไป" placement="right">
+                                <span className='text-[#ababab] flex items-center'>
+                                  {t('dashboard_ceo_pv_overdue_22_label')}
+                                  <Tippy content={t('dashboard_ceo_pv_overdue_22_tooltip')} placement="right">
                                                   <img
                                                       src="/assets/images/information.png"
                                                       alt="Info"
@@ -495,7 +500,7 @@ const DashboardCEOPV = () => {
                     <hr />
 
                     <div className="flex justify-between">
-                      <span className="font-bold text-[#113144]">หนี้ครบกำหนด ณ วันที่เลือก</span>
+                      <span className="font-bold text-[#113144]">{t('dashboard_ceo_pv_due_today_label')}</span>
                       <span className="font-bold text-yellow-500">{numberWithCommas(dashboardCEOData?.rTodayContact)}</span>
                     </div>
                   </div>
@@ -506,44 +511,44 @@ const DashboardCEOPV = () => {
             <div className="col-span-1">
               <div className="border border-gray-300 rounded-lg shadow-lg">
                 <div className="bg-gradient-to-r from-red-800 to-red-500 text-white p-4 rounded-t-lg flex flex-col gap-2">
-                  <h2 className="text-lg font-bold text-center">คงเหลือจ่ายให้ร้านค้า</h2>
+                  <h2 className="text-lg font-bold text-center">{t('dashboard_ceo_pv_shop_payable_title')}</h2>
                   <h2 className="font-bold text-white text-3xl text-center">{numberWithCommas(dashboardCEOData?.total_amount_shop)}</h2>
                 </div>
                 <div className="p-4">
                   <div className="space-y-3">
                     <div className="flex justify-between gap-4">
                       <div className="flex w-full flex-col gap-1">
-                        <span className='text-[#ababab]'>จำนวนสัญญา</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_count_label')}</span>
                         <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.total_asset)}</span>
                       </div>
                       <div className="flex flex-col gap-1 w-full">
-                        <span className='text-[#ababab]'>รวมยอดขาย (ทุนสินค้า)</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_total_sales_cost_label')}</span>
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_cost_product)}</span>
                       </div>
                     </div>
                     <hr />
                     <div className="flex justify-between gap-4">
                       {/* <div className="flex flex-col gap-1 w-full">
-                        <span className='text-[#ababab]'>โอนดาวน์</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_transfer_down_label')}</span>
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_transfer_down)}</span>
                       </div> */}
                       <div className="flex flex-col gap-1 w-full">
-                        <span className='text-[#ababab]'>รวมเงินดาวน์</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_total_down_payment_label')}</span>
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_down_payment)}</span>
                       </div>
                       <div className="flex flex-col gap-1 w-full">
-                        <span className='text-[#ababab]'>รวมทุนเช่าซื้อ</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_total_hire_purchase_label')}</span>
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_payment_notcom)}</span>
                       </div>
                     </div>
                     <hr />
                     <div className="flex justify-between gap-4">
                       <div className="flex flex-col gap-1 w-full">
-                        <span className='text-[#ababab]'>รวมค่านายหน้า</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_total_commission_label')}</span>
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_commission)}</span>
                       </div>
                       <div className="flex w-full flex-col gap-1">
-                        <span className='text-[#ababab]'>หัก รวมค่าทำสัญญา</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_total_contract_fee_label')}</span>
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_contract_fee)}</span>
                       </div>
                     </div>
@@ -558,9 +563,9 @@ const DashboardCEOPV = () => {
                 <div className="bg-gradient-to-r from-green-800 to-green-500 text-white p-4 rounded-t-lg flex flex-col gap-2">
                                   <div className="flex items-center justify-center">
                                       <h2 className="text-lg font-bold text-center mr-2">
-                                          เงินทุนรอจัดเก็บสุทธิ (Net Funds to be Collected)
+                            {t('dashboard_ceo_pv_net_funds_title')}
                                       </h2>
-                                      <Tippy content="วงเงินเช่าซื้อ - ค่านายหน้า + ค่าทำสัญญา" placement="right">
+                          <Tippy content={t('dashboard_ceo_pv_net_funds_tooltip')} placement="right">
                                           <img
                                               src="/assets/images/information-white.png"
                                               alt="Info"
@@ -574,8 +579,8 @@ const DashboardCEOPV = () => {
                   <div className="space-y-3">
                   <div className="flex flex-col gap-1 w-full">
                     <span className="flex items-center text-[#ababab]">
-                        วงเงินให้เช่าซื้อ
-                        <Tippy content="ไม่รวมเงินดาวน์" placement="right">
+                        {t('dashboard_ceo_pv_hire_purchase_limit_label')}
+                        <Tippy content={t('dashboard_ceo_pv_hire_purchase_limit_tooltip')} placement="right">
                         <img
                             src="/assets/images/information.png"
                             alt="Info"
@@ -589,17 +594,17 @@ const DashboardCEOPV = () => {
                     </div>
 
                     <hr />
-                    <h5 className='font-semibold text-green-500'>รายได้</h5>
+                    <h5 className='font-semibold text-green-500'>{t('dashboard_ceo_pv_revenue_label')}</h5>
                     <div className='flex justify-between gap-4'>
                       <div className="flex flex-col gap-1 w-full">
-                        <span className='text-[#ababab]'>ค่าดำเนินการเช่าซื้อ</span>
+                        <span className='text-[#ababab]'>{t('dashboard_ceo_pv_hire_purchase_fee_label')}</span>
 
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.profit_withcom)}</span>
                       </div>
                       <div className="flex flex-col gap-1 w-full">
                         <span className="flex items-center text-[#ababab]">
-                                                  ค่าทำสัญญา
-                        <Tippy content="ค่าบริการทำสัญญา" placement="right">
+                                                  {t('dashboard_ceo_pv_contract_fee_label')}
+                        <Tippy content={t('dashboard_ceo_pv_contract_fee_tooltip')} placement="right">
                         <img
                             src="/assets/images/information.png"
                             alt="Info"
@@ -611,12 +616,12 @@ const DashboardCEOPV = () => {
                       </div>
                     </div>
                     <hr />
-                    <h5 className='font-semibold text-red-500'>รายจ่าย</h5>
+                    <h5 className='font-semibold text-red-500'>{t('dashboard_ceo_pv_expense_label')}</h5>
                     <div>
                       <div className="flex flex-col gap-1 w-full">
                                               <span className="flex items-center text-[#ababab]">
-                                                  ค่านายหน้า
-                                                  <Tippy content="ค่านายหน้า Commission จากร้านค้า/พาร์ทเนอร์" placement="right">
+                                                  {t('dashboard_ceo_pv_commission_fee_label')}
+                                                  <Tippy content={t('dashboard_ceo_pv_commission_fee_tooltip')} placement="right">
                                                       <img
                                                           src="/assets/images/information.png"
                                                           alt="Info"
@@ -627,10 +632,6 @@ const DashboardCEOPV = () => {
                         <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.total_commission)}</span>
                       </div>
                     </div>
-                    {/* <div className="flex justify-between">
-                      <span className='text-green-700 font-semibold'>กำไรจริง</span>
-                      <span className="font-bold text-[#113144]">{numberWithCommas(dashboardCEOData?.recievableContract)}</span>
-                    </div> */}
                   </div>
                 </div>
               </div>

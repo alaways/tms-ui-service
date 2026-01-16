@@ -22,21 +22,21 @@ const DashboardIncome = () => {
     const toast = Swal.mixin(toastAlert)
     interface reportTab1 {
         month: number
-        total_price_total: number //ยอดสินชื่อ
-        total_down_payment: number // ยอดดาวน์
-        total_pay_amount: number //ยอดค่างวดที่จ่ายแล้ว
-        total_pay_penalty: number // ยอดค่าปรับที่จ่ายแล้ว
-        total_pay_unlock: number //ยอดค่าปลดล้อคที่จ่ายแล้ว
-        total_discount: number //ยอดส่วนลด
-        total_summary1: number // รวมยอดที่จ่าย
+        total_price_total: number // 贷款总额
+        total_down_payment: number // 首付金额
+        total_pay_amount: number // 已支付期款
+        total_pay_penalty: number // 已支付罚金
+        total_pay_unlock: number // 已支付解锁费用
+        total_discount: number // 折扣总额
+        total_summary1: number // 已支付合计
 
-        total_asset_price: number //ค่าเครื่อง
-        total_commission_price: number  // ค่าคอม
+        total_asset_price: number // 设备成本
+        total_commission_price: number  // 佣金成本
         total_benefit: number
         total_fee: number
-        total_summary2: number //ต้นทุน
-        total_unpaid:number // ยอดต้างจ่าย
-        total_profit: number // กำไร/ขาดทุน
+        total_summary2: number // 成本合计
+        total_unpaid:number // 未结清金额
+        total_profit: number // 盈亏
     }
     const defaultItemTab1 = {
         total_price_total: 0,
@@ -54,7 +54,7 @@ const DashboardIncome = () => {
         total_unpaid:0,
         total_profit: 0,
     };
-    interface reportTab2 { 
+    interface reportTab2 {
         month : number
         on_process :number
         closed : number
@@ -118,16 +118,16 @@ const DashboardIncome = () => {
               title: t('please_select_business_unit'),
               padding: '10px 20px',
             })
-          
+
         } else if (year === null || year === undefined) {
-            
+
             toast.fire({
                 icon: 'warning',
                 title: t('please_select_year'),
                 padding: '10px 20px',
             })
         } else {
-            
+
             fetchReportTab1({data: {"id_business_unit": id_business_unit,"year": +year}})
             fetchReportTab2({data: {"id_business_unit": id_business_unit,"year": +year}})
         }
@@ -194,10 +194,10 @@ const DashboardIncome = () => {
         fetchBuALL({})
     }, [])
     return (
-        
+
         <>
          {isLoading || isLoading2 && <PreLoading />}
-            <Formik initialValues={{id_business_unt: '',year: ''}} 
+            <Formik initialValues={{id_business_unt: '',year: ''}}
             onSubmit={onSubmit}>
                 {(props) => (
                     <Form className="flex flex-col gap-6">
@@ -264,7 +264,7 @@ const DashboardIncome = () => {
                                         <th>{t('device_cost')}</th>
                                         <th>{t('commission_cost')}</th>
                                         <th>{t('special_benefit')}</th>
-                                       
+
                                         <th>{t('total_label')}</th>
                                         <th>{t('outstanding_payment')}</th>
                                         <th>{t('profit_loss')}</th>
@@ -286,7 +286,7 @@ const DashboardIncome = () => {
                                                 <td className="">{numberWithCommas(item.total_asset_price)}</td>
                                                 <td className="">{numberWithCommas(item.total_commission_price)}</td>
                                                 <td className="">{numberWithCommas(item.total_benefit)}</td>
-                                              
+
                                                 <td className="">{numberWithCommas(item.total_summary2)}</td>
                                                 <td className="">{numberWithCommas(item.total_unpaid)}</td>
                                                 <td className="">{numberWithCommas(item.total_profit)}</td>
