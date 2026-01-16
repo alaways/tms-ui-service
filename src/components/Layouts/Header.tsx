@@ -33,7 +33,7 @@ const Header = () => {
       const startDate = moment.tz(res.data.date_start, 'YYYY-MM-DD HH:mm', 'Asia/Bangkok').subtract(1,'day')
       const endDate = moment.tz(res.data.date_end, 'YYYY-MM-DD HH:mm', 'Asia/Bangkok');
       const now = moment().tz('Asia/Bangkok');
-      
+
       // if(res.data.status) {
       //   setCloseMessage(res.data.message)
       // }
@@ -45,7 +45,7 @@ const Header = () => {
       }
     }
   })
-  
+
   useEffect(() => {
     // const fcm_token = localStorage.getItem('FCM_TOKEN')
     // if (fcm_token !== undefined && fcm_token !== null && fcm_token !== '') {
@@ -184,7 +184,7 @@ const Header = () => {
 
   const calculateTimeAgo = (activity_at: string): string => {
     const now = new Date();
-    now.setHours(now.getHours() + 7); // ปรับเวลาให้เป็น GMT+7
+    now.setHours(now.getHours() + 7); // 调整为 GMT+7
     const formattedISO = now.toISOString();
     const date1 = new Date(formattedISO);
     const date2 = new Date(activity_at);
@@ -240,7 +240,7 @@ const Header = () => {
             </button>
           </div>
           <div className="sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]">
-        
+
             <div className="sm:ltr:mr-auto sm:rtl:ml-auto">
               {
                 userRole === 'business_unit' && (<a className="link" style={{ color: '#561de2', fontWeight: 'bold' }} onClick={() => goToBusiness()}>
@@ -268,9 +268,9 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-            
 
-            {closeMessage !== null && userRole !== 'shop' && 
+
+            {closeMessage !== null && userRole !== 'shop' &&
               <div className="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light">
                 <span className="ltr:pr-2 rtl:pl-2">
                   <strong className="ltr:mr-1 rtl:ml-1">{t('alert')}!</strong> {closeMessage}

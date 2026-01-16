@@ -107,7 +107,7 @@ const SidebarShop = () => {
             <ul className="relative space-y-0.5 p-4 py-0">
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                <span>{t('leasing apps')}</span>
+                <span>{t('leasing_apps')}</span>
               </h2>
               <li className="nav-item">
                 <NavLink to="/" className="group" onClick={() => {
@@ -129,7 +129,7 @@ const SidebarShop = () => {
                     <button type="button" className={`${currentMenu === 'customer' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('customer')}>
                       <div className="flex items-center">
                         <IconUsersGroup fill={true} className="group-hover:!text-primary shrink-0" />
-                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('ลูกค้า')}</span>
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('customer')}</span>
                       </div>
                       <div className={currentMenu !== 'customer' ? 'rtl:rotate-90 -rotate-90' : ''}>
                         <IconCaretDown />
@@ -139,13 +139,13 @@ const SidebarShop = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/customer/list" className={currentSubMenu === '/apps/customer/list' ? 'active' : ''}>
-                            {t('รายการลูกค้า')}
+                            {t('customer_list')}
                           </NavLink>
                         </li>
                         {
                           acc && <li>
                             <NavLink to="/apps/customer/add" className={currentSubMenu === '/apps/customer/add' ? 'active' : ''}>
-                              {t('เพิ่มลูกค้า')}
+                              {t('add_customer')}
                             </NavLink>
                           </li>
                         }
@@ -161,7 +161,7 @@ const SidebarShop = () => {
                     <button type="button" className={`${currentMenu === 'asset' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('asset')}>
                       <div className="flex items-center">
                         <IconArchive fill={true} className="group-hover:!text-primary shrink-0" />
-                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('สินทรัพย์')}</span>
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('asset')}</span>
                       </div>
                       <div className={currentMenu !== 'asset' ? 'rtl:rotate-90 -rotate-90' : ''}>
                         <IconCaretDown />
@@ -171,12 +171,12 @@ const SidebarShop = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/asset/list" className={currentSubMenu === '/apps/asset/list' ? 'active' : ''}>
-                            {t('รายการสินทรัพย์')}
+                            {t('asset_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/asset/add" className={currentSubMenu === '/apps/asset/add' ? 'active' : ''}>
-                            {t('เพิ่มสินทรัพย์')}
+                            {t('add_asset')}
                           </NavLink>
                         </li>
                       </ul>
@@ -191,7 +191,7 @@ const SidebarShop = () => {
                       <div className="flex items-center">
                         <IconNotesEdit fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('สัญญา')}
+                          {t('contract')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'contract' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -202,32 +202,32 @@ const SidebarShop = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/contract/list" className={currentSubMenu === '/apps/contract/list' ? 'active' : ''}>
-                            {t('รายการสัญญา')}
+                            {t('contract_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-credit" className={currentSubMenu === '/apps/contract/list-credit' ? 'active' : ''}>
-                            {t('สัญญาที่อนุมัติแล้ว')}
+                            {t('approved_contracts')}
                           </NavLink>
                         </li>
                         {themeInit?.features?.contract_refinance && <li>
                           <NavLink to="/apps/contract/list-refinance" className={currentSubMenu === '/apps/contract/list-refinance' ? 'active' : ''}>
-                            {t('สัญญารีไฟแนนซ์')}
+                            {t('refinance_contract_list')}
                           </NavLink>
                         </li>}
                         <li>
                           <NavLink to="/apps/contract/list-wait" className={currentSubMenu === '/apps/contract/list-wait' ? 'active' : ''}>
-                            {t('สัญญาที่รอสิ้นสุด')}
+                            {t('pending_completion_contract_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-complete" className={currentSubMenu === '/apps/contract/list-complete' ? 'active' : ''}>
-                            {t('สัญญาที่สิ้นสุดแล้ว')}
+                            {t('completed_contract_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-cancel" className={currentSubMenu === '/apps/contract/list-cancel' ? 'active' : ''}>
-                            {t('สัญญาที่ยกเลิก')}
+                            {t('cancelled_contracts')}
                           </NavLink>
                         </li>
                       </ul>
@@ -240,31 +240,33 @@ const SidebarShop = () => {
                   <div className="flex items-center">
                     <IconMenuShop className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t('ข้อมูลร้านค้า')}
+                      {t('shop_info')}
                     </span>
                   </div>
                 </NavLink>
               </li>
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                <span>{t('Leasing Report')}</span>
+                <span>{t('leasing_report')}</span>
               </h2>
-              {/* <li className="nav-item">
+              {/* 预留：支付给商店 (PV)
+              <li className="nav-item">
                 <NavLink to="/apps/report/pay-to-shop-pv" className={currentMenu === 'pay-to-shop-pv' ? 'group active' : 'group'} onClick={() => toggleMenu('pay-to-shop-pv')}>
                   <div className="flex items-center">
                     <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t('จ่ายเงินให้ร้านค้า (PV)')}
+                      {t('pay_to_shop_pv')}
                     </span>
                   </div>
                 </NavLink>
-              </li> */}
+              </li>
+              */}
               <li className="nav-item">
                 <NavLink to="/apps/report/account-creditor" className={currentMenu === 'account-creditor' ? 'group active' : 'group'} onClick={() => toggleMenu('account-creditor')}>
                   <div className="flex items-center">
                     <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t('ธุรกรรมร้านค้า')}
+                      {t('shop_transactions')}
                     </span>
                   </div>
                 </NavLink>

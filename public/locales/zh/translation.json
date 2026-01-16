@@ -981,5 +981,20 @@
     "dashboard_ceo_pv_contract_fee_tooltip": "合同服务费",
     "dashboard_ceo_pv_expense_label": "支出",
     "dashboard_ceo_pv_commission_fee_label": "佣金",
-    "dashboard_ceo_pv_commission_fee_tooltip": "来自店铺/合作伙伴的佣金"
+    "dashboard_ceo_pv_commission_fee_tooltip": "来自店铺/合作伙伴的佣金",
+    "leasing_apps": "租赁应用",
+    "leasing_management": "租赁管理",
+    "leasing_report": "租赁报表",
+    "leasing_setting": "租赁设置",
+    "report": "报告",
+    "customer_list": "客户列表",
+    "transfer_history": "转账记录",
+    "pay_to_shop_pv": "向商店付款 (PV)",
+    "shop_transactions": "店铺交易",
+    "insurance_type": "保险类型",
+    "permission_management": "用户权限管理",
+    "cookie_policy_title": "本网站使用 Cookie",
+    "cookie_policy_description": "我们使用 Cookie 以提升性能、网站体验、数据分析和营销。点击“接受”以允许我们为上述目的使用 Cookie。",
+    "cookie_policy_link": "Cookie 政策",
+    "cookie_policy_accept_all": "全部接受"
 }

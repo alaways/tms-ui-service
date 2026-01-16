@@ -117,7 +117,7 @@ const SidebarBusiness = () => {
             <ul className="relative space-y-0.5 p-4 py-0">
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                <span>{t('leasing apps')}</span>
+                <span>{t('leasing_apps')}</span>
               </h2>
               <li className="nav-item">
                 <NavLink to="/" className="group" onClick={() => {
@@ -147,7 +147,7 @@ const SidebarBusiness = () => {
                       </div>
                     </NavLink>
                   </li>
-                    
+
                   <li className="nav-item">
                     <NavLink to="/dashboard-ceo-income" className="group" onClick={() => {
                       toggleMenu('dashboard-ceo-income')
@@ -155,12 +155,12 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconTrendingUp className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('รายงาน')}
+                          {t('report')}
                         </span>
                       </div>
                     </NavLink>
                   </li>
-                  
+
                   <li className="nav-item">
                     <NavLink to="/dashboard-ceo-pv" className="group" onClick={() => {
                       toggleMenu('dashboard-ceo-pv')
@@ -175,7 +175,7 @@ const SidebarBusiness = () => {
                   </li>
                 </>
               )}
-              
+
 
               <li className="nav-item">
                 <ul>
@@ -184,7 +184,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconNotes className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('หน่วยธุรกิจ')}
+                          {t('business_unit')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'bu' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -195,17 +195,17 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/business-unit/list" className={currentSubMenu === '/apps/business-unit/list' ? 'active' : ''}>
-                            {t('รายการหน่วยธุรกิจ')}
+                            {t('business_unit_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/shop-group/list" className={currentSubMenu === '/apps/shop-group/list' ? 'active' : ''}>
-                            {t('กลุ่มร้าน')}
+                            {t('shop_group')}
                           </NavLink>
                         </li>
                         {/* <li>
                           <NavLink to="/apps/interest-rate/list" className={currentSubMenu === '/apps/interest-rate/list' ? 'active' : ''}>
-                            {t('ผลตอบแทน')}
+                            {t('reward_report')}
                           </NavLink>
                         </li> */}
                       </ul>
@@ -216,7 +216,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconUsersGroup fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#3c475b] dark:group-hover:text-white-dark">
-                          {t('ลูกค้า')}
+                          {t('customer')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'customer' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -227,12 +227,12 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/customer/list" className={currentSubMenu === '/apps/customer/list' ? 'active' : ''}>
-                            {t('รายการลูกค้า')}
+                            {t('customer_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/customer/add" className={currentSubMenu === '/apps/customer/add' ? 'active' : ''}>
-                            {t('เพิ่มลูกค้า')}
+                            {t('add_customer')}
                           </NavLink>
                         </li>
                       </ul>
@@ -247,7 +247,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconArchive fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('สินทรัพย์')}
+                          {t('asset')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'asset' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -258,12 +258,12 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/asset/list" className={currentSubMenu === '/apps/asset/list' ? 'active' : ''}>
-                            {t('รายการสินทรัพย์')}
+                            {t('asset_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/asset/add" className={currentSubMenu === '/apps/asset/add' ? 'active' : ''}>
-                            {t('เพิ่มสินทรัพย์')}
+                            {t('add_asset')}
                           </NavLink>
                         </li>
                       </ul>
@@ -278,7 +278,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconNotesEdit fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('สัญญา')}
+                          {t('contract')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'contract' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -289,32 +289,32 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/contract/list" className={currentSubMenu === '/apps/contract/list' ? 'active' : ''}>
-                            {t('รายการสัญญา')}
+                            {t('contract_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-credit" className={currentSubMenu === '/apps/contract/list-credit' ? 'active' : ''}>
-                            {t('สัญญาที่อนุมัติแล้ว')}
+                            {t('approved_contracts')}
                           </NavLink>
                         </li>
                        {themeInit?.features?.contract_refinance && <li>
                           <NavLink to="/apps/contract/list-refinance" className={currentSubMenu === '/apps/contract/list-refinance' ? 'active' : ''}>
-                            {t('สัญญารีไฟแนนซ์')}
+                            {t('refinance_contract_list')}
                           </NavLink>
                         </li>}
                         <li>
                           <NavLink to="/apps/contract/list-wait" className={currentSubMenu === '/apps/contract/list-wait' ? 'active' : ''}>
-                            {t('สัญญาที่รอสิ้นสุด')}
+                            {t('pending_completion_contract_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-complete" className={currentSubMenu === '/apps/contract/list-complete' ? 'active' : ''}>
-                            {t('สัญญาที่สิ้นสุดแล้ว')}
+                            {t('completed_contract_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-cancel" className={currentSubMenu === '/apps/contract/list-cancel' ? 'active' : ''}>
-                            {t('สัญญาที่ยกเลิก')}
+                            {t('cancelled_contracts')}
                           </NavLink>
                         </li>
                       </ul>
@@ -324,7 +324,7 @@ const SidebarBusiness = () => {
               </li>
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                <span>{t('leasing management')}</span>
+                <span>{t('leasing_management')}</span>
               </h2>
               <li className="nav-item">
                 <ul>
@@ -333,7 +333,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconMenuShop className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('ร้านค้า')}
+                          {t('shop')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'shop' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -344,12 +344,12 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/shop/list" className={currentSubMenu === '/apps/shop/list' ? 'active' : ''}>
-                            {t('รายการร้านค้า')}
+                            {t('shop_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/shop/add" className={currentSubMenu === '/apps/shop/add' ? 'active' : ''}>
-                            {t('เพิ่มร้านค้า')}
+                            {t('add_shop')}
                           </NavLink>
                         </li>
                       </ul>
@@ -364,7 +364,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconUser fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('พนักงาน')}
+                          {t('employee')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'employee' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -375,12 +375,12 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/employee/list" className={currentSubMenu === '/apps/employee/list' ? 'active' : ''}>
-                            {t('รายการพนักงาน')}
+                            {t('employee_list')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/employee/add" className={currentSubMenu === '/apps/employee/add' ? 'active' : ''}>
-                            {t('เพิ่มพนักงาน')}
+                            {t('add_employee')}
                           </NavLink>
                         </li>
                       </ul>
@@ -395,7 +395,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconDollarSignCircle fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          การเงิน
+                          {t('finance')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'finance' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -406,12 +406,12 @@ const SidebarBusiness = () => {
                       <ul className="sub-menu text-gray-500">
                         <li>
                           <NavLink to="/apps/finance/invoice" className={currentSubMenu === '/apps/finance/invoice' ? 'active' : ''}>
-                            ใบแจ้งหนี้
+                            {t('invoice')}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/apps/finance/payment/business-unit" className={currentSubMenu === '/apps/finance/payment/business-unit' ? 'active' : ''}>
-                            การชำระเงิน
+                            {t('payment_history')}
                           </NavLink>
                         </li>
                       </ul>
@@ -421,24 +421,26 @@ const SidebarBusiness = () => {
               </li>
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                <span>{t('Leasing Report')}</span>
+                <span>{t('leasing_report')}</span>
               </h2>
-              {/* <li className="nav-item">
+              {/* 预留：支付给商店
+              <li className="nav-item">
                 <NavLink to="/apps/report/pay-to-shop" className={currentMenu === 'pay-to-shop' ? 'group active' : 'group'} onClick={() => toggleMenu('pay-to-shop')}>
                   <div className="flex items-center">
                     <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t('จ่ายเงินให้ร้านค้า')}
+                      {t('pay_to_shop_pv')}
                     </span>
                   </div>
                 </NavLink>
-              </li> */}
+              </li>
+              */}
               <li className="nav-item">
                   <NavLink to="/apps/report/pay-to-shop-pv" className={currentMenu === 'pay-to-shop-pv' ? 'group active' : 'group'} onClick={() => toggleMenu('pay-to-shop-pv')}>
                     <div className="flex items-center">
                       <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
                       <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                        {t('จ่ายเงินให้ร้านค้า (PV)')}
+                        {t('pay_to_shop_pv')}
                       </span>
                     </div>
                   </NavLink>
@@ -449,22 +451,22 @@ const SidebarBusiness = () => {
                     <div className="flex items-center">
                       <IconDollarSignCircle className="group-hover:!text-primary shrink-0" />
                       <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                        {t('ธุรกรรมร้านค้า')}
+                        {t('shop_transactions')}
                       </span>
                     </div>
                   </NavLink>
                 </li>
-                
+
               <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                <span>{t('leasing setting')}</span>
+                <span>{t('leasing_setting')}</span>
               </h2>
               <li className="nav-item">
                 <NavLink to="/apps/announce/list" className={currentMenu === 'announce' ? 'group active' : 'group'} onClick={() => toggleMenu('announce')}>
                   <div className="flex items-center">
                     <IconNotes className="group-hover:!text-primary shrink-0" />
                     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t('ประกาศ')}
+                      {t('announce')}
                     </span>
                   </div>
                 </NavLink>
