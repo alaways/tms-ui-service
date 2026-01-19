@@ -352,17 +352,17 @@ const DashboardCEOPV = () => {
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_20')}</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status')} (20)</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s20ContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_21')}</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status')} (21)</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s21ContractCount)}</span>
                     </div>
                     <hr />
                     <div className="flex justify-between">
-                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status_22')}</span>
+                      <span className='text-[#ababab]'>{t('dashboard_ceo_pv_contract_status')} (22)</span>
                       <span className="font-bold text-[#113144]">{numberCommas(dashboardCEOData?.s22ContractCount)}</span>
                     </div>
                   </div>

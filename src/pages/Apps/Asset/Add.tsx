@@ -29,13 +29,13 @@ import { useTranslation } from 'react-i18next'   // 新增
 const mode = process.env.MODE || 'admin'
 
 const Add = () => {
-  const { t } = useTranslation();  
+  const { t } = useTranslation();
   const toast = Swal.mixin(toastAlert)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(setPageTitle(t('add_asset')))  
+    dispatch(setPageTitle(t('add_asset')))
   })
 
   const breadcrumbItems = [
@@ -46,7 +46,7 @@ const Add = () => {
   const storedUser:any = localStorage.getItem(mode)
   const id_shop = storedUser ? JSON.parse(storedUser).id_shop : null
  const dataTest = JSON.parse(storedUser)
- 
+
   const role = storedUser ? JSON.parse(storedUser).role : null;
 
   if (role != 'admin' && role != 'shop' && role != 'business_unit') {
@@ -217,7 +217,7 @@ const Add = () => {
           title: t('save_success'),                     // 已有 key
           padding: '10px 20px',
         })
-        
+
         navigate('/apps/asset/list')
       } else {
         toast.fire({
@@ -277,7 +277,7 @@ const Add = () => {
               const toast = Swal.mixin(toastAlert);
               toast.fire({
                 icon: 'error',
-                title: 'เพิ่มไฟล์ผิดพลาดกรุณาใช้ไฟล์ที่เป็นรูปเท่านั้น',
+                title: t('asset_file_upload_error'),
                 padding: '10px 20px',
               });
             }
@@ -331,9 +331,9 @@ const Add = () => {
         setFormData({ ...res.data, id_shop: res.data.shop.uuid })
       }
     },
-    
+
   })
-  
+
 
 
   const handleSearch = (props: any, event: any, name: any) => {
@@ -407,7 +407,7 @@ const Add = () => {
       onSuccess: (res: any) => {
          toast.fire({
           icon: 'success',
-          title: 'แก้ไขสำเร็จ',
+          title: t('edit_success'),
           padding: '10px 20px',
         });
         navigate('/apps/asset/list');
@@ -423,7 +423,7 @@ const Add = () => {
 
   const submitForm = useCallback(
     (event: any) => {
-    
+
       if (event.uuid) {
         //
         // if (images.length > 0) {
@@ -445,7 +445,7 @@ const Add = () => {
           } else {
              assetUpdate({ data: { ...event, id: event.uuid } })
           }
-       
+
       }
       else {
         // if (images.length > 0) {
@@ -508,7 +508,7 @@ const Add = () => {
              {formData?.on_contract === true && (
                 <div className="w-full bg-[#fedee2] text-[#f9303e] rounded-md">
                   <div className="p-5">
-                  {t('asset_under_contract')} {formData?.bu_name} 
+                  {t('asset_under_contract')} {formData?.bu_name}
                   </div>
                 </div>
               )}
@@ -516,7 +516,7 @@ const Add = () => {
                 <div className="w-full">
                   <InputField
                     require={true}
-                    label="หมายเลขซีเรียล"
+                    label={t('asset_serial_number')}
                     name="serial_number"
                     type="text"
                     onKeyPress={(e: any) => {
@@ -527,7 +527,7 @@ const Add = () => {
                         } else {
                           toast.fire({
                             icon: 'error',
-                            title: 'กรุณากรอกหมายเลขซีเรียลก่อนค้นหา',
+                            title: t('asset_serial_required'),
                             padding: '10px 20px',
                           })
                         }
@@ -550,7 +550,7 @@ const Add = () => {
                       }
                     }}
                   >
-                    ตรวจสอบ
+                    {t('asset_check')}
                   </button>
                   <p className="mt-4 text-[11px] text-white-dark"> {t('asset_check_help_text')}        </p>
                 </div>
@@ -562,7 +562,7 @@ const Add = () => {
                       <SelectField
                         require={true}
                         id="id_shop"
-                        label={t('shop')}  
+                        label={t('shop')}
                         name="id_shop"
                         options={shopListData}
                         // disabled={isSearchAsset === 2}
@@ -582,7 +582,7 @@ const Add = () => {
                     <SelectField
                       require={true}
                       id="id_asset_type"
-                      label={t('asset_type')}  
+                      label={t('asset_type')}
                       name="id_asset_type"
                       options={assetTypeList}
                       disabled={isSearchAsset === 2}
@@ -594,7 +594,7 @@ const Add = () => {
                   <div className="input-flex-row">
                     <div className="input-container">
                       {isSearchAsset === 2 ? (<InputField
-                        label={t('asset_name')} 
+                        label={t('asset_name')}
                         name="name"
                         require={true}
                         disabled={true}
@@ -603,7 +603,7 @@ const Add = () => {
                         <div className={'relative text-white-dark'}>
                           <CreatableSelect
                             id="name"
-                            placeholder={t('asset_name')} 
+                            placeholder={t('asset_name')}
                             name="name"
                             isClearable
                             options={assetNameList}
@@ -618,11 +618,11 @@ const Add = () => {
                     </div>
                     <div className="input-container">
                       {isSearchAsset === 2 ? (<InputField
-                        label={t('asset_model_number')} 
+                        label={t('asset_model_number')}
                         name="model_number"
                         disabled={true}
                       />) : (<div>
-                        <label>หมายเลขรุ่น</label>
+                        <label>{t('asset_model_number')}</label>
                         <div className={'relative text-white-dark'}>
                           <CreatableSelect
                             id="model_number"
@@ -643,10 +643,10 @@ const Add = () => {
                   <div className="input-flex-row">
                     <div className="input-container">
                       {isSearchAsset === 2 ? (<InputField
-                        label={t('asset_capacity')}   
+                        label={t('asset_capacity')}
                         name="capacity"
                         disabled={true}
-                      />) : (<div><label>ความจุ</label>
+                      />) : (<div><label>{t('asset_capacity')}</label>
                         <div className={'relative text-white-dark'}>
                           <CreatableSelect
                             id="capacity"
@@ -664,11 +664,11 @@ const Add = () => {
 
                     <div className="input-container">
                       {isSearchAsset === 2 ? (<InputField
-                        label={t('asset_capacity')}   
+                        label={t('asset_capacity')}
                         name="capacity"
                         disabled={true}
                       />) : (<div>
-                        <label>สี</label>
+                        <label>{t('asset_color')}</label>
                         <div className={'relative text-white-dark'}>
                           <CreatableSelect
                             id="color"
@@ -700,7 +700,7 @@ const Add = () => {
                     />
                     <InputField
                       require={true}
-                      label={t('asset_selling_price')} 
+                      label={t('asset_selling_price')}
                       name="price"
                       disabled={isSearchAsset === 2}
                       onKeyPress={(e: any) => {
@@ -712,11 +712,11 @@ const Add = () => {
                   </div>
                   <div className="input-flex-row">
                     <InputField
-                      label={t('asset_note')} 
+                      label={t('asset_note')}
                       name="note"
                       as="textarea"
                       rows="4"
-                      placeholder={t('please_enter_info')} 
+                      placeholder={t('please_enter_info')}
                       className="form-textarea ltr:rounded-l-none rtl:rounded-r-none resize-none"
                       disabled={isSearchAsset === 2}
                     />
@@ -746,7 +746,7 @@ const Add = () => {
                           <div className="upload__image-wrapper">
                             {isSearchAsset === 1 && (
                               <button type="button" className="custom-file-container__custom-file__custom-file-control custom-btn-select-file" onClick={onImageUpload}>
-                                {t('asset_select_file')}   
+                                {t('asset_select_file')}
                               </button>
                             )}
                             <div className="grid gap-4 sm:grid-cols-3 grid-cols-1">
@@ -778,7 +778,7 @@ const Add = () => {
                       {isCreateLoading && (
                         <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>
                       )}
-                     {t('save')}  
+                     {t('save')}
                     </button>
                   )}
 

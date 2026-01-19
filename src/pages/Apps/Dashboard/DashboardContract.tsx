@@ -307,7 +307,7 @@ const DashboardContract = () => {
                                 </table>
                             </div>
                         </div>
-                    
+
 
                         <div
                             className={`flex bg-white items-center justify-center min-h-[100px] bg-cover bg-center bg-no-repeat rounded-lg `}
@@ -320,10 +320,10 @@ const DashboardContract = () => {
                                 <h1 className="text-xl font-semibold px-4">{t('overdue_contracts')}</h1>
                                 <table className="w-full table-fixed border-collapse">
                                      <tr className="h-[50px]">
-                                        <th className="w-1/4">{t('phase_1')}</th>
-                                        <th className="w-1/4">{t('phase_2')}</th>
-                                        <th className="w-1/4">{t('phase_3')}</th>
-                                        <th className="w-1/4">{t('phase_4')}</th>
+                                        <th className="w-1/4">{t('phase')} 1</th>
+                                        <th className="w-1/4">{t('phase')} 2</th>
+                                        <th className="w-1/4">{t('phase')} 3</th>
+                                        <th className="w-1/4">{t('phase')} 4</th>
                                         <th className="w-1/4"></th>
                                     </tr>
                                     <tr className="h-[50px] border-t">
@@ -333,7 +333,7 @@ const DashboardContract = () => {
                                         <th>{numberCommas(dashboardData?.pay_late?.contract_late_payed_code_48)}</th>
                                         <th></th>
                                     </tr>
-                                   
+
                                 </table>
                             </div>
                         </div>

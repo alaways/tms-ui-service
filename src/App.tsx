@@ -10,11 +10,24 @@ import zhCN from 'antd/locale/zh_CN'
 import enUS from 'antd/locale/en_US'
 import thTH from 'antd/locale/th_TH'
 
+// dayjs 时间多语言配置
+import dayjs from 'dayjs'
+import 'dayjs/locale/en'
+import 'dayjs/locale/zh-cn'
+import 'dayjs/locale/th'
+
 // Ant Design 语言映射
 const antdLocales: Record<string, any> = {
   zh: zhCN,
   en: enUS,
   th: thTH,
+}
+
+// dayjs 语言映射
+const dayjsLocales: Record<string, string> = {
+  zh: 'zh-cn',
+  en: 'en',
+  th: 'th',
 }
 
 function App({ children }: PropsWithChildren) {
@@ -71,6 +84,10 @@ function App({ children }: PropsWithChildren) {
     dispatch(toggleLocale(localStorage.getItem('i18nextLng') || themeConfig.locale))
     dispatch(toggleSemidark(localStorage.getItem('semidark') || themeConfig.semidark))
     dispatch(setSidebarActive(localStorage.getItem('sidebarActive') || themeConfig.sidebarActive))
+
+    // 设置 dayjs 语言
+    const currentLocale = localStorage.getItem('i18nextLng') || themeConfig.locale
+    dayjs.locale(dayjsLocales[currentLocale] || 'en')
   }, [dispatch, themeConfig.theme, themeConfig.menu, themeConfig.layout, themeConfig.rtlClass, themeConfig.animation, themeConfig.navbar, themeConfig.locale, themeConfig.semidark])
 
   return (

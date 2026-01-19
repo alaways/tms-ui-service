@@ -3,8 +3,12 @@ import SelectField from '../../../components/HOC/SelectField';
 import { DatePicker, Space } from 'antd';
 import type { DatePickerProps } from 'antd';
 import { useGlobalMutation } from '../../../helpers/globalApi';
+import { useSelector } from 'react-redux';
+import { IRootState } from '../../../store';
 import dayjs from 'dayjs';
 import th from 'antd/es/date-picker/locale/th_TH';
+import en from 'antd/es/date-picker/locale/en_US';
+import zhCN from 'antd/es/date-picker/locale/zh_CN';
 import dayTh from 'dayjs/locale/th';
 import buddhistEra from 'dayjs/plugin/buddhistEra';
 import { numberWithCommas } from '../../../helpers/formatNumeric';
@@ -17,8 +21,18 @@ import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
     const { t } = useTranslation()
+    const themeConfig = useSelector((state: IRootState) => state.themeConfig);
+
     dayjs.extend(buddhistEra);
-    dayjs.locale(dayTh);
+
+    // 根据当前语言设置 dayjs 语言
+    const dayjsLocaleMap: Record<string, string> = {
+        zh: 'zh-cn',
+        en: 'en',
+        th: 'th',
+    };
+    dayjs.locale(dayjsLocaleMap[themeConfig.locale] || 'en');
+
     const toast = Swal.mixin(toastAlert)
     interface reportTab1 {
         month: number
@@ -93,17 +107,33 @@ const Dashboard = () => {
         }))
     );
     const [itemBusinessUnit, setBusinessUnitList] = useState<any[]>([])
-    const buddhistLocale: typeof th = {
-        ...th,
-        lang: {
-            ...th.lang,
-            fieldDateFormat: 'BBBB-MM-DD',
-            fieldYearFormat: 'BBBB',
-            fieldDateTimeFormat: 'BBBB-MM-DD HH:mm:ss',
-            yearFormat: 'BBBB',
-            cellYearFormat: 'BBBB',
-        },
+
+    // 根据当前语言选择相应的 locale
+    const localeMap: Record<string, any> = {
+        th: th,
+        en: en,
+        zh: zhCN,
     };
+
+    let locale = localeMap[themeConfig.locale] || en;
+
+    // 如果是泰文，使用佛历格式
+    if (themeConfig.locale === 'th') {
+        locale = {
+            ...th,
+            lang: {
+                ...th.lang,
+                fieldDateFormat: 'BBBB-MM-DD',
+                fieldYearFormat: 'BBBB',
+                fieldDateTimeFormat: 'BBBB-MM-DD HH:mm:ss',
+                yearFormat: 'BBBB',
+                cellYearFormat: 'BBBB',
+            },
+        };
+    }
+
+    const buddhistLocale = locale;
+
     const onChange = (props: FormikProps<any>, date: any, dateString: string) => {
         const formatted = date.locale('en').format('YYYY');
         props.setFieldValue('date', formatted);
