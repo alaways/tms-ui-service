@@ -79,7 +79,7 @@ const ListWait = () => {
     };
 
     // const onSearch = (values: any) => {
-    
+
     // };
 
     const { mutate: fetchContractGetStatus } = useGlobalMutation(url_api.contractFilter, {
@@ -103,7 +103,7 @@ const ListWait = () => {
             console.error('Failed to fetch asset type data');
         },
     });
-    // 
+    //
     const { mutate: fetchContractData, isLoading: isLoadingContract } = useGlobalMutation(url_api.contractWaitFindAll, {
         onSuccess: (res: any) => {
             setContractList(res.data.list);
@@ -198,10 +198,10 @@ const ListWait = () => {
             sortable: false,
             render: (item: any) => {
                 return ((role == 'shop' && item?.is_view == 1) || role != 'shop')  ? <p className="pointer">{convertDateDbToClient(item?.close_contract_at) ?? '-'}</p> :  '-'
-               
+
             }
         },
-        
+
         mode !== 'shop'
             ? {
                 accessor: 'credit',
@@ -223,7 +223,7 @@ const ListWait = () => {
                 };
                 const unreadStatus = contractUnread?.find((c: ContractUnread) => c.id_contract === item.id)?.unread;
 
-                
+
                  return ((role == 'shop' && item?.is_view == 1 || role != 'shop')) ? (
                     <>
                         <div className="pointer flex items-center space-x-2 active" onClick={() => goEdit(item)}>
@@ -250,7 +250,7 @@ const ListWait = () => {
         },
         {
             accessor: 'shop',
-            title: 'ร้านค้า',
+            title: t('shop'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p>{item.shop.name}</p>,
@@ -278,7 +278,7 @@ const ListWait = () => {
             sortable: false,
             render: (item: any) => {
                 return ((role == 'shop' && item?.is_view == 1) || role != 'shop')  ? <p className="pointer">{convertDateDbToClient(item?.contract_date) ?? '-'}</p> :  '-'
-               
+
             }
         },
         {
@@ -368,7 +368,7 @@ const ListWait = () => {
             textAlignment: 'center',
             sortable: false,
             render: (item: any) =>{
-                return ((role == 'shop' && item?.is_view == 1)  || role != 'shop')  ? 
+                return ((role == 'shop' && item?.is_view == 1)  || role != 'shop')  ?
                     <span className={`${item?.customer_signature_at ? 'badge-outline-success' : 'badge-outline-danger'}`}>
                         {item?.customer_signature_at ? <IconChecks className="w-6 h-6" /> : ''}
                     </span>
@@ -480,7 +480,7 @@ const ListWait = () => {
                                 </div>
 
                                <div className="flex flex-col sm:flex-row md:flex-row gap-5 pt-3">
-                                    
+
                                     <div className="flex-1">
                                         <InputField label={t('search')} id="query" name="query" />
                                     </div>

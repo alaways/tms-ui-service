@@ -64,7 +64,7 @@ const ListBu = () => {
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการร้านค้า'))
+    dispatch(setPageTitle(t('shop_group_list_bu')))
     dispatch(setSidebarActive(['bu', '/apps/shop-group/list']))
   }, [dispatch])
 

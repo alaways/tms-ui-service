@@ -371,7 +371,7 @@ const ListRefinance = () => {
         },
         {
             accessor: 'shop',
-            title: 'ร้านค้า',
+            title: t('shop'),
             textAlignment: 'left',
             sortable: false,
             render: (item: any) => <p>{item.shop.name}</p>,
@@ -537,7 +537,7 @@ const ListRefinance = () => {
                     const ws = wb.Sheets[wb.SheetNames[0]]; // Get the first sheet
                     const data = XLSX.utils.sheet_to_json(ws, { header: 1 }); // Extract rows as arrays
                     const references = data.map((row: any) => row[0]).filter((reference: string) => reference); // Extract references
-                 
+
                     if (references.length > 0) {
                         setImportedContracts(references);
                         setIsUploading(true);

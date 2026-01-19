@@ -25,9 +25,9 @@ import PreLoading from '../../../helpers/preLoading'
 import themeInit from '../../../theme.init'
 import { PAGE_SIZES } from '../../../helpers/config'
 const mode = process.env.MODE || 'admin'
-import { useTranslation } from 'react-i18next'   
+import { useTranslation } from 'react-i18next'
 const List = () => {
-  const { t } = useTranslation();    
+  const { t } = useTranslation();
   const toast = Swal.mixin(toastAlert);
   const [selectedRecords, setSelectedRecords] = useState<Shop[]>([]);
   const dispatch = useDispatch()
@@ -105,7 +105,7 @@ const List = () => {
   }
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการร้านค้า'))
+    dispatch(setPageTitle(t('shop_list')))
     if (mode !== 'admin' && mode !== 'business_unit') {
       navigate('/')
     }
@@ -113,7 +113,7 @@ const List = () => {
   useEffect(() => {
     dispatch(setPageTitle('รายการลูกค้า'))
     fetchShopData({data: {page:1, page_size: pageSize}})
-   
+
   }, [])
 
   useEffect(() => {
@@ -196,12 +196,12 @@ const List = () => {
           return []
         })
   }
-  
+
   const handleExport = async (filename: any) => {
       if (!isDownloading) {
         setIsDownloading(true)
         const data: any = await fetchExportCsv()
-        
+
         // Filter out uuid from each item
         const cleanedList = data?.list?.map(({ uuid, province, ...rest }: any) => ({
           ...rest,
@@ -234,7 +234,7 @@ const List = () => {
         setIsDownloading(false)
      }
     }
-  
+
   return (
     <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
       {(isDownloading) && <PreLoading />}
@@ -243,10 +243,10 @@ const List = () => {
           <div className="flex items-center gap-2">
             <Link to="/apps/shop/add" className="btn btn-primary gap-2">
               <IconPlus />
-              {t('add_shop')}  
+              {t('add_shop')}
             </Link>
             <button type='button' className="btn btn-success gap-2" onClick={() => { handelUpdateCreateCustomer() }}>
-            {t('toggle_create_customer')} 
+            {t('toggle_create_customer')}
             </button>
           </div>
           <div className="ml-auto">
@@ -272,7 +272,7 @@ const List = () => {
                         id="id_province"
                         name="id_province"
                         value={values.id_province}
-                        placeholder={t('province')}         
+                        placeholder={t('province')}
                         className="z-10 w-[200px] dropdown-custom"
                         options={dataStoredProvinces}
                         isSearchable={true}
@@ -281,13 +281,13 @@ const List = () => {
                         }}
                       />
                     )}
-                    
+
                       <div className="relative">
                         <input
                           type="text"
                           id="query"
                           name="query"
-                          placeholder={t('search_text')}      
+                          placeholder={t('search_text')}
                           className="form-input py-2 ltr:pr-11 rtl:pl-11 peer"
                           value={values.query}
                           onChange={(e) => {
@@ -299,7 +299,7 @@ const List = () => {
                       <div className="flex-1">
                         <button type="submit" className="btn btn-primary w-[100px] gap-2">  {t('search')}     </button>
                       </div>
-                     
+
                       <button
                           type="reset"
                           className="btn btn-info gap-2 w-[100px]"
@@ -314,13 +314,13 @@ const List = () => {
                             location.reload();
                           }}
                         >
-                          {t('clear')} 
+                          {t('clear')}
                         </button>
                         {(role === 'admin' || role === 'business_unit') && (
                         <button type="button" className="btn btn-success gap-2 w-[100px]" onClick={() => { handleExport(`contract_${new Date().toLocaleString()}`) }}>
                           Export
                         </button>
-                      )}   
+                      )}
                     </div>
                   </div>
                 </Form>

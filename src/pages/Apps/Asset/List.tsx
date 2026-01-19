@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next'   // 新增
 const mode = process.env.MODE || 'admin'
 
 const List = () => {
-  const { t } = useTranslation();  
+  const { t } = useTranslation();
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -29,7 +29,7 @@ const List = () => {
   const id_shop = storedUser ? JSON.parse(storedUser).id_shop : null
 
   useEffect(() => {
-    dispatch(setPageTitle(t('asset_list')))  
+    dispatch(setPageTitle(t('asset_list')))
   })
 
   const [items, setItems] = useState<Assets[]>([])
@@ -172,7 +172,7 @@ const List = () => {
           <div className="flex items-center gap-2">
             <Link to="/apps/asset/add" className="btn btn-primary gap-2">
               <IconPlus />
-              {t('add_asset')} 
+              {t('add_asset')}
             </Link>
 
           </div>
@@ -180,7 +180,7 @@ const List = () => {
             {!id_shop && (
               <div className="flex-1">
                 <Select
-                  placeholder="ร้านค้า"
+                  placeholder={t('shop')}
                   className="pr-6 z-10 w-[200px]"
                   options={[{ value: null, label: t('all') },...shopLists]}
                   isSearchable={true}
@@ -275,13 +275,13 @@ const List = () => {
                 sortable: false,
                 render: (item) => (
                   <div className="flex gap-4 items-center w-max mx-auto">
-                    <Tippy content={t('view_data')} theme="Primary"> 
+                    <Tippy content={t('view_data')} theme="Primary">
                       <a className="flex cursor-pointer active" onClick={() => goPreview(item)}>
                         <IconEye />
                       </a>
                     </Tippy>
                     {!id_shop && (
-                      <Tippy content={t('edit')} theme="Primary"> 
+                      <Tippy content={t('edit')} theme="Primary">
                         <a className="flex cursor-pointer active" onClick={() => goEdit(item)}>
                           <IconEdit className="w-4.5 h-4.5" />
                         </a>

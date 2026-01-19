@@ -262,7 +262,7 @@ const AddEdit = () => {
     return parseFloat(comPrice.toFixed(2))
   }
 
-  // ร้านค้าลงนาม
+  // shop_signature
   const [isModalRCOpen, setIsModalRCOpen] = useState(false)
   const openModalRC = () => setIsModalRCOpen(true)
   const closeModal = () => setIsModalRCOpen(false)
@@ -695,7 +695,7 @@ const AddEdit = () => {
   })
 
   const openReturnReceiptModal = () => {
-    
+
     fetchContractRequestDATA({
       data: { only_data: true }
     })
@@ -2192,7 +2192,7 @@ const AddEdit = () => {
               <div className="custom-file-container">
                 <div className="label-container flex items-center justify-between">
                   <p className="mb-0">
-                    4. ใบเสร็จรับเงินร้านค้า
+                    4. {t('shop_receipt')}
                   </p>
 
                   {!formData?.shop_signature_at && userRole === 'shop' && formData?.status_id >= 3 && (
@@ -2203,7 +2203,7 @@ const AddEdit = () => {
                       disabled={false}
                     >
 
-                      ลงนามใบเสร็จรับเงิน
+                      {t('sign_receipt')}
                     </button>
                   )}
 
@@ -2420,7 +2420,7 @@ const AddEdit = () => {
       deduct_down_payment: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ').matches(PRICE_REGEX, 'กรุณาใส่ราคาให้ถูกต้อง'),
   })
 
-  
+
 
   //  const { mutate: refinanceUpdate } = useGlobalMutation(url_api.refinanceUpdate, {
   //   onSuccess: (res: any) => {
@@ -2799,7 +2799,7 @@ const AddEdit = () => {
                                   if (props.values?.id_shop == "") {
                                     toast.fire({
                                       icon: 'error',
-                                      title: 'ยังไม่ได้เลือกร้านค้า',
+                                      title: t('shop_not_selected'),
                                       padding: '10px 20px',
                                     })
                                     return false
@@ -2840,7 +2840,7 @@ const AddEdit = () => {
                                   </li>
                                   <li>
                                     <button type="button" onClick={() => { setPdfLoading(true); if (!pdfLoading) { fetchContractReceipts({ data: { id: contract_uuid } }) } }}>
-                                      ดาวน์โหลดใบเสร็จรับเงิน
+                                      {t('download_receipt')}
                                     </button>
                                   </li>
                                   {themeInit.features?.signature_online && formData?.business_unit?.signature_online_type == 1 && ![2, 3, 4, 11, 16, 17, 18, 19, 34, 39].includes(formData?.credit?.id) && (
@@ -2942,16 +2942,16 @@ const AddEdit = () => {
                           <div className="!mt-8 border border-white-light dark:border-[#1b2e4b] group rounded-md">
                             <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex">
                               <span className="bg-white dark:bg-black dark:text-white-light inline-block px-3 h-[20px] lg:h-[20px] rounded flex justify-center items-center text-base font-semibold -mt-[10px] ">
-                                ข้อมูลร้านค้า
+                                {t('shop_info')}
                               </span>
                             </div>
                             <div className="flex flex-row p-5">
                               <div className="flex-auto w-[50%]">
                                 <SelectField
-                                  label="ร้านค้าผู้จัดทำสัญญา"
+                                  label={t('shop_name')}
                                   id="id_shop"
                                   name="id_shop"
-                                  placeholder="ค้นหาและเลือกร้านค้า"
+                                  placeholder={t('select_shop')}
                                   isSearchable={true}
                                   options={shopListData}
                                   onChange={(event: any) => handleChangeSelect(props, event, 'id_shop')}
@@ -3061,21 +3061,21 @@ const AddEdit = () => {
                             <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex">
                               <span className="bg-white dark:bg-black dark:text-white-light
                                                           inline-block px-3 h-[20px] lg:h-[20px] rounded flex justify-center items-center text-base font-semibold -mt-[10px] ">
-                                ข้อมูลหน่วยธุรกิจ
+                                {t('business_unit_info')}
                               </span>
                             </div>
                             <div className="flex flex-col p-5">
                               <div className="w-full h-[auto] bg-[#fedee2] text-[#f9303e] rounded-md">
                                 {isSelectRate && !contractRate && (
-                                  <div className="p-5">แจ้งเตือน ! ไม่พบผลตอบแทนหน่วยธุรกิจ โปรดติดต่อแอดมิน เพื่อทำการตั้งค่าหน่วยธุรกิจให้ถูกต้อง</div>
+                                  <div className="p-5">{t('warning')} ! {t('no_business_unit_rate_found')} {t('please_contact_admin_to_setup_business_unit')}</div>
                                 )}
                               </div>
                               <div className="flex-auto flex-row w-full pt-2">
                                 <SelectField
-                                  label="หน่วยธุรกิจ"
+                                  label={t('business_unit')}
                                   id="id_business_unit"
                                   name="id_business_unit"
-                                  placeholder="ค้นหาและเลือกหน่วยธุรกิจ"
+                                  placeholder={t('search_and_select_business_unit')}
                                   options={buListData}
                                   onChange={(event: any) => handleChangeSelect(props, event, 'id_business_unit')}
                                   disabled={_.isEmpty(shopDetail) || (statusAction > 2 && admin_business_unit_role) || (statusAction > 1 && userRole === 'shop')}
@@ -3130,21 +3130,21 @@ const AddEdit = () => {
                             <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex">
                               <span className="bg-white dark:bg-black dark:text-white-light
                                                           inline-block px-3 h-[20px] lg:h-[20px] rounded flex justify-center items-center text-base font-semibold -mt-[10px] ">
-                                ข้อมูลกลุ่มร้านค้า
+                                {t('shop_group')} {t('info')}
                               </span>
                             </div>
                             <div className="flex flex-col p-5">
                               <div className="w-full h-[auto] bg-[#fedee2] text-[#f9303e] rounded-md">
                                 {isSelectRate && !contractRate && (
-                                  <div className="p-5">แจ้งเตือน ! ไม่พบผลตอบแทนของกลุ่มร้านค้า โปรดติดต่อแอดมิน เพื่อทำการตั้งค่าห้ถูกต้อง</div>
+                                  <div className="p-5">{t('warning')} ! {t('no_shop_group_rate_found')} {t('please_contact_admin_to_setup')} </div>
                                 )}
                               </div>
                               <div className="flex-auto flex-row w-full pt-2">
                                 <SelectField
-                                  label="กลุ่มร้านค้า"
+                                  label={t('shop_group')}
                                   id="id_shop_group"
                                   name="id_shop_group"
-                                  placeholder="ค้นหาและเลือกกลุ่มร้านค้า"
+                                  placeholder={t('select_shop_group')}
                                   options={shopGroupListData}
                                   onChange={(event: any) => handleChangeSelect(props, event, 'id_shop_group')}
                                   disabled={_.isEmpty(shopDetail) || (statusAction > 2 && admin_business_unit_role) || (statusAction > 1 && userRole === 'shop')}
@@ -3169,7 +3169,7 @@ const AddEdit = () => {
                                     label="ลูกค้า"
                                     id="id_customer"
                                     name="id_customer"
-                                    placeholder="ค้นหาและเลือกลูกค้า"
+                                    placeholder={t('search_and_select_customer')}
                                     isSearchable={true}
                                     options={customerListData}
                                     onChange={(event: any) => handleChangeSelect(props, event, 'id_customer')}
@@ -3350,7 +3350,7 @@ const AddEdit = () => {
                                         <div className="col-span-6 grid gap-1 pb-2">
                                           <div className="flex flex-row">
                                             <IconAward className="mr-2" />
-                                            <p> <span className='pr-3'>ระดับเครดิต (ร้านค้า)</span>  {creditLevelTypes.find(i => i.value === customerDetail.shop_credit_level)?.label || ''}</p>
+                                            <p> <span className='pr-3'>{t('credit_level')} ({t('shop')})</span>  {creditLevelTypes.find(i => i.value === customerDetail.shop_credit_level)?.label || ''}</p>
                                           </div>
                                         </div>
                                       )}
@@ -3374,7 +3374,7 @@ const AddEdit = () => {
                                     label="สินทรัพย์"
                                     id="id_asset"
                                     name="id_asset"
-                                    placeholder="ค้นหาและเลือกสินทรัพย์"
+                                    placeholder={t('search_and_select_asset')}
                                     isSearchable={true}
                                     options={assetListData}
                                     onChange={(event: any) => handleChangeSelect(props, event, 'id_asset')}
@@ -3607,12 +3607,12 @@ const AddEdit = () => {
                               </div>
                               <div className="p-5">
                                 <div>
-                                  <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center pt-2 pb-2">ตั้งค่าจัดการร้านค้า</div>
+                                  <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center pt-2 pb-2">{t('shop_management_settings')}</div>
                                   {themeInit.features?.contract_issuer && <InputField label="ชื่อผู้ออกสัญญา" name="contract_issuer" disabled={(statusAction > 5) || lockUpdate} />}
                                   <div className="input-flex-row">
-                                    <InputField label="Commission ร้านค้า (%)" name="commission" type="number" disabled={(statusAction > 5) || lockUpdate} />
+                                    <InputField label={`${t('commission')} ${t('shop')} (%)`} name="commission" type="number" disabled={(statusAction > 5) || lockUpdate} />
                                     <InputField
-                                      label="ค่าตอบแทนพิเศษร้านค้า (บาท)"
+                                      label={t('shop_special_benefit')}
                                       name="benefit"
                                       type="number"
                                       disabled={(statusAction > 5) || lockUpdate}
@@ -4028,7 +4028,7 @@ const AddEdit = () => {
                   {statusAction >= 3 ? (
                     <>
                       <div className="text-lg font-semibold text-center">
-                        {`หลักฐานประกอบสัญญา ${formData.reference}`} 
+                        {`หลักฐานประกอบสัญญา ${formData.reference}`}
                       </div>
                       <div className="w-full h-[auto] bg-[#ffddab] text-[#f3831e] rounded-md mt-3">
                         <div className="p-5">
@@ -4832,7 +4832,7 @@ const AddEdit = () => {
                         <button type='button' onClick={async() => await cancelEkyc({})} className="btn bg-red-600 text-white shadow-lg hover:shadow-none max-w-40">ตกลง</button>
                       </div>
                     </div>
-                   
+
                   </Dialog.Panel>
                 </Transition.Child>
               </div>

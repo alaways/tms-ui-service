@@ -86,7 +86,7 @@ const Edit = () => {
 
   const storedUser = localStorage.getItem(mode)
   const user = storedUser ? JSON.parse(storedUser) : null
- 
+
   const role = user ? user?.role : null
   let id_bu = Number(id)
   if(role == "business_unit") {
@@ -248,7 +248,7 @@ const Edit = () => {
             title: 'บันทึกสำเร็จ',
             padding: '10px 20px',
           });
-          
+
         } else {
           toast.fire({
             icon: 'error',
@@ -347,7 +347,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
       }
     },
   })
-  
+
   const { mutate: bankFindAll } = useGlobalMutation(url_api.bankFindAll, {
     onSuccess: (res: any) => {
       setMasterDataBankList(
@@ -467,7 +467,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
       cbd_condition: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ').min(4, 'ต้องมากกว่า 3'),
       cbd_discount_1: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ').min(0, 'ต้องมากกว่าหรือเท่ากับ 0'),
       cbd_discount_2: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ').min(0, 'ต้องมากกว่าหรือเท่ากับ 0'),
-      cbd_discount_3: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ').min(0, 'ต้องมากกว่าหรือเท่ากับ 0'), 
+      cbd_discount_3: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ').min(0, 'ต้องมากกว่าหรือเท่ากับ 0'),
    }
 )
 
@@ -814,7 +814,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                   <Form className="space-y-5 dark:text-white">
                     <div className="panel">
                       <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                        ตั้งค่าจัดการร้านค้า
+                        {t('shop_management_settings')}
                       </div>
                       <div className="flex flex-col sm:flex-row gap-4 mt-3">
                         <InputField
@@ -827,7 +827,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                         />
 
                         <InputField
-                          label="ค่าตอบแทนพิเศษร้านค้า (บาท)"
+                          label={t('shop_special_benefit')}
                           name="benefit"
                           type="number"
                           min="0"
@@ -859,7 +859,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                             },
                           ]} />
                         )}
-                        
+
 
                       </div>
                       <br />
@@ -884,7 +884,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                       </div>
 
                       <div className="input-flex-row">
-                       
+
                         <InputField
                           require={true}
                           label="ค่าธรรมเนียมทำสัญญา (บาท)"
@@ -943,7 +943,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                           type="number"
                           min="0"
                           disabled={true}
-                          
+
                         />
                       </div>
 
@@ -993,7 +993,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
 
 
                       <div className="input-flex-row">
-                      
+
 
                         <InputField
                           require={false}
@@ -1044,9 +1044,9 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                           type="number"
                           min="0"
                         />
-                        
+
                       </div>
-                      
+
 
                       <div className="flex flex-col sm:flex-row gap-4">
 
@@ -1079,7 +1079,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                           disabled={mode === 'business_unit'}
                         />
 
-                       
+
                       </div>
 
                       {mode === 'admin' && (
@@ -1114,8 +1114,8 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                       </div>
 
                         <div className="flex flex-col sm:flex-row gap-4">
-             
-                        
+
+
                         <SelectField
                           label="การชำระเงิน QR CODE"
                           id="payment_qr_method"
@@ -1192,9 +1192,9 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                           </div>
                         </>
                       {/* )} */}
-                     
 
-                     
+
+
                       <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                         บันทึก
                       </button>
@@ -1288,7 +1288,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                 </div>
               </div>
             </Tab.Panel>
-            
+
             <Tab.Panel>
               <Formik initialValues={shopFormData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedPayment}>
                 {(props) => (
@@ -1297,7 +1297,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                       <div className="text-l font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
                         ตั้งค่าการชำระเงิน (Paysolution)
                       </div>
-                     
+
                       <div className="flex flex-col sm:flex-row gap-4">
                         <InputField
                           required={false}
@@ -1795,7 +1795,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                               <div className="flex gap-4 items-center w-max mx-auto">
                                   {themeInit.features.boardCast && (
                                       <div className="bg-[#E5E4E2] w-8 h-8 rounded-full flex items-center justify-center text-white">
-                                        <a className="flex cursor-pointer active" onClick={() => 
+                                        <a className="flex cursor-pointer active" onClick={() =>
                                             lineBoardCastOne({data:{
                                               id_business_unit:id_bu,
                                               id_notify:item?.id
@@ -1805,7 +1805,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                                           </a>
                                        </div>
                                   )}
-                                  
+
                                 <Tippy content="แก้ไข" theme="Primary">
                                   <a className="flex cursor-pointer active" onClick={() => { editLineNotify(item) }}>
                                     <IconEdit className="w-4.5 h-4.5" />
@@ -2069,7 +2069,7 @@ const { mutate: buNotifyUpdate } = useGlobalMutation(url_api.buNotifyUpdate, {
                     <Formik initialValues={lineSettingForm} onSubmit={submitTableLine} enableReinitialize autoComplete="off" validationSchema={SubmittedTableLine}>
                       {(props) => (
                         <Form className="space-y-5 mb-7 dark:text-white custom-select">
-                          
+
                           <InputField label='หัวเรื่อง' type='text' name='title' placeholder='กรุณาใส่ข้อมูล' require={true} />
                           <InputField label='ข้อความแจ้งเตือน' type='text' name='message' placeholder='กรุณาใส่ข้อมูล' require={true} />
                           <InputField label='กำหนดวันแจ้งเตือน' type='text' name='day' placeholder='กรุณาใส่ข้อมูล' require={true} onKeyPress={(e: any) => {
