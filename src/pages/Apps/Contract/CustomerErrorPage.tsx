@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const CustomerErrorPage = () => {
+    const { t } = useTranslation();
     // ตั้งชื่อ Title ของหน้าเว็บ
-    document.title = "ลิงก์หมดอายุ";
+    document.title = t('link_expired');
 
     return (
         // Container หลัก จัดให้อยู่กลางหน้าจอ
@@ -30,12 +32,12 @@ const CustomerErrorPage = () => {
                 {/* ส่วนของข้อความ */}
                 <div className="space-y-4">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-                        ลิงก์หมดอายุ
+                        {t('link_expired')}
                     </h1>
                     <p className="text-base text-gray-600 leading-relaxed">
-                        ขออภัย, ลิงก์สำหรับเอกสารนี้ได้หมดอายุการใช้งานแล้ว
+                        {t('link_expired_message')}
                         <br />
-                        กรุณาติดต่อเจ้าหน้าที่เพื่อดำเนินการขอลิงก์ใหม่
+                        {t('contact_staff_for_new_link')}
                     </p>
                 </div>
 

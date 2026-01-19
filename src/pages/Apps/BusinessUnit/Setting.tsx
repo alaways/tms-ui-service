@@ -13,10 +13,12 @@ import InputField from '../../../components/HOC/InputField'
 import SelectField from '../../../components/HOC/SelectField'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import Breadcrumbs from '../../../helpers/breadcrumbs'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const SettingBU = () => {
+  const { t } = useTranslation()
 
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -40,13 +42,13 @@ const SettingBU = () => {
   }
 
   const breadcrumbItems = [
-    { to: '/apps/business-unit/list', label: 'หน่วยธุรกิจ' },
-    { to: '/apps/business-unit/preview/' + id_business_unit, label: 'ข้อมูลหน่วยธุรกิจ' },
-    { label: 'การตั้งค่าหน่วยธุรกิจ', isCurrent: true },
+    { to: '/apps/business-unit/list', label: t('business_unit') },
+    { to: '/apps/business-unit/preview/' + id_business_unit, label: t('business_unit_info') },
+    { label: t('business_unit_setting'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('ร้านค้าพาร์ทเนอร์'))
+    dispatch(setPageTitle(t('partner_shop')))
     dispatch(setSidebarActive(['bu', '/apps/business-unit/list']))
   })
 
@@ -129,7 +131,7 @@ const SettingBU = () => {
       setOriginalShopGroupShopRecords(uniqueRecords)
     },
     onError: () => {
-      showErrorMessage('ไม่พบข้อมูล ร้านค้าในกลุ่มร้าน')
+      showErrorMessage(t('shop_not_found_in_group'))
       setShopGroupShopRecords([])
       setOriginalShopGroupShopRecords([])
     },
@@ -160,7 +162,7 @@ const SettingBU = () => {
   const { mutate: interestRateCreate } = useGlobalMutation(url_api.interestRateCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('เพิ่มข้อมูลสำเร็จ', 'success')
+        showNotification(t('add_success'), 'success')
         fetchModelData({ data: { id_shop_group: shopGroupBuConfig.id } })
       } else {
         showNotification(res.message, 'error')
@@ -178,7 +180,7 @@ const SettingBU = () => {
   const { mutate: interestRateUpdate } = useGlobalMutation(url_api.interestRateUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
       } else {
         showNotification(res.message, 'error')
       }
@@ -216,32 +218,32 @@ const SettingBU = () => {
   }, [interestRateCreate, interestRateUpdate])
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_shop_group: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_1: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_2: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_3: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_4: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_5: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_6: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_7: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_8: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_9: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_10: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_11: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_12: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_13: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_14: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_15: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_16: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_17: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_18: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_19: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_20: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_21: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_22: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_23: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
-    inr_24: Yup.number().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('required_field')),
+    id_shop_group: Yup.string().nullable().required(t('required_field')),
+    inr_1: Yup.number().required(t('required_field')),
+    inr_2: Yup.number().required(t('required_field')),
+    inr_3: Yup.number().required(t('required_field')),
+    inr_4: Yup.number().required(t('required_field')),
+    inr_5: Yup.number().required(t('required_field')),
+    inr_6: Yup.number().required(t('required_field')),
+    inr_7: Yup.number().required(t('required_field')),
+    inr_8: Yup.number().required(t('required_field')),
+    inr_9: Yup.number().required(t('required_field')),
+    inr_10: Yup.number().required(t('required_field')),
+    inr_11: Yup.number().required(t('required_field')),
+    inr_12: Yup.number().required(t('required_field')),
+    inr_13: Yup.number().required(t('required_field')),
+    inr_14: Yup.number().required(t('required_field')),
+    inr_15: Yup.number().required(t('required_field')),
+    inr_16: Yup.number().required(t('required_field')),
+    inr_17: Yup.number().required(t('required_field')),
+    inr_18: Yup.number().required(t('required_field')),
+    inr_19: Yup.number().required(t('required_field')),
+    inr_20: Yup.number().required(t('required_field')),
+    inr_21: Yup.number().required(t('required_field')),
+    inr_22: Yup.number().required(t('required_field')),
+    inr_23: Yup.number().required(t('required_field')),
+    inr_24: Yup.number().required(t('required_field')),
   })
 
   // const goAddPartner = () => {
@@ -266,7 +268,7 @@ const SettingBU = () => {
     }
   }, [search, originalShopGroupShopRecords])
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <div>{t('loading')}</div>
 
   return (
     <div className="flex xl:flex-col flex-col gap-2.5">
@@ -276,20 +278,17 @@ const SettingBU = () => {
           {(props) => (
             <Form className="space-y-5 dark:text-white">
               <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                ตั้งค่าผลตอบแทน
+                {t('set_return')}
               </div>
               <div className="input-flex-row">
-                {/* <div className="input-container">
-                  <InputField label="ชื่อดอกเบี้ย" name="name" type="text" />
-                  </div> */}
                 {/* TODO: list group */}
                 <div className="input-container">
                   <SelectField
-                    label="กลุ่มร้าน"
+                    label={t('shop_group')}
                     id="id_shop_group"
                     name="id_shop_group"
                     options={shopGroupList}
-                    placeholder="กรุณาเลือก"
+                    placeholder={t('please_select')}
                     onChange={(e: any) => handleChangeSelect(props, e, 'id_shop_group')}
                     isSearchable={true}
                     disabled={true}
@@ -299,48 +298,48 @@ const SettingBU = () => {
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="1 เดือน" name="inr_1" type="number" />
-                    <InputField label="2 เดือน" name="inr_2" type="number" />
+                    <InputField label={`1 ${t('month')}`} name="inr_1" type="number" />
+                    <InputField label={`2 ${t('months')}`} name="inr_2" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="3 เดือน" name="inr_3" type="number" />
-                    <InputField label="4 เดือน" name="inr_4" type="number" />
+                    <InputField label={`3 ${t('months')}`} name="inr_3" type="number" />
+                    <InputField label={`4 ${t('months')}`} name="inr_4" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="5 เดือน" name="inr_5" type="number" />
-                    <InputField label="6 เดือน" name="inr_6" type="number" />
+                    <InputField label={`5 ${t('months')}`} name="inr_5" type="number" />
+                    <InputField label={`6 ${t('months')}`} name="inr_6" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="7 เดือน" name="inr_7" type="number" />
-                    <InputField label="8 เดือน" name="inr_8" type="number" />
+                    <InputField label={`7 ${t('months')}`} name="inr_7" type="number" />
+                    <InputField label={`8 ${t('months')}`} name="inr_8" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="9 เดือน" name="inr_9" type="number" />
-                    <InputField label="10 เดือน" name="inr_10" type="number" />
+                    <InputField label={`9 ${t('months')}`} name="inr_9" type="number" />
+                    <InputField label={`10 ${t('months')}`} name="inr_10" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="11 เดือน" name="inr_11" type="number" />
-                    <InputField label="12 เดือน" name="inr_12" type="number" />
+                    <InputField label={`11 ${t('months')}`} name="inr_11" type="number" />
+                    <InputField label={`12 ${t('months')}`} name="inr_12" type="number" />
                   </div>
                 </div>
               </div>
@@ -348,56 +347,56 @@ const SettingBU = () => {
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="13 เดือน" name="inr_13" type="number" />
-                    <InputField label="14 เดือน" name="inr_14" type="number" />
+                    <InputField label={`13 ${t('months')}`} name="inr_13" type="number" />
+                    <InputField label={`14 ${t('months')}`} name="inr_14" type="number" />
                   </div>
                 </div>
               </div>
                <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="15 เดือน" name="inr_15" type="number" />
-                    <InputField label="16 เดือน" name="inr_16" type="number" />
+                    <InputField label={`15 ${t('months')}`} name="inr_15" type="number" />
+                    <InputField label={`16 ${t('months')}`} name="inr_16" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="17 เดือน" name="inr_17" type="number" />
-                    <InputField label="18 เดือน" name="inr_18" type="number" />
+                    <InputField label={`17 ${t('months')}`} name="inr_17" type="number" />
+                    <InputField label={`18 ${t('months')}`} name="inr_18" type="number" />
                   </div>
                 </div>
               </div>
                <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="19 เดือน" name="inr_19" type="number" />
-                    <InputField label="20 เดือน" name="inr_20" type="number" />
+                    <InputField label={`19 ${t('months')}`} name="inr_19" type="number" />
+                    <InputField label={`20 ${t('months')}`} name="inr_20" type="number" />
                   </div>
                 </div>
               </div>
               <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="21 เดือน" name="inr_21" type="number" />
-                    <InputField label="22 เดือน" name="inr_22" type="number" />
+                    <InputField label={`21 ${t('months')}`} name="inr_21" type="number" />
+                    <InputField label={`22 ${t('months')}`} name="inr_22" type="number" />
                   </div>
                 </div>
               </div>
                <div className="input-flex-row">
                 <div className="input-container">
                   <div className="input-flex-row">
-                    <InputField label="23 เดือน" name="inr_23" type="number" />
-                    <InputField label="24 เดือน" name="inr_24" type="number" />
+                    <InputField label={`23 ${t('months')}`} name="inr_23" type="number" />
+                    <InputField label={`24 ${t('months')}`} name="inr_24" type="number" />
                   </div>
                 </div>
               </div>
-              
+
               <div className="input-flex-row"></div>
               <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                 {isLoading && <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>}
-                บันทึก
+                {t('save')}
               </button>
             </Form>
           )}

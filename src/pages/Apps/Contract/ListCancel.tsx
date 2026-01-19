@@ -25,6 +25,7 @@ import IconOpenBook from '../../../components/Icon/IconOpenBook'
 import PreLoading from '../../../helpers/preLoading'
 import DateRangeAntd from '../../../components/HOC/DateRangeAntd'
 import IconChecks from '../../../components/Icon/IconChecks'
+import { useTranslation } from 'react-i18next'
 
 const filterInitial: any = {
   start_at: '',
@@ -42,10 +43,11 @@ const mode = process.env.MODE || 'admin'
 const ListCancel = () => {
 
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการสัญญาที่ถูกยกเลิก'))
-  }, [dispatch])
+    dispatch(setPageTitle(t('cancelled_contract_list')))
+  }, [dispatch, t])
 
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState<any>([])
@@ -121,7 +123,7 @@ const ListCancel = () => {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
     myHeaders.append('Authorization', `Bearer ${token}`)
-    const raw = JSON.stringify({...filterValues,page:1,page_size:999999,format:'excel',contract_hire_type_id: 1});
+    const raw = JSON.stringify({...filterValues,page:1,page_size:999999,format:'excel'});
     const requestOptions: any = {
       method: 'POST',
       headers: myHeaders,
@@ -175,8 +177,7 @@ const ListCancel = () => {
       query: filters.query,
       status_type: filters?.status_code?.value?.status_type ? filters?.status_code?.value?.status_type : 'contract',
       status_code: filters?.status_code?.value?.status_code ? filters?.status_code?.value?.status_code : '',
-      id_business_unit: filters?.id_business_unit?.value?.id || '',
-      contract_hire_type_id: 1
+      id_business_unit: filters?.id_business_unit?.value?.id || ''
     }
     fetchContractData({
       data: params,
@@ -185,7 +186,7 @@ const ListCancel = () => {
   }
 
   useEffect(() => {
-    fetchContractData({data:{...filterValues,page:page,page_size:pageSize,contract_hire_type_id: 1}})
+    fetchContractData({data:{...filterValues,page:page,page_size:pageSize}})
   }, [page, pageSize])
 
   return (
@@ -202,17 +203,17 @@ const ListCancel = () => {
               <Form className="flex flex-col flex-auto gap-2">
                 <div className="flex flex-col sm:flex-row md:flex-row gap-5">
                   <div className="flex-1">
-                    <label>หน่วยธุรกิจ</label>
+                    <label>{t('business_unit')}</label>
                     {role === "business_unit" ? (<Select
                       defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
                       value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('select_business_unit')}
                       className="z-10 w-auto"
                       options={businessUnit.map((item: any) => ({ label: item.label, value: item.value.id }))}
                       isDisabled={true}
                     />) : (<Select
                       value={values.id_business_unit}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('select_business_unit')}
                       className="z-10 w-auto"
                       options={businessUnit}
                       isSearchable={true}
@@ -224,10 +225,10 @@ const ListCancel = () => {
 
                   </div>
                   <div className="flex-1">
-                    <label>สถานะการยกเลิก</label>
+                    <label>{t('cancellation_status')}</label>
                     <Select
                       value={values.status_code}
-                      placeholder="เลือก สถานะ"
+                      placeholder={t('select_status')}
                       className="z-10 w-auto"
                       options={status}
                       isSearchable={true}
@@ -241,7 +242,7 @@ const ListCancel = () => {
                 </div>
                 <div className="flex flex-col sm:flex-row md:flex-row gap-5 pt-3">
                   {/* <DatePicker
-                    label="วันที่ทำสัญญา"
+                    label={t('contract_date')}
                     name="contract_date"
                     isRange={true}
                     onChange={(value: any) => {
@@ -251,7 +252,7 @@ const ListCancel = () => {
                     }}
                   />
                   <DatePicker
-                    label="วันที่อนุมัติ"
+                    label={t('contract_approval_date')}
                     name="approved_at"
                     isRange={true}
                     onChange={(value: any) => {
@@ -260,18 +261,18 @@ const ListCancel = () => {
                       updateFilterValues(convertDateClientToDb(value[1]?[value[1]]:null), 'approved_end_at')
                     }}
                   /> */}
-                  <DateRangeAntd label="วันที่ทำสัญญา" name="contract_date" />
-                  <DateRangeAntd label="วันที่อนุมัติ" name="approved_at" />
+                  <DateRangeAntd label={t('contract_date')} name="contract_date" />
+                  <DateRangeAntd label={t('contract_approval_date')} name="approved_at" />
 
                 </div>
                 <div className='flex flex-col sm:flex-row md:flex-row gap-5'>
                   <div className="flex-1">
-                    <label>ค้นหา</label>
+                    <label>{t('search_text')}</label>
                     <input
                       type="text"
                       name="query"
                       className="form-input"
-                      placeholder="ค้นหา..."
+                      placeholder={t('search_text') + '...'}
                       onChange={(e: any) => {
                         setFieldValue('query', e.target.value)
                         updateFilterValues(e.target.value, 'query')
@@ -280,7 +281,7 @@ const ListCancel = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row md:flex-row gap-5 justify-center items-end">
                     <button type="submit" className="btn btn-primary gap-2 w-[100px] h-[40px]">
-                      ค้นหา
+                      {t('search_text')}
                     </button>
                     <button
                       type="reset"
@@ -301,7 +302,7 @@ const ListCancel = () => {
                         // setFilterValues(resetValues)
                       }}
                     >
-                      ล้างค่า
+                      {t('clear')}
                     </button>
                     {(role === 'admin' || role === 'business_unit') && (
                       <button type="button" className="btn btn-success gap-2 w-[100px] h-[40px]" onClick={() => { handleExport(`contract_${new Date().toLocaleString()}`) }}>
@@ -316,7 +317,7 @@ const ListCancel = () => {
         </div>
         <div className="datatables pagination-padding">
           {contractList.length === 0 ? (
-            <div className="my-10 text-center text-gray-500">ไม่พบข้อมูล</div>
+            <div className="my-10 text-center text-gray-500">{t('not_found_data')}</div>
           ) : (
             <DataTable
               className="whitespace-nowrap table-hover invoice-table"
@@ -324,7 +325,7 @@ const ListCancel = () => {
               columns={[
                 {
                   accessor: 'index',
-                  title: 'ลำดับ',
+                  title: t('order'),
                   textAlignment: 'center',
                   render: (row, index) => (
                     index + 1 + (page - 1) * pageSize
@@ -332,7 +333,7 @@ const ListCancel = () => {
                 },
                 {
                   accessor: 'id',
-                  title: 'เลขสัญญา',
+                  title: t('contract_number'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item: any) => {
@@ -354,7 +355,7 @@ const ListCancel = () => {
                 },
                 {
                   accessor: 'business_unit',
-                  title: 'หน่วยธุรกิจ',
+                  title: t('business_unit'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item: any) => (
@@ -365,7 +366,7 @@ const ListCancel = () => {
                 },
                 {
                   accessor: 'shop',
-                  title: 'ร้านค้า',
+                  title: t('shop'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item) => (
@@ -376,14 +377,14 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'contract_type',
-                    title: 'ประเภทสัญญา',
+                    title: t('contract_type'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item: any) => <p>{item?.contract_type?.name}</p>,
                 },
                 {
                     accessor: 'contract_date',
-                    title: 'วันที่ทำสัญญา',
+                    title: t('contract_date'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item: any) => {
@@ -393,7 +394,7 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'approved_at',
-                    title: 'วันที่อนุมัติ',
+                    title: t('contract_approval_date'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item: any) => {
@@ -402,7 +403,7 @@ const ListCancel = () => {
                  },
                  {
                     accessor: 'customer',
-                    title: 'ชื่อลูกค้า',
+                    title: t('customer_name'),
                     textAlignment: 'left',
                     sortable: false,
                     render: (item: any) => {
@@ -411,7 +412,7 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'price',
-                    title: 'ราคา',
+                    title: t('price'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item: any) =>{
@@ -420,7 +421,7 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'down_payment',
-                    title: 'ชำระเงินดาวน์',
+                    title: t('down_payment'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item: any) =>{
@@ -429,7 +430,7 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'principle',
-                    title: 'ทุนเช่าซื้อ',
+                    title: t('lease_principal'),
                     textAlignment: 'right',
                     sortable: false,
                     render: (item: any) =>{
@@ -438,7 +439,7 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'ins_period',
-                    title: 'จำนวนงวด',
+                    title: t('installment_period'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item: any) =>{
@@ -447,7 +448,7 @@ const ListCancel = () => {
                 },
                 {
                     accessor: 'customer_signature_at',
-                    title: 'ลงนามออนไลน์',
+                    title: t('online_signature'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item: any) =>{
@@ -460,7 +461,7 @@ const ListCancel = () => {
                 },
                 {
                   accessor: 'e_contract_status',
-                  title: 'ลงนาม Ekyc',
+                  title: t('ekyc_signature'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item:any) => (
@@ -499,7 +500,7 @@ const ListCancel = () => {
               }}
               highlightOnHover
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
               )}
             />
           )}

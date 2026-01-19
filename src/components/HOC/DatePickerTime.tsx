@@ -4,6 +4,7 @@ import Flatpickr from 'react-flatpickr';
 import * as moment from 'moment-timezone'
 
 import { Field, ErrorMessage, useField, useFormikContext } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 import 'flatpickr/dist/flatpickr.css';
 
@@ -11,6 +12,7 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
 
   const [field, meta] = useField(name);
   const { setFieldValue, setFieldTouched, values } = useFormikContext();
+  const { t } = useTranslation();
 
   const [date, setDate] = useState<Date | null>(field.value || null);
   const hasError = meta.touched && meta.error;
@@ -34,7 +36,7 @@ const withInputField = (Component: any) => ({ label, name, placeholder, require 
               <Flatpickr
                   value={date}
                   onChange={(selectedDates) => setDate(selectedDates[0] || null)}
-                  placeholder={placeholder ?? 'เลือกวันที่'}
+                  placeholder={placeholder ?? t('select_date')}
                   className={props.disabled ? 'form-input disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b]' : 'form-input placeholder:text-white-dark'}
                   options={{
                       enableTime: true,

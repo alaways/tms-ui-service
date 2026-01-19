@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom'
 import 'tippy.js/dist/tippy.css'
 import Tippy from '@tippyjs/react'
 import IconEdit from '../../../components/Icon/IconEdit'
+import { useTranslation } from 'react-i18next'
 
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
@@ -38,10 +39,11 @@ const List = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการประเภทสินทรัพย์'))
-  }, [dispatch])
+    dispatch(setPageTitle(t('asset_type_list')))
+  }, [dispatch, t])
 
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -64,7 +66,7 @@ const List = () => {
   const [search, setSearch] = useState('')
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('required_field')),
   })
 
   const { mutate: fetchAssetTypeData } = useGlobalMutation(url_api.assetTypeFindAll, {
@@ -123,7 +125,7 @@ const List = () => {
   const { mutate: assetTypeCreate } = useGlobalMutation(url_api.assetTypeCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('เพิ่มข้อมูลสำเร็จ', 'success')
+        showNotification(t('add_success'), 'success')
         setActionModal(false)
         fetchAssetTypeData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -138,7 +140,7 @@ const List = () => {
   const { mutate: assetTypeUpdate } = useGlobalMutation(url_api.assetTypeUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
         setActionModal(false)
         fetchAssetTypeData({ data: { page, page_size: pageSize, query: search } })
       } else {
@@ -175,17 +177,17 @@ const List = () => {
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
         <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
           <h2 className="text-xl">
-            ประเภทสินทรัพย์
+            {t('asset_type_list')}
           </h2>
           <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
             <div className="flex gap-3">
               <button type="button" className="btn btn-primary" onClick={() => addEditAssetType()}>
                 <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                เพิ่มประเภทสินทรัพย์
+                {t('add_asset_type')}
               </button>
             </div>
             <div className="relative">
-              <input type="text" placeholder="ค้นหา" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input type="text" placeholder={t('search_text')} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
               <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
                 <IconSearch className="mx-auto" />
               </button>
@@ -199,7 +201,7 @@ const List = () => {
             columns={[
               {
                 accessor: 'id',
-                title: 'ลำดับ',
+                title: t('order'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (row, index) => (
@@ -208,7 +210,7 @@ const List = () => {
               },
               {
                 accessor: 'name',
-                title: 'ชื่อประเภททรัพย์สิน',
+                title: t('asset_type_name'),
                 textAlignment: 'left',
                 sortable: false,
                 render: (item: any) => (
@@ -221,7 +223,7 @@ const List = () => {
               },
               {
                 accessor: 'description',
-                title: 'คำอธิบาย',
+                title: t('asset_type_description'),
                 textAlignment: 'left',
                 sortable: false,
                 render: ({ description }) => (
@@ -232,28 +234,28 @@ const List = () => {
               },
               {
                 accessor: 'is_active',
-                title: 'เปิดปิดการใช้งาน',
+                title: t('active_status'),
                 textAlignment: 'center',
                 sortable: false,
                 render: ({ is_active }) => (
                   <span className={`badge ${is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                    {is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+                    {is_active ? t('open') : t('close')}
                   </span>
                 ),
               },
               {
                 accessor: 'action',
-                title: 'Actions',
+                title: t('actions'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (item) => (
                   <div className="flex gap-4 items-center w-max mx-auto">
-                    <Tippy content="แก้ไข" theme="Primary">
+                    <Tippy content={t('edit')} theme="Primary">
                       <a className="flex cursor-pointer active" onClick={() => addEditAssetType(item)}>
                         <IconEdit className="w-4.5 h-4.5" />
                       </a>
                     </Tippy>
-                    <Tippy content="ตั้งค่า" theme="Primary">
+                    <Tippy content={t('settings')} theme="Primary">
                       <a className="flex cursor-pointer active" onClick={() => goColorModelCapacity(item)}>
                         <IconSettings />
                       </a>
@@ -273,7 +275,7 @@ const List = () => {
               setPageSize(p)
             }}
             paginationText={({ from, to, totalRecords }) => (
-              `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+              `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
             )}
           />
         </div>
@@ -309,28 +311,28 @@ const List = () => {
                     >
                       <IconX />
                     </button>
-                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{formData.id ? 'แก้ไข' : 'เพิ่ม'}</div>
+                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{formData.id ? t('edit') : t('add')}</div>
                     <div className="p-5">
                       <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedForm}>
                         {(props) => (
                           <Form className="space-y-5 mb-7 dark:text-white custom-select">
-                            <InputField label="ชื่อประเภททรัพย์สิน" name="name" type="text" placeholder="กรุณาใส่ข้อมูล" />
-                            <InputField label="คำอธิบาย" name="description" type="text" placeholder="กรุณาใส่ข้อมูล" />
+                            <InputField label={t('asset_type_name')} name="name" type="text" placeholder={t('please_enter_info')} />
+                            <InputField label={t('asset_type_description')} name="description" type="text" placeholder={t('please_enter_info')} />
                             <SelectField
-                              label="สถานะ*"
+                              label={t('status') + '*'}
                               id="is_active"
                               name="is_active"
                               options={[
                                 {
                                   value: true,
-                                  label: 'เปิด',
+                                  label: t('open'),
                                 },
                                 {
                                   value: false,
-                                  label: 'ปิด',
+                                  label: t('close'),
                                 },
                               ]}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => {
                                 props.setFieldValue('is_active', e.value)
                               }}
@@ -338,10 +340,10 @@ const List = () => {
                             />
                             <div className="flex justify-end items-center mt-8">
                               <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                                ยกเลิก
+                                {t('cancel')}
                               </button>
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {formData.id ? 'บันทึก' : 'เพิ่ม'}
+                                {formData.id ? t('save') : t('add')}
                               </button>
                             </div>
                           </Form>

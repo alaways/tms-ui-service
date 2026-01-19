@@ -14,6 +14,7 @@ import { url_api } from '../../../services/endpoints'
 import { toastAlert } from '../../../helpers/constant'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { formatIDNumber, formatPhoneNumber } from '../../../helpers/formatNumeric'
+import { useDistrictMutation, useSubDistrictMutation } from '../../../services/mutations/useProvincesMutation'
 import { useBusinessUnitFindMutation } from '../../../services/mutations/useBusinessUnitMutation'
 import { Form, Formik } from 'formik'
 import { Dialog, Transition } from '@headlessui/react'
@@ -35,10 +36,12 @@ import IconTrashLines from '../../../components/Icon/IconTrashLines'
 import IconChecks from '../../../components/Icon/IconChecks'
 import 'tippy.js/dist/tippy.css'
 import { DataTable } from 'mantine-datatable'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 const Preview = () => {
 
+  const { t } = useTranslation()
   const { id } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -47,15 +50,15 @@ const Preview = () => {
   const role = storedUser ? JSON.parse(storedUser).role : null
   const dataBusinessUnits = useSelector((state: IRootState) => state.dataStore.businessUnits)
   const breadcrumbItems = [
-    { to: '/apps/business-unit/list', label: 'หน่วยธุรกิจ' },
-    { label: 'ข้อมูลหน่วยธุรกิจ', isCurrent: true },
+    { to: '/apps/business-unit/list', label: t('business_unit') },
+    { label: t('business_unit_info'), isCurrent: true },
   ]
 
   if (role !== 'admin' && role !== 'business_unit') {
     navigate('/')
   }
   useEffect(() => {
-    dispatch(setPageTitle('ข้อมูลหน่วยธุรกิจ'))
+    dispatch(setPageTitle(t('business_unit_info')))
     dispatch(setSidebarActive(['bu', '/apps/business-unit/list']))
   }, [])
 
@@ -82,9 +85,9 @@ const Preview = () => {
     logo_image_url: ''
   })
   const SubmittedFormSG = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('required_field')), // 已有 key
   })
-  
+
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -98,7 +101,7 @@ const Preview = () => {
     }, 500);
 
     return () => clearTimeout(delayDebounce);
-  }, [search, listData]); 
+  }, [search, listData]);
 
   const searchListData = () => {
     if (search.trim() !== "") {
@@ -122,8 +125,8 @@ const Preview = () => {
     }
   };
 
-  
-  
+
+
   const { mutate: fetchBusinessUnitsData, isLoading: isLoadingBusinessUnitsData } = useBusinessUnitFindMutation({
     async onSuccess(res: any) {
       const setFormValue = res.data
@@ -138,7 +141,7 @@ const Preview = () => {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         setSearch('')
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
         setActionModal2(false)
         buGetShopV2({ data: { id_business_unit: dataBusinessUnits.id } })
       } else {
@@ -154,7 +157,7 @@ const Preview = () => {
   const { mutate: buGetShopGroup,isLoading: isShopGroupBuLoading } = useGlobalMutation(url_api.buGetShopGroup, {
     onSuccess: (res: any) => {
       const uniqueRecords = res.data.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => t.id === item.id)).map((item: any) => item)
-      
+
       setShopGroupRecords(uniqueRecords)
       setShopGroupList(
         uniqueRecords.map((item: any) => ({
@@ -165,7 +168,7 @@ const Preview = () => {
       setOriginalShopGroupRecords(uniqueRecords)
     },
     onError: () => {
-      showErrorMessage('ไม่พบข้อมูล กลุ่มร้านในหน่วยธุรกิจ')
+      showErrorMessage(t('business_unit_no_shop_group_data'))
       setShopGroupRecords([])
       setOriginalShopGroupRecords([])
     },
@@ -178,7 +181,7 @@ const Preview = () => {
       setListDataFiltered(uniqueRecords)
     },
     onError: () => {
-      showErrorMessage('ไม่พบข้อมูล ร้านค้าในกลุ่มร้าน')
+      showErrorMessage(t('business_unit_no_shop_data'))
       setListData([])
       setListDataFiltered([])
     },
@@ -271,7 +274,7 @@ const Preview = () => {
   const { mutate: shopGroupCreate } = useGlobalMutation(url_api.shopGroupCreate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('เพิ่มข้อมูลสำเร็จ', 'success')
+        showNotification(t('add_success'), 'success')
         setActionModal(false)
         buGetShopGroup({ data: { id_business_unit: dataBusinessUnits.id } })
       } else {
@@ -286,7 +289,7 @@ const Preview = () => {
   const { mutate: shopGroupUpdate } = useGlobalMutation(url_api.shopGroupUpdate, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
-        showNotification('แก้ไขข้อมูลสำเร็จ', 'success')
+        showNotification(t('edit_success'), 'success')
         setActionModal(false)
         buGetShopGroup({ data: { id_business_unit: dataBusinessUnits.id } })
       } else {
@@ -303,7 +306,7 @@ const Preview = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกสำเร็จ',
+          title: t('save_success'),
           padding: '10px 20px',
         })
         // buGetShopV2({
@@ -401,8 +404,8 @@ const Preview = () => {
   }, [])
 
   const SubmitPartnerForm = Yup.object().shape({
-    id_shop_group: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_shop: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    id_shop_group: Yup.string().required(t('required_field')), // 已有 key
+    id_shop: Yup.string().required(t('required_field')),       // 已有 key
   })
 
   const goEditPreview = () => {
@@ -420,9 +423,9 @@ const Preview = () => {
   const wizardContent = (statusAction: Record<StatusKeys, boolean>) => {
 
     const steps: { label: string, key: StatusKeys }[] = [
-      { label: 'กลุ่มร้าน', key: 'shop_group' },
-      { label: 'ร้านค้าพาร์ทเนอร์', key: 'partner' },
-      { label: 'การตั้งค่าหน่วยธุรกิจ', key: 'business_unit' }
+      { label: t('shop_group'), key: 'shop_group' },            // 新 key：店铺组
+      { label: t('partner_shop'), key: 'partner' },             // 新 key：合作伙伴店铺
+      { label: t('business_unit_settings'), key: 'business_unit' }, // 新 key：业务单位设置
     ]
 
     const completedSteps = steps.filter(step => statusAction[step.key]).length
@@ -456,11 +459,11 @@ const Preview = () => {
         <div className="flex">
           <a className="cursor-pointer btn btn-sm btn-primary mr-1" onClick={() => goEditPreview()}>
             <IconEdit className="w-4.5 h-4.5" /> &nbsp;
-            แก้ไข
+            {t('edit')}
           </a>
           <a className="cursor-pointer btn btn-sm btn-primary" onClick={() => goShopInterestRate()}>
             <IconSettings /> &nbsp;
-            ตั้งค่า
+            {t('settings')}
           </a>
         </div>
       </div>
@@ -520,14 +523,14 @@ const Preview = () => {
             <div className="panel px-6 flex-1 py-6 rtl:xl:ml-6">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                  กลุ่มร้าน
+                {t('shop_group')}
                 </div>
                 <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                   <div className="flex gap-3">
                     <div>
                       <button type="button" className="btn btn-primary" onClick={() => addEditShopGroup()}>
                         <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                        เพิ่มกลุ่มร้าน
+                        {t('add_shop_group')}
                       </button>
                     </div>
                   </div>
@@ -536,15 +539,15 @@ const Preview = () => {
               <br />
               <div className="table-responsive">
                 <table className="table-striped table-hover">
-                  <thead>
+                <thead>
                     <tr>
                       <th className="text-center" style={{ width: '100px' }}>
-                        ลำดับ
+                        {t('order')}                                           {/* 已有 key */}
                       </th>
-                      <th>ชื่อกลุ่มร้าน</th>
-                      <th>ตั้งค่า</th>
+                      <th>{t('shop_group_name')}</th>                          {/* 新 key：店铺组名称 */}
+                      <th>{t('settings')}</th>                                 {/* 新 key：设置 */}
                       <th className="!text-center" style={{ width: '200px' }}>
-                        Actions
+                        {t('actions')}                                         {/* 已有 key */}
                       </th>
                     </tr>
                   </thead>
@@ -558,16 +561,16 @@ const Preview = () => {
                         </td>
                         <td>{item.name}</td>
                         <td><span className={`badge ${item.is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                          {item.is_active ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน'}
+                          {item.is_active ? t('available') : t('not_available')}
                         </span></td>
                         <td>
                           <div className="flex gap-4 items-center w-max mx-auto">
-                            <Tippy content="ดูข้อมูล" theme="Primary">
+                            <Tippy content={t('view_data')} theme="Primary">
                               <a className="flex hover:text-info cursor-pointer" onClick={() => goSetting(item)}>
                                 <IconEye className="w-4.5 h-4.5" />
                               </a>
                             </Tippy>
-                            <Tippy content="แก้ไข" theme="Primary">
+                            <Tippy content={t('edit')} theme="Primary">
                               <a className="flex hover:text-info cursor-pointer" onClick={() => addEditShopGroup(item)}>
                                 <IconEdit className="w-4.5 h-4.5" />
                               </a>
@@ -586,13 +589,13 @@ const Preview = () => {
             <div className="panel px-6 flex-1 py-6 rtl:xl:ml-6">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                  ร้านค้าพาร์ทเนอร์
+                {t('partner_shop')}
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
                   <input
                     type="text"
-                    placeholder="ค้นหา..."
+                    placeholder={t('search_text')}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="border rounded p-2"
@@ -606,10 +609,10 @@ const Preview = () => {
                       <div className="w-4/6" style={{ width: 'calc(100% - 210px)' }}>
                         <div className="input-flex-row">
                           <SelectField
-                            label="กลุ่มร้าน"
+                            label={t('shop_group')}
                             id="id_shop_group"
                             name="id_shop_group"
-                            placeholder="กรุณาเลือก"
+                            placeholder={t('please_select')}
                             options={shopGroupList}
                             isSearchable={true}
                             onChange={(e: any) => {
@@ -617,10 +620,10 @@ const Preview = () => {
                             }}
                           />
                           <SelectField
-                            label="ร้านค้า"
+                            label={t('shop')}
                             id="id_shop"
                             name="id_shop"
-                            placeholder="กรุณาเลือก"
+                            placeholder={t('please_select')}
                             options={shopList}
                             isSearchable={true}
                             disabled={props.values.id_shop_group ? false : true}
@@ -634,7 +637,7 @@ const Preview = () => {
                         <div className="pt-10">
                           <button type="submit" className="btn btn-primary">
                             <IconPlus /> &nbsp;
-                            เพิ่มร้านค้าพาร์ทเนอร์
+                            {t('add_partner_shop')}
                           </button>
                         </div>
                       </div>
@@ -643,18 +646,18 @@ const Preview = () => {
                 )}
               </Formik>
               <br />
-              <div className='overflow-x-scroll'> 
+              <div className='overflow-x-scroll'>
                 <div className="table-responsive ">
                   <table className="table-striped table-hover">
                     <thead>
                       <tr>
-                        <th className="text-center" style={{ width: '100px' }}>ลำดับ</th>
-                        <th style={{ minWidth: '180px' }}>เลขผู้เสียภาษี</th>
-                        <th style={{ minWidth: '150px' }}>ชื่อร้าน</th>
-                        <th style={{ minWidth: '90px' }}>กลุ่มร้าน</th>
-                        <th style={{ minWidth: '130px' }}>สถานะ</th>
-                        <th style={{ minWidth: '130px' }}>กลุ่มหลัก</th>
-                        <th className="!text-center" style={{ width: '200px' }}>Actions</th>
+                        <th className="text-center" style={{ width: '100px' }}>{t('order')}</th>
+                        <th style={{ minWidth: '180px' }}>{t('tax_id')}</th>
+                        <th style={{ minWidth: '150px' }}>{t('shop_name')}</th>
+                        <th style={{ minWidth: '90px' }}>{t('shop_group')}</th>
+                        <th style={{ minWidth: '130px' }}>{t('status')}</th>
+                        <th style={{ minWidth: '130px' }}>{t('main_group')}</th>
+                        <th className="!text-center" style={{ width: '200px' }}>{t('actions')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -669,14 +672,14 @@ const Preview = () => {
                           <td>{item.name}</td>
                           <td>{item?.shop_group_name}</td>
                           <td><span className={`badge ${item.is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                            {item.is_active ? 'พร้อมใช้งาน' : 'ไม่พร้อมใช้งาน'}
+                          {item.is_active ? t('available') : t('not_available')}
                           </span></td>
                           <td className="text-center text-green">
                             {item?.is_main == true ? <IconChecks /> : ''}
                           </td>
                           <td>
                             <div className="flex gap-4 items-center w-max mx-auto">
-                              <Tippy content="แก้ไข" theme="Primary">
+                            <Tippy content={t('edit')} theme="Primary">
                                 <a className="flex hover:text-info cursor-pointer" onClick={() => editShop(item)}>
                                   <IconEdit className="w-4.5 h-4.5" />
                                 </a>
@@ -706,33 +709,33 @@ const Preview = () => {
                     <IconX />
                   </button>
                   <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                    {formSGData.id ? 'แก้ไข' : 'เพิ่ม'}
+                    {formSGData.id ? t('save') : t('add')}
                   </div>
                   <div className="p-5">
                     <Formik initialValues={formSGData} onSubmit={submitFormSG} enableReinitialize autoComplete="off" validationSchema={SubmittedFormSG}>
                       {(props) => (
                         <Form className="space-y-5 mb-7 dark:text-white custom-select">
                           <InputField
-                            label="ชื่อกลุ่มร้าน"
+                            label={t('shop_group_name')}
                             name="name"
                             type="text"
-                            placeholder="กรุณาใส่ข้อมูล"
+                            placeholder={t('please_enter_info')}
                           />
                           <SelectField
-                            label="สถานะ *"
+                            label={`${t('status')} *`}
                             id="is_active"
                             name="is_active"
                             options={[
                               {
                                 value: true,
-                                label: 'เปิด',
+                                label: t('open'),
                               },
                               {
                                 value: false,
-                                label: 'ปิด',
-                              },
+                                label: t('close'),
+                              }
                             ]}
-                            placeholder="กรุณาเลือก"
+                            placeholder={t('please_select')}
                             onChange={(e: any) => {
                               props.setFieldValue('is_active', e.value)
                             }}
@@ -740,10 +743,10 @@ const Preview = () => {
                           />
                           <div className="flex justify-end items-center mt-8">
                             <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                              ยกเลิก
+                              {t('cancel')}
                             </button>
                             <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                              {formSGData.id ? 'บันทึก' : 'เพิ่ม'}
+                              {formSGData.id ? t('save') : t('add')}
                             </button>
                           </div>
                         </Form>
@@ -770,44 +773,44 @@ const Preview = () => {
                     <IconX />
                   </button>
                   <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">
-                    แก้ไข
+                  {t('edit')}
                   </div>
                   <div className="p-5">
                     <Formik initialValues={formShopData} onSubmit={submitFormShop} enableReinitialize autoComplete="off">
                       {(props) => (
                         <Form className="space-y-5 mb-7 dark:text-white custom-select">
                           <InputField
-                            label="ชื่อร้านค้า"
+                            label={t('shop_name')}
                             name="name"
                             type="text"
-                            placeholder="กรุณาใส่ข้อมูล"
+                            placeholder={t('please_enter_info')}
                             disabled
                           />
                          {/* todo */}
                           <SelectField
-                            label="กลุ่มร้าน"
+                            label={t('shop_group')}
                             id="id_shop_group"
                             name="id_shop_group"
-                            placeholder="กรุณาเลือก"
+                            placeholder={t('please_select')}
                             options={shopGroupList}
                             isSearchable={true}
                             disabled
                           />
                           <SelectField
-                            label="กลุ่มหลัก"
+                            label={t('main_group')}
                             id="is_main"
                             name="is_main"
                             options={[
                               {
                                 value: true,
-                                label: 'เปิด',
+                                label: t('open'),
                               },
                               {
                                 value: false,
-                                label: 'ปิด',
+                                label: t('close'),
                               },
                             ]}
-                            placeholder="กรุณาเลือก"
+                            placeholder={t('please_select')}
                             onChange={(e: any) => {
                               props.setFieldValue('is_active', e.value)
                             }}
@@ -815,20 +818,20 @@ const Preview = () => {
                           />
 
                           <SelectField
-                            label="สถานะ *"
+                            label={`${t('status')} *`}
                             id="is_active"
                             name="is_active"
                             options={[
                               {
                                 value: true,
-                                label: 'เปิด',
+                                label: t('open'),
                               },
                               {
                                 value: false,
-                                label: 'ปิด',
+                                label: t('close'),
                               },
                             ]}
-                            placeholder="กรุณาเลือก"
+                            placeholder={t('please_select')}
                             onChange={(e: any) => {
                               props.setFieldValue('is_active', e.value)
                             }}
@@ -836,10 +839,10 @@ const Preview = () => {
                           />
                           <div className="flex justify-end items-center mt-8">
                             <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal2(false)}>
-                              ยกเลิก
+                            {t('cancel')}
                             </button>
                             <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                              บันทึก
+                            {t('save')}
                             </button>
                           </div>
                         </Form>

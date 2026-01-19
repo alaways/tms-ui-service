@@ -4,14 +4,15 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
+        "dev": "cross-env VITE_ENV=dev vite --host 0.0.0.0",
         "start": "vite --host 0.0.0.0",
-        "start:dev": "copy .\\.env.dev .\\.env && vite",
+        "start:loc": "cross-env VITE_ENV=dev vite --host 0.0.0.0",
+        "start:dev": " .\\.env.dev .\\.env && vite",
         "start:prod": "copy .\\.env.prod .\\.env && vite",
         "clean": "vite clean",
         "build": "vite build",
         "build:prod": "copy .\\.env.prod .\\.env && vite build",
         "build-dev": "dotenv -e .env.dev vite build",
-        "build-dev-admin": "dotenv -e .env.dev-admin vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
     },
@@ -48,7 +49,7 @@
         "@types/react-text-mask": "^5.4.11",
         "@x1mrdonut1x/nouislider-react": "^3.4.3",
         "antd": "^5.24.6",
-        "apexcharts": "^3.37.1",
+        "apexcharts": "^4.0.0",
         "axios": "^1.7.2",
         "browser-image-compression": "^2.0.2",
         "date-fns": "^4.1.0",
@@ -90,7 +91,6 @@
         "react-pdf": "^10.2.0",
         "react-pin-field": "^4.0.2",
         "react-popper": "^2.3.0",
-        "react-qr-code": "^2.0.18",
         "react-query": "^3.39.3",
         "react-quill": "^2.0.0",
         "react-redux": "^8.0.4",
@@ -102,7 +102,6 @@
         "react-simplemde-editor": "^5.2.0",
         "react-sortablejs": "^6.1.4",
         "react-text-mask": "^5.5.0",
-        "react-webcam": "^7.2.0",
         "reactstrap": "^9.2.2",
         "redux-persist": "^6.0.0",
         "socket.io": "^4.8.0",
@@ -130,6 +129,7 @@
         "@types/styled-components": "^5.1.26",
         "@vitejs/plugin-react": "^3.1.0",
         "autoprefixer": "^10.4.17",
+        "cross-env": "^7.0.3",
         "dotenv-cli": "^7.4.2",
         "i18next": "^21.10.0",
         "i18next-browser-languagedetector": "^6.1.8",
@@ -141,5 +141,8 @@
         "tailwindcss": "^3.4.1",
         "typescript": "^4.9.3",
         "vite": "^4.1.0"
+    },
+    "volta": {
+        "node": "18.20.8"
     }
 }

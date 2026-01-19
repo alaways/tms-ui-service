@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import { IRootState } from '../../store';
+import { useTranslation } from 'react-i18next';
 
 const Maintenence = () => {
+    const { t } = useTranslation();
 
     return (
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
@@ -16,18 +18,18 @@ const Maintenence = () => {
                         className="mx-auto -mt-10 w-full max-w-xs object-cover md:-mt-20 md:max-w-lg"
                     />
                     <div className="-mt-8 font-semibold dark:text-white">
-                        <h2 className="mb-5 text-3xl font-bold text-primary md:text-5xl">เรียนผู้ใช้งานทุกท่าน</h2>
-                        <h4 className="mb-7 text-xl sm:text-2xl">ขออภัยในความไม่สะดวกค่ะ</h4>
+                        <h2 className="mb-5 text-3xl font-bold text-primary md:text-5xl">{t('maintenance_title')}</h2>
+                        <h4 className="mb-7 text-xl sm:text-2xl">{t('maintenance_apology')}</h4>
                         <p className="text-base">
-                            ระบบ TMS จะหยุดให้บริการชั่วคราว <br className="hidden sm:block" />
-                            ท่านสามารถเข้าสู่ระบบและใช้งานได้ตามปกติโดยเร็วนี้ <br />
+                            {t('maintenance_message_1')} <br className="hidden sm:block" />
+                            {t('maintenance_message_2')} <br />
                             <br />
-                            หากต้องการตรวจสอบรายละเอียดการทำรายการเพิ่มเติม
-                            สามารถติดต่อเราได้ที่ Line : @tmsconnect
+                            {t('maintenance_message_3')}
+                            {t('maintenance_message_4')}
                         </p>
                     </div>
                     <Link to="/" className="btn btn-gradient mx-auto !mt-7 w-max border-0 uppercase shadow-none">
-                        หน้าหลัก
+                        {t('home_page')}
                     </Link>
                 </div>
             </div>

@@ -21,6 +21,7 @@ import Lightbox from 'react-18-image-lightbox'
 import IconDownload from '../../../components/Icon/IconDownload'
 import IconShare from '../../../components/Icon/IconShare'
 import IconCopy from '../../../components/Icon/IconCopy'
+import { useTranslation } from 'react-i18next'
 
 import 'react-18-image-lightbox/style.css'
 
@@ -28,6 +29,7 @@ const ContractSignPreview = () => {
 
   const { uuid } = useParams()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const toast = Swal.mixin({
     toast: true,
@@ -60,8 +62,8 @@ const ContractSignPreview = () => {
   const [generateDataLink, setGenerateDataLink] = useState<string>('')
 
   const breadcrumbItems = [
-    { to: '/apps/contract/list', label: 'สัญญา' },
-    { label: 'PDF สัญญา', isCurrent: true },
+    { to: '/apps/contract/list', label: t('contract') },
+    { label: t('contract_pdf'), isCurrent: true },
   ]
 
   const { mutate: fetchContract} = useGlobalMutation(url_api.contractFindData + `${uuid}/?tab=contract`, {
@@ -71,7 +73,7 @@ const ContractSignPreview = () => {
       }
     },
     onError: (error: any) => {
-      toast.fire({ icon: 'error', title: 'ไม่พบสัญญา' })
+      toast.fire({ icon: 'error', title: t('contract_not_found') })
     },
   })
 
@@ -82,7 +84,7 @@ const ContractSignPreview = () => {
       setPdfObjectUrl(objectUrl)
     },
     onError: (error: any) => {
-      toast.fire({ icon: 'error', title: 'ไม่สามารถโหลดไฟล์ PDF ได้' })
+      toast.fire({ icon: 'error', title: t('cannot_load_pdf') })
     },
   })
 
@@ -93,7 +95,7 @@ const ContractSignPreview = () => {
       setPdfObjectUrl2(objectUrl)
     },
     onError: (error: any) => {
-      toast.fire({ icon: 'error', title: 'ไม่สามารถโหลดไฟล์ PDF ได้' })
+      toast.fire({ icon: 'error', title: t('cannot_load_pdf') })
     },
   })
 
@@ -104,7 +106,7 @@ const ContractSignPreview = () => {
       setPdfObjectUrl3(objectUrl)
     },
     onError: (error: any) => {
-      toast.fire({ icon: 'error', title: 'ไม่สามารถโหลดไฟล์ PDF ได้' })
+      toast.fire({ icon: 'error', title: t('cannot_load_pdf') })
     },
   })
 
@@ -115,7 +117,7 @@ const ContractSignPreview = () => {
       setPdfObjectUrl4(objectUrl)
     },
     onError: (error: any) => {
-      toast.fire({ icon: 'error', title: 'ไม่สามารถโหลดไฟล์ PDF ได้' })
+      toast.fire({ icon: 'error', title: t('cannot_load_pdf') })
     },
   })
 
@@ -128,30 +130,30 @@ const ContractSignPreview = () => {
         }
         let signatureUrl
         if (webUrl) {
-          signatureUrl = `${webUrl}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}&business_unit=${contractData?.reference?.slice(0,3)}`
+          signatureUrl = `${webUrl}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}?business_unit=${contractData?.reference?.slice(0,3)}`
         } else {
-          signatureUrl = `${window.location.origin}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}&business_unit==${contractData?.reference?.slice(0,3)}`
+          signatureUrl = `${window.location.origin}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}?business_unit==${contractData?.reference?.slice(0,3)}`
         }
         setGenerateDataLink(signatureUrl)
-        toast.fire({ icon: 'success', title: 'สร้างลิงก์สำหรับลูกค้าแล้ว!' })
+        toast.fire({ icon: 'success', title: t('link_created_successfully') })
         // navigator.clipboard
         //     .writeText(signatureUrl)
-        //     .then(() => toast.fire({ icon: 'success', title: 'คัดลอกลิงก์สำหรับลูกค้าแล้ว!' }))
+        //     .then(() => toast.fire({ icon: 'success', title: t('link_copied_successfully') }))
         //     .catch((err) => {
         //         const success = copyFallback(signatureUrl)
         //         if (success) {
-        //             toast.fire({ icon: 'success', title: 'คัดลอกลิงก์สำหรับลูกค้าแล้ว!' })
+        //             toast.fire({ icon: 'success', title: t('link_copied_successfully') })
         //         } else {
-        //             toast.fire({ icon: 'error', title: 'ไม่สามารถคัดลอกลิงก์' })
+        //             toast.fire({ icon: 'error', title: t('cannot_copy_link') })
         //         }
         //     })
         // setIsGeneratingLink(false)
       } else {
-        toast.fire({ icon: 'error', title: res.data?.message || 'ไม่สามารถสร้างลิงก์ได้' })
+        toast.fire({ icon: 'error', title: res.data?.message || t('cannot_create_link') })
         // setIsGeneratingLink(false)
       }
     },
-    onError: (error: any) => toast.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดในการสร้างลิงก์' }),
+    onError: (error: any) => toast.fire({ icon: 'error', title: t('link_creation_error') }),
   })
 
   const copyFallback = (text: string) => {
@@ -178,7 +180,7 @@ const ContractSignPreview = () => {
   } 
 
   useEffect(() => {
-    dispatch(setPageTitle('PDF สัญญา'))
+    dispatch(setPageTitle(t('contract_pdf')))
     if (uuid) {
       fetchContract({})
       fetchPDF({})
@@ -231,7 +233,7 @@ const ContractSignPreview = () => {
 
   const handleDownload = async () => {
     if (!pdfObjectUrl || !pdfObjectUrl2 || !pdfObjectUrl3 || (type == 'refinance' && !pdfObjectUrl4)) {
-      alert('ยังไม่มี PDF ทั้งสองไฟล์')
+      alert(t('pdf_files_not_ready'))
       return
     }
     try {
@@ -240,7 +242,7 @@ const ContractSignPreview = () => {
       // ฟังก์ชันโหลด PDF จาก URL และ copy pages ไป PDF ใหม่
       const fetchAndCopyPages = async (url: string) => {
         const response = await fetch(url)
-        if (!response.ok) throw new Error(`โหลด PDF จาก ${url} ไม่สำเร็จ`)
+        if (!response.ok) throw new Error(`${t('pdf_load_failed')} ${url}`)
         const arrayBuffer = await response.arrayBuffer()
         const pdfDoc = await PDFDocument.load(arrayBuffer)
         const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices())
@@ -266,8 +268,8 @@ const ContractSignPreview = () => {
       // Cleanup
       URL.revokeObjectURL(mergedUrl)
     } catch (error) {
-      console.error('เกิดข้อผิดพลาดในการรวม PDF:', error)
-      alert('เกิดข้อผิดพลาดในการรวม PDF')
+      console.error(t('pdf_merge_error'), error)
+      alert(t('pdf_merge_error'))
     }
   }
 
@@ -291,7 +293,7 @@ const ContractSignPreview = () => {
   const onCopyLinkHandler = () => {
     if (generateDataLink) {
       navigator.clipboard.writeText(generateDataLink)
-      toast.fire({ icon: 'success', title: 'คัดลอกลิงก์สำหรับลูกค้าแล้ว!' })
+      toast.fire({ icon: 'success', title: t('link_copied_successfully') })
     }
   }
 
@@ -299,34 +301,34 @@ const ContractSignPreview = () => {
     return (
       <div className="upload-container mb-10">
         {isFetchingPdf || isFetchingPdfPDA || isFetchingCardID || isFetchingReceipt ? (
-          <p className="text-center text-gray-600">กำลังโหลด PDF...</p>
+          <p className="text-center text-gray-600">{t('loading_pdf')}</p>
         ) : pdfObjectUrl ? (
           <div className="pdf-viewer-container space-y-10">
             {/* Section 1 */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-left text-xl font-bold mb-4 text-gray-800">1. รายละเอียดสัญญา</h2>
+              <h2 className="text-left text-xl font-bold mb-4 text-gray-800">1. {t('contract_details')}</h2>
               <iframe src={`${pdfObjectUrl}#toolbar=0`} width="100%" height="600px" className="border rounded-xl shadow-md w-full" title="PDF Preview - Contract"></iframe>
             </div>
             {/* Section 2 */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-left text-xl font-bold mb-4 text-gray-800">2. PDPA</h2>
+              <h2 className="text-left text-xl font-bold mb-4 text-gray-800">2. {t('pdpa_section')}</h2>
               <iframe src={`${pdfObjectUrl2}#toolbar=0`} width="100%" height="600px" className="border rounded-xl shadow-md w-full" title="PDF Preview - PDPA"></iframe>
             </div>
             {/* Section 3 */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-left text-xl font-bold mb-4 text-gray-800">3. สำเนาบัตรประชาชน</h2>
+              <h2 className="text-left text-xl font-bold mb-4 text-gray-800">3. {t('id_card_copy_section')}</h2>
               <iframe src={`${pdfObjectUrl3}#toolbar=0`} width="100%" height="600px" className="border rounded-xl shadow-md w-full" title="PDF Preview - PDPA"></iframe>
             </div>
             {/* Section 4 */}
             {type == 'refinance' &&
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-left text-xl font-bold mb-4 text-gray-800">4. ใบเสร็จรับเงิน</h2>
+                <h2 className="text-left text-xl font-bold mb-4 text-gray-800">4. {t('receipt_section')}</h2>
                 <iframe src={`${pdfObjectUrl4}#toolbar=0`} width="100%" height="600px" className="border rounded-xl shadow-md w-full" title="PDF Preview - PDPA"></iframe>
               </div>
             }
           </div>
         ) : (
-          <p className="text-center text-gray-500">ไม่พบไฟล์สัญญา</p>
+          <p className="text-center text-gray-500">{t('contract_not_found')}</p>
         )}
       </div>
     )
@@ -349,21 +351,21 @@ const ContractSignPreview = () => {
           </div>
           )}
           <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-            <h2 className="text-2xl font-bold text-themePrimary">PDF สัญญา</h2>
+            <h2 className="text-2xl font-bold text-themePrimary">{t('contract_pdf')}</h2>
             <div className="flex flex-wrap items-center gap-2">
               <button type="button" className="btn btn-outline-primary" onClick={handleDownload} disabled={isGeneratingLink || !pdfObjectUrl}>
-                <IconDownload className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> Download
+                <IconDownload className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> {t('download')}
               </button>
               <button type="button" className="btn btn-outline-secondary" onClick={handleCreateLink} disabled={isGeneratingLink}>
                 {isGeneratingLink ? (
-                  'กำลังสร้าง...'
+                  t('creating_link')
                 ) : (
                   <>
-                    <IconShare className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> สร้าง Link ให้ลูกค้า
+                    <IconShare className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> {t('create_customer_link')}
                   </>
                 )}
               </button>
-              {generateDataLink && <button className='btn btn-outline-danger' onClick={onCopyLinkHandler}><IconCopy className="w-5 h-5 ltr:mr-2 rtl:ml-2" />Copy Link</button>}
+              {generateDataLink && <button className='btn btn-outline-danger' onClick={onCopyLinkHandler}><IconCopy className="w-5 h-5 ltr:mr-2 rtl:ml-2" />{t('copy_link')}</button>}
             </div>
           </div>
           <div className="text-center">

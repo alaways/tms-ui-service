@@ -16,19 +16,21 @@ import { useDistrictMutation, useSubDistrictMutation } from '../../../services/m
 import Breadcrumbs from '../../../helpers/breadcrumbs'
 import { useGlobalMutation } from '../../../helpers/globalApi'
 import { url_api } from '../../../services/endpoints'
+import { useTranslation } from 'react-i18next'
 const mode = process.env.MODE || 'admin'
 const Add = () => {
+  const { t } = useTranslation()
   const toast = Swal.mixin(toastAlert)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const breadcrumbItems = [
-    { to: '/apps/business-unit/list', label: 'หน่วยธุรกิจ' },
-    { label: 'เพิ่ม', isCurrent: true },
+    { to: '/apps/business-unit/list', label: t('business_unit') },
+    { label: t('add'), isCurrent: true },
   ]
 
   useEffect(() => {
-    dispatch(setPageTitle('เพิ่มหน่วยธุรกิจ'))
+    dispatch(setPageTitle(t('add_business_unit')))
     dispatch(setSidebarActive(['bu', '/apps/business-unit/list']))
   })
 
@@ -59,14 +61,14 @@ const Add = () => {
   const [qrImages, setQrImages] = useState<any>([])
   const [signature, setSignature] = useState<any>([])
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    tax_id: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    phone: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    address: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    id_subdistrict: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
-    has_vat: Yup.boolean().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('required_field')),              // 已有 key
+    tax_id: Yup.string().required(t('required_field')),           // 已有 key
+    phone: Yup.string().required(t('required_field')),            // 已有 key
+    address: Yup.string().required(t('required_field')),          // 已有 key
+    id_province: Yup.string().nullable().required(t('required_field')), // 已有 key
+    id_district: Yup.string().nullable().required(t('required_field')), // 已有 key
+    id_subdistrict: Yup.string().nullable().required(t('required_field')), // 已有 key
+    has_vat: Yup.boolean().required(t('required_field')),         // 已有 key
   })
 
   const { mutate: businessUnitCreate, isLoading: isLoadingCreate  } = useGlobalMutation(url_api.businessUnitCreate, {
@@ -74,7 +76,7 @@ const Add = () => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'บันทึกสำเร็จ',
+          title: t('save_success'),                     // 已有 key
           padding: '10px 20px',
         })
         navigate('/apps/business-unit/list')
@@ -240,15 +242,15 @@ const Add = () => {
               <Form className="space-y-5 dark:text-white custom-select">
                 <>
                   <div className="text-lg font-semibold ltr:sm:text-left rtl:sm:text-right text-center">
-                    หน่วยธุรกิจ
+                  {t('business_unit')}  
                   </div>
                   <div className='input-flex-row'>
                     <InputField
                       require={true}
-                      label="เลขประจำตัวผู้เสียภาษี"
+                      label={t('tax_id')} 
                       name="tax_id"
                       type="text"
-                      placeholder="กรุณาใส่ข้อมูล"
+                      placeholder={t('please_enter_info')}   
                       onKeyPress={(e: any) => {
                         if (!/[0-9]/.test(e.key)) {
                           e.preventDefault()
@@ -271,17 +273,17 @@ const Add = () => {
                   <div className="input-flex-row">
                     <InputField
                       require={true}
-                      label="ชื่อธุรกิจ"
+                      label={t('business_name')}    
                       name="name"
                       type="text"
-                      placeholder="กรุณาใส่ข้อมูล"
+                      placeholder={t('please_enter_info')} 
                     />
                     <InputField
                       require={true}
-                      label="เบอร์โทรศัพท์"
+                      label={t('phone_number')}
                       name="phone"
                       type="text"
-                      placeholder="กรุณาใส่ข้อมูล"
+                      placeholder={t('please_enter_info')}  
                       maxLength={10}
                       onKeyPress={(e: any) => {
                         if (!/[0-9]/.test(e.key)) {
@@ -310,13 +312,13 @@ const Add = () => {
                       label="Email"
                       name="email"
                       type="text"
-                      placeholder="กรุณาใส่ข้อมูล"
+                      placeholder={t('please_enter_info')} 
                     />
                     <InputField
-                      label="Email รับสำเนา"
+                      label={t('contract_email')}  
                       name="contract_email"
                       type="text"
-                      placeholder="กรุณาใส่ข้อมูล"
+                      placeholder={t('please_enter_info')}  
                     />
                   </div>
                   <div className="input-flex-row">
@@ -324,11 +326,11 @@ const Add = () => {
                       label="Website"
                       name="website"
                       type="text"
-                      placeholder="กรุณาใส่ข้อมูล"
+                      placeholder={t('please_enter_info')}      
                     />
                     <InputField
                       require={true}
-                      label="ที่อยู่"
+                      label={t('address')}  
                       name="address"
                       as="textarea"
                       rows="1"
@@ -338,10 +340,10 @@ const Add = () => {
                   <div className="input-flex-row">
                     <SelectField
                       require={true}
-                      label="จังหวัด"
+                      label={t('province')}
                       id="id_province"
                       name="id_province"
-                      placeholder="กรุณาเลือก"
+                      placeholder={t('please_select')}    
                       options={dataStoredProvinces}
                       onChange={(e) => {
                         handleChangeSelect(props, e, 'id_province')
@@ -350,10 +352,10 @@ const Add = () => {
                     />
                     <SelectField
                       require={true}
-                      label="อำเภอ/เขต"
+                      label={t('district')} 
                       id="id_district"
                       name="id_district"
-                      placeholder="กรุณาเลือก"
+                      placeholder={t('please_select')}    
                       options={districtIdList}
                       onChange={(e) => {
                         handleChangeSelect(props, e, 'id_district')
@@ -365,10 +367,10 @@ const Add = () => {
                   <div className="input-flex-row">
                     <SelectField
                       require={true}
-                      label="ตำบล/แขวง"
+                      label={t('subdistrict')}       
                       id="id_subdistrict"
                       name="id_subdistrict"
-                      placeholder="กรุณาเลือก"
+                      placeholder={t('please_select')} 
                       options={subDistrictIdList}
                       onChange={(e) => {
                         handleChangeSelect(props, e, 'id_subdistrict')
@@ -376,7 +378,7 @@ const Add = () => {
                       isSearchable={true}
                     />
                     <InputField
-                      label="รหัสไปรษณีย์"
+                      label={t('zip_code')}  
                       name="zip_code"
                       type="text"
                       disabled={true}
@@ -390,10 +392,10 @@ const Add = () => {
                     />
                     <SelectField
                       require={true}
-                      label="จดภาษีมูลค่าเพิ่ม (VAT)"
+                      label={t('has_vat')}     
                       id="has_vat"
                       name="has_vat"
-                      placeholder="กรุณาเลือก"
+                      placeholder={t('please_select')}     
                       options={vatTypes}
                       onChange={(e) => {
                         handleChangeSelect(props, e, 'has_vat')
@@ -404,7 +406,7 @@ const Add = () => {
                     <div className="input-container">
                       <div className="custom-file-container" data-upload-id="myFirstImage">
                         <div className="label-container">
-                          Line QR code
+                        {t('line_qr_code')}   
                           <button type="button" className="custom-file-container__image-clear" title="Clear Image" onClick={() => setQrImages([])}>
                             ×
                           </button>
@@ -417,7 +419,7 @@ const Add = () => {
                           {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                             <div className="upload__image-wrapper">
                               <button type="button" className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload}>
-                                เลือกไฟล์...
+                              {t('asset_select_file')}
                               </button>
                               &nbsp;
                               {imageList.map((image, index) => (
@@ -446,7 +448,7 @@ const Add = () => {
                           {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                             <div className="upload__image-wrapper">
                               <button type="button" className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload}>
-                                เลือกไฟล์...
+                              {t('asset_select_file')}       
                               </button>
                               &nbsp;
                               {imageList.map((image, index) => (
@@ -464,7 +466,7 @@ const Add = () => {
                       <div className="input-container">
                         <div className="custom-file-container" data-upload-id="myFirstImage">
                           <div className="label-container">
-                            ลายเซ็นต์
+                          {t('signature')}    
                             <button
                               type="button"
                               className="custom-file-container__image-clear"
@@ -484,7 +486,7 @@ const Add = () => {
                             {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                               <div className="upload__image-wrapper">
                                 <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
-                                  เลือกไฟล์...
+                                {t('asset_select_file')}     
                                 </button>
                                 &nbsp;
                                 {imageList.map((image, index) => (
@@ -501,7 +503,7 @@ const Add = () => {
                     </div>
                   <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                     {isLoadingCreate && (<span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>)}
-                    บันทึก
+                    {t('save')}   
                   </button>
                 </>
               </Form>

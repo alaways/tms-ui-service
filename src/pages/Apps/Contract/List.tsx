@@ -18,10 +18,12 @@ import IconOpenBook from '../../../components/Icon/IconOpenBook'
 import { useGlobalChatMutation } from '../../../helpers/globalApi'
 import PreLoading from '../../../helpers/preLoading'
 import IconChecks from '../../../components/Icon/IconChecks'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const List = () => {
+  const { t } = useTranslation()
 
   const dispatch = useDispatch()
   const [firstLoading, setFirstLoading] = useState(false)
@@ -29,7 +31,7 @@ const List = () => {
     setFirstLoading(true)
   }, [])
   useEffect(() => {
-    dispatch(setPageTitle('รายการสัญญา'))
+    dispatch(setPageTitle(t('contract_list')))
   }, [dispatch])
 
   const apiUrl = process.env.BACKEND_URL
@@ -208,20 +210,20 @@ const List = () => {
 
         {role === "business_unit" ? <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-[#ffffff] text-center px-5 pt-5">
           <div className="rounded col-span-1 md:col-span-1 p-4 bg-[#ff5f00]">
-            <div className='text-base'>ร่างสัญญา</div>
+            <div className='text-base'>{t('draft_contract')}</div>
             <div className='text-5xl'>{businessDashboard.ct_status_1}</div>
           </div>
           <div className="rounded col-span-1 md:col-span-1 p-4 bg-[#ff5f00]">
-            <div className='text-base'>อยู่ระหว่างพิจารณา</div>
+            <div className='text-base'>{t('under_review')}</div>
             <div className='text-5xl'>{businessDashboard.ct_status_2}</div>
           </div>
           <div className="rounded col-span-1 md:col-span-1 p-4 bg-[#ff5f00]">
-            <div className='text-base'>อนุมัติร่างสัญญา</div>
+            <div className='text-base'>{t('draft_approved')}</div>
             <div className='text-5xl'>{businessDashboard.ct_status_3}</div>
 
           </div>
           <div className="rounded col-span-1 md:col-span-1 p-4 bg-[#ff5f00]">
-            <div className='text-base'>รออนุมัติ</div>
+            <div className='text-base'>{t('pending_approval')}</div>
             <div className='text-5xl'>{businessDashboard.ct_status_4}</div>
 
           </div>
@@ -232,7 +234,7 @@ const List = () => {
           <div className="flex items-center gap-2">
             <button className="btn btn-primary gap-2" onClick={goAdd}>
               <IconPlus />
-              เพิ่มสัญญาเช่าซื้อ
+              {t('add_contract')}
             </button>
           </div>
         </div>
@@ -268,8 +270,7 @@ const List = () => {
                   status_type: values.status_type?.value?.status_type || 'contract',
                   id_business_unit: values.id_business_unit.value?.id || '',
                   contract_type_id: values.contract_type_id?.value,
-                  is_locked: values.is_locked.value,
-                  contract_hire_type_id: 1
+                  is_locked: values.is_locked.value
                 },
               })
               setFilterParams({
@@ -324,17 +325,17 @@ const List = () => {
               <Form className="flex flex-col flex-auto gap-2">
                 <div className="flex flex-col sm:flex-row md:flex-row gap-5">
                   <div className="flex-1">
-                    <label>หน่วยธุรกิจ</label>
+                    <label>{t('business_unit')}</label>
                     {role === "business_unit" ? (<Select
                       defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
                       value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('select_business_unit')}
                       className="z-10 w-auto"
                       options={businessUnit.map((item: any) => ({ label: item.label, value: item.value.id }))}
                       isDisabled={true}
                     />) : (<Select
                       value={values.id_business_unit}
-                      placeholder="เลือก หน่วยธุรกิจ"
+                      placeholder={t('select_business_unit')}
                       className="z-10 w-auto"
                       options={businessUnit}
                       isSearchable={true}
@@ -345,10 +346,10 @@ const List = () => {
 
                   </div>
                   <div className="z-10 flex-1">
-                    <label>สถานะสัญญา</label>
+                    <label>{t('contract_status')}</label>
                     <Select
                       value={values.status_code}
-                      placeholder="เลือก สถานะสัญญา"
+                      placeholder={t('select_contract_status')}
                       className="z-10 w-auto"
                       options={status}
                       isSearchable={true}
@@ -360,23 +361,23 @@ const List = () => {
                   </div>
 
                   <div className="z-10 flex-1">
-                    <label>สถานะการล็อคเครื่อง</label>
+                    <label>{t('device_lock_status')}</label>
                     <Select
                       value={values.is_locked}
-                      placeholder="เลือก สถานะการล็อคเครื่อง"
+                      placeholder={t('select_device_lock_status')}
                       className="z-10 w-auto"
                       options={[
                         {
                           value: 'all',
-                          label: 'ทั้งหมด'
+                          label: t('all')
                         },
                         {
                           value: 'locked',
-                          label: 'ล๊อคเครื่อง'
+                          label: t('locked')
                         },
                         {
                           value: 'unlocked',
-                          label: 'ปลดล๊อค'
+                          label: t('unlocked')
                         }
                       ]}
                       isSearchable={true}
@@ -389,7 +390,7 @@ const List = () => {
 
                 <div className="flex flex-col sm:flex-row md:flex-row gap-5 pt-3">
                   <div className="flex-1">
-                    <InputField label="ค้นหา" placeholder="ค้นหา" name="search" type="text" />
+                    <InputField label={t('search_text')} placeholder={t('search_text')} name="search" type="text" />
                   </div>
                   {/* <div className='flex-1'>
                     <DatePicker
@@ -415,12 +416,12 @@ const List = () => {
                     name="contract_date"
                   /> */}
                   {/* <SingleInputDateRangePicker label="วันที่ทำสัญญา" /> */}
-                  <DateRangeAntd label="วันที่ทำสัญญา" name="contract_date"/>
+                  <DateRangeAntd label={t('contract_date')} name="contract_date"/>
                   <div className='flex-1'>
-                    <label>ประเภทสัญญา</label>
+                    <label>{t('contract_type')}</label>
                     <Select
                       value={values.contract_type_id}
-                      placeholder="เลือกประเภทสัญญา"
+                      placeholder={t('select_contract_type')}
                       className="z-9 w-auto"
                       options={contractType}
                       onChange={(e: any) => {
@@ -437,10 +438,10 @@ const List = () => {
                   /> */}
                   <div className="flex flex-col sm:flex-row md:flex-row gap-4 flex-1 justify-end items-end">
                     <button type="submit" className="btn btn-primary w-[100px] gap-2">
-                      ค้นหา
+                      {t('search_text')}
                     </button>
                     <button type="reset" className="btn btn-info gap-2 w-[100px]" onClick={handleReset}>
-                      ล้างค่า
+                      {t('clear')}
                     </button>
                     {(role === 'admin' || role === 'business_unit') && (
                       <button type="button" className="btn btn-success gap-2 w-[100px]" onClick={() => { handleExport(`contract_${new Date().toLocaleString()}`, values) }}>
@@ -455,7 +456,7 @@ const List = () => {
         </div>
         <div className="datatables pagination-padding">
           {contractList.length === 0 ? (
-            <div className="my-10 text-center text-gray-500">ไม่พบข้อมูล</div>
+            <div className="my-10 text-center text-gray-500">{t('not_found_data')}</div>
           ) : (
             <DataTable
               className="whitespace-nowrap table-hover invoice-table"
@@ -463,7 +464,7 @@ const List = () => {
               columns={[
                 {
                   accessor: 'index',
-                  title: 'ลำดับ',
+                  title: t('order'),
                   textAlignment: 'center',
                   render: (row, index) => (
                     index + 1 + (page - 1) * pageSize
@@ -471,7 +472,7 @@ const List = () => {
                 },
                 {
                   accessor: 'business_unit',
-                  title: 'หน่วยธุรกิจ',
+                  title: t('business_unit'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item) => (
@@ -482,7 +483,7 @@ const List = () => {
                 },
                 {
                   accessor: 'shop',
-                  title: 'ร้านค้า',
+                  title: t('shop'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item) => (
@@ -493,7 +494,7 @@ const List = () => {
                 },
                 {
                   accessor: 'id',
-                  title: 'เลขสัญญา',
+                  title: t('contract_number'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item) => {
@@ -518,7 +519,7 @@ const List = () => {
                 },
                 {
                   accessor: 'contract_type',
-                  title: 'ประเภทสัญญา',
+                  title: t('contract_type'),
                   textAlignment: 'center',
                   sortable: false,
                   render: (item) => (
@@ -529,7 +530,7 @@ const List = () => {
                 },
                 {
                   accessor: 'contract_date',
-                  title: 'วันที่ทำสัญญา',
+                  title: t('contract_date'),
                   textAlignment: 'left',
                   sortable: false,
                   render: (item) => (
@@ -540,7 +541,7 @@ const List = () => {
                 },
                 {
                   accessor: 'customer',
-                  title: 'ชื่อลูกค้า',
+                  title: t('customer_name'),
                   sortable: false,
                   render: (item) => (
                     <div>{item.customer.name}</div>
@@ -548,7 +549,7 @@ const List = () => {
                 },
                 {
                   accessor: 'price',
-                  title: 'ราคาสินค้า',
+                  title: t('product_price'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ price }) => (
@@ -559,7 +560,7 @@ const List = () => {
                 },
                 {
                   accessor: 'down_payment',
-                  title: 'ชำระเงินดาวน์',
+                  title: t('down_payment'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ down_payment }) => (
@@ -570,7 +571,7 @@ const List = () => {
                 },
                 {
                   accessor: 'principle',
-                  title: 'ทุนเช่าซื้อ',
+                  title: t('lease_principal'),
                   textAlignment: 'right',
                   sortable: false,
                   render: ({ principle }) => (
@@ -581,13 +582,13 @@ const List = () => {
                 },
                 {
                   accessor: 'ins_period',
-                  title: 'จำนวนงวด',
+                  title: t('installment_period'),
                   textAlignment: 'center',
                   sortable: false,
                 },
                 {
                   accessor: 'status_id',
-                  title: 'สถานะสัญญา',
+                  title: t('contract_status'),
                   sortable: false,
                   render: ({ status }: any) => (
                     <div>
@@ -597,7 +598,7 @@ const List = () => {
                 },
                 {
                     accessor: 'customer_signature_at',
-                    title: 'ลงนามออนไลน์',
+                    title: t('online_signature'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item:any) => (
@@ -608,7 +609,7 @@ const List = () => {
                 },
                 {
                     accessor: 'e_contract_status',
-                    title: 'ลงนาม Ekyc',
+                    title: t('ekyc_signature'),
                     textAlignment: 'center',
                     sortable: false,
                     render: (item:any) => (
@@ -630,7 +631,7 @@ const List = () => {
                 },
                 {
                   accessor: 'action',
-                  title: 'Actions',
+                  title: t('actions'),
                   sortable: false,
                   textAlignment: 'center',
                   render: (item) => (
@@ -653,7 +654,7 @@ const List = () => {
               }}
               highlightOnHover
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
               )}
             />
           )}

@@ -18,11 +18,13 @@ import { showNotification } from '../../../helpers/showNotification'
 import { DataTable, DataTableSortStatus } from 'mantine-datatable'
 import { PAGE_SIZES } from '../../../helpers/config'
 import { formatIDNumber, formatPhoneNumber } from '../../../helpers/formatNumeric'
+import { useTranslation } from 'react-i18next'
 
 const mode = process.env.MODE || 'admin'
 
 const List = () => {
 
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -57,7 +59,7 @@ const List = () => {
   const [itemList, setitemList] = useState<BusinessUnits[]>([])
 
   useEffect(() => {
-    dispatch(setPageTitle('รายการหน่วยธุรกิจ'))
+    dispatch(setPageTitle(t('business_unit_list')))
     dispatch(setSidebarActive(['bu', '/apps/business-unit/list']))
   }, [])
 
@@ -140,20 +142,20 @@ const List = () => {
       <div>
           <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
               <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
-                  <h2 className="text-xl">หน่วยธุรกิจ</h2>
+                  <h2 className="text-xl">{t('business_unit')}</h2>
               </div>
               <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
                   <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                       <div className="flex gap-3">
                           <Link to="/apps/business-unit/add" className="btn btn-primary gap-2">
                               <IconPlus />
-                              เพิ่มหน่วยธุรกิจ
+                              {t('add_business_unit')}
                           </Link>
                       </div>
                   </div>
                   <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
                       <div className="relative">
-                          <input type="text" placeholder="ค้นหา" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={handleSearch} />
+                          <input type="text" placeholder={t('search')} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={handleSearch} />
                           <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
                               <IconSearch className="mx-auto" />
                           </button>
@@ -168,13 +170,13 @@ const List = () => {
                       columns={[
                           {
                               accessor: 'index',
-                              title: 'ลำดับ',
+                              title: t('order'),
                               textAlignment: 'center',
                               render: (row, index) => index + 1 + (page - 1) * pageSize,
                           },
                           {
                               accessor: 'name',
-                              title: 'ชื่อธุรกิจ',
+                              title: t('business_name'),
                               textAlignment: 'left',
                               sortable: false,
                               render: (item) => (
@@ -187,7 +189,7 @@ const List = () => {
                           },
                           {
                               accessor: 'tax_id',
-                              title: 'เลขประจำตัวผู้เสียภาษี',
+                              title: t('tax_id'),
                               textAlignment: 'left',
                               sortable: false,
                               render: ({ tax_id }) => (
@@ -198,7 +200,7 @@ const List = () => {
                           },
                           {
                               accessor: 'phone',
-                              title: 'เบอร์โทรศัพท์ลูกค้า',
+                              title: t('customer_phone'),
                               textAlignment: 'left',
                               sortable: false,
                               render: ({ phone }) => (
@@ -209,7 +211,7 @@ const List = () => {
                           },
                           {
                               accessor: 'province',
-                              title: 'ที่อยู่',
+                              title: t('address'),
                               textAlignment: 'left',
                               sortable: false,
                               render: ({ province }) => (
@@ -220,20 +222,20 @@ const List = () => {
                           },
                           {
                               accessor: 'verify',
-                              title: 'ตั้งค่า',
+                              title: t('settings'),
                               textAlignment: 'center',
                               sortable: false,
-                              render: (verify) => <span className={`badge ${verify ? 'badge-outline-success' : 'badge-outline-danger'}`}>{verify ? 'เสร็จสิ้น' : 'ข้อมูลไม่ครบ'}</span>,
+                              render: (verify) => <span className={`badge ${verify ? 'badge-outline-success' : 'badge-outline-danger'}`}>{verify ? t('completed') : t('incomplete_data')}</span>,
                           },
 
                           {
                               accessor: 'action',
-                              title: 'Actions',
+                              title: t('actions'),
                               textAlignment: 'center',
                               sortable: false,
                               render: (item) => (
                                   <div className="flex gap-4 items-center w-max mx-auto">
-                                      <Tippy content="ดูข้อมูล" theme="Primary">
+                                      <Tippy content={t('view_data')} theme="Primary">
                                           <a className="flex hover:text-info cursor-pointer active" onClick={() => goPreview(item)}>
                                               <IconEye className="w-4.5 h-4.5" />
                                           </a>
@@ -254,7 +256,7 @@ const List = () => {
                       }}
                       sortStatus={sortStatus}
                       onSortStatusChange={setSortStatus}
-                      paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                      paginationText={({ from, to, totalRecords }) => `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`}
                       onCellClick={(item) => {
                           if (item.column.accessor === 'name') {
                               goPreview(item.record);

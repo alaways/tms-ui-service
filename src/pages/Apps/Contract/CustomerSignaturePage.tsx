@@ -21,11 +21,13 @@ import PDFViewer from '../../../components/HOC/PDFViewer'
 import { PDFDocument } from 'pdf-lib'
 import moment from 'moment'
 import IconDownload from '../../../components/Icon/IconDownload'
+import { useTranslation } from 'react-i18next'
 
 const CustomerSignaturePage = () => {
 
   const { signature_uuid } = useParams()
   const sigPad = useRef<SignatureCanvas | any>(null)
+  const { t } = useTranslation()
 
   const location = useLocation()
 
@@ -57,8 +59,8 @@ const CustomerSignaturePage = () => {
   const [isLoadingPDF4, setIsLoadingPDF4] = useState( type == 'refinance' ? true : false)
   const [loadingPDF,setLoadingPDF] = useState(false)
   const [showBottomButton, setBottomTopButton] = useState(true)
- 
- 
+
+
   const navigate = useNavigate()
 
   const { mutate: signPDF, isLoading: isLoadingSign } = useGlobalMutation(url_api.SignPdf, {
@@ -84,7 +86,7 @@ const CustomerSignaturePage = () => {
       if (res.statusCode === 400 || res.code === 400) {
         toast.fire({
           icon: 'error',
-          title: 'อัพโหลดไม่สำเร็จ!!!!!',
+          title: t('upload_failed'),
           padding: '10px 20px',
         })
       } else {
@@ -101,7 +103,7 @@ const CustomerSignaturePage = () => {
     onError: (err: any) => {
       toast.fire({
         icon: 'error',
-        title: 'อัพโหลดไม่สำเร็2',
+        title: t('upload_failed'),
         padding: '10px 20px',
       })
     },
@@ -212,7 +214,7 @@ const CustomerSignaturePage = () => {
   })
 
   useEffect(() => {
-    dispatch(setPageTitleOnly('ลงนามสัญญาออนไลน์'))
+    dispatch(setPageTitleOnly(t('online_contract_signing')))
     getContractInfo({ data: { ref: signature_uuid } })
   }, [])
 
@@ -265,18 +267,18 @@ const CustomerSignaturePage = () => {
 
   const handleSaveSignature = async () => {
     if (!sigPad.current || sigPad.current.isEmpty()) {
-      Swal.fire('คำเตือน', 'กรุณาลงลายเซ็นก่อนบันทึก', 'warning')
+      Swal.fire(t('warning'), t('sign_before_save'), 'warning')
       return
     }
     Swal.fire({
-      title: 'ยืนยันการบันทึก',
-      text: 'คุณต้องการบันทึกลายเซ็นนี้ลงในเครื่องของคุณใช่หรือไม่?',
+      title: t('signature_save_confirm_title'),
+      text: t('signature_save_confirm_text'),
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3b3f5c',
       cancelButtonColor: '#e7515a',
-      confirmButtonText: 'ยืนยัน',
-      cancelButtonText: 'ยกเลิก',
+      confirmButtonText: t('confirm'),
+      cancelButtonText: t('cancel'),
       reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -297,8 +299,8 @@ const CustomerSignaturePage = () => {
           const signatureFile = dataURLtoFile(dataURL, 'signature.png')
           uploadFile({ data: { file: signatureFile, type: 'contract', ref: signature_uuid } })
         } catch (error: any) {
-          console.error("เกิดข้อผิดพลาด:", error)
-          Swal.fire('เกิดข้อผิดพลาด', error.message || 'ไม่สามารถอัปโหลดได้', 'error')
+          console.error(t('error_occurred') + ":", error)
+          Swal.fire(t('error_occurred'), error.message || t('cannot_upload'), 'error')
         }
       }
     })
@@ -307,7 +309,7 @@ const CustomerSignaturePage = () => {
   const handleDownload = async () => {
     setLoadingPDF(true)
     if (!pdfObjectUrl || !pdfObjectUrl2 || !pdfObjectUrl3 || (type == 'refinance' && !pdfObjectUrl4)) {
-      alert('ยังไม่มี PDF ทั้งสองไฟล์')
+      alert(t('pdf_files_not_ready'))
       return
     }
     try {
@@ -316,7 +318,7 @@ const CustomerSignaturePage = () => {
       // ฟังก์ชันโหลด PDF จาก URL และ copy pages ไป PDF ใหม่
       const fetchAndCopyPages = async (url: string) => {
         const response = await fetch(url)
-        if (!response.ok) throw new Error(`โหลด PDF จาก ${url} ไม่สำเร็จ`)
+        if (!response.ok) throw new Error(t('pdf_load_failed') + ` ${url}`)
         const arrayBuffer = await response.arrayBuffer()
         const pdfDoc = await PDFDocument.load(arrayBuffer)
         const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices())
@@ -343,8 +345,8 @@ const CustomerSignaturePage = () => {
       URL.revokeObjectURL(mergedUrl)
       setLoadingPDF(false)
     } catch (error) {
-      console.error('เกิดข้อผิดพลาดในการรวม PDF:', error)
-      alert('เกิดข้อผิดพลาดในการรวม PDF')
+      console.error(t('pdf_merge_error') + ':', error)
+      alert(t('pdf_merge_error'))
     }
   }
 
@@ -359,7 +361,7 @@ const CustomerSignaturePage = () => {
     } else {
       setBottomTopButton(true)
     }
-  } 
+  }
 
   useEffect(() => {
     window.addEventListener('scroll', onScrollHandler)
@@ -376,8 +378,8 @@ const CustomerSignaturePage = () => {
           <div className="panel">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-themePrimary">ลงนามสัญญาเช่าซื้อออนไลน์</h2>
-                <p className="text-gray-500 mt-1">สำหรับสัญญาเลขที่: <span className="font-semibold text-black">{contractRef}</span></p>
+                <h2 className="text-2xl font-bold text-themePrimary">{t('online_lease_contract_signing')}</h2>
+                <p className="text-gray-500 mt-1">{t('contract_number_label')}: <span className="font-semibold text-black">{contractRef}</span></p>
               </div>
               <button type="button" className="btn btn-outline-primary" onClick={handleDownload}>
                 <IconDownload className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> Download
@@ -388,9 +390,9 @@ const CustomerSignaturePage = () => {
               </div> */}
             </div>
             <div className="mb-10">
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">1. รายละเอียดสัญญา</h3>
+              <h3 className="text-xl font-bold mb-4 border-b pb-2">1. {t('contract_details')}</h3>
               {isLoading ? (
-                <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>กำลังโหลดเอกสารสัญญา...</p></div>
+                <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>{t('loading_contract_document')}</p></div>
               ) : pdfObjectUrl ? (
                 <div className="pdf-viewer-container border rounded-lg overflow-hidden shadow-sm">
                   {/* <iframe
@@ -411,15 +413,15 @@ const CustomerSignaturePage = () => {
                   <PDFViewer pdfUrl={pdfObjectUrl} />
                 </div>
               ) : (
-                <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>ไม่สามารถแสดงเอกสารสัญญาได้</p></div>
+                <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>{t('cannot_display_document')}</p></div>
               )}
             </div>
 
 
             <div className="mb-10">
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">2. PDPA</h3>
+              <h3 className="text-xl font-bold mb-4 border-b pb-2">2. {t('pdpa_section')}</h3>
               {isLoading ? (
-                <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>กำลังโหลดเอกสารสัญญา...</p></div>
+                <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>{t('loading_contract_document')}</p></div>
               ) : pdfObjectUrl2 ? (
                 <div className="pdf-viewer-container border rounded-lg overflow-hidden shadow-sm">
                   <iframe
@@ -439,15 +441,15 @@ const CustomerSignaturePage = () => {
                   /> */}
                 </div>
               ) : (
-                <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>ไม่สามารถแสดงเอกสารสัญญาได้</p></div>
+                <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>{t('cannot_display_document')}</p></div>
               )}
             </div>
 
 
             <div className="mb-10">
-              <h3 className="text-xl font-bold mb-4 border-b pb-2">3. สำเนาบัตรประชาชน</h3>
+              <h3 className="text-xl font-bold mb-4 border-b pb-2">3. {t('id_card_copy_section')}</h3>
               {isLoading ? (
-                <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>กำลังโหลดเอกสารสัญญา...</p></div>
+                <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>{t('loading_contract_document')}</p></div>
               ) : pdfObjectUrl3 ? (
                 <div className="pdf-viewer-container border rounded-lg overflow-hidden shadow-sm">
                   <iframe
@@ -467,15 +469,15 @@ const CustomerSignaturePage = () => {
                   /> */}
                 </div>
               ) : (
-                <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>ไม่สามารถแสดงเอกสารสัญญาได้</p></div>
+                <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>{t('cannot_display_document')}</p></div>
               )}
             </div>
 
             {type == 'refinance' &&
               <div className="mb-10">
-                <h3 className="text-xl font-bold mb-4 border-b pb-2">4. ใบเสร็จรับเงิน</h3>
+                <h3 className="text-xl font-bold mb-4 border-b pb-2">4. {t('receipt_section')}</h3>
                 {isLoading ? (
-                  <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>กำลังโหลดเอกสารสัญญา...</p></div>
+                  <div className="text-center text-gray-500 p-10 bg-gray-100 rounded-lg"><p>{t('loading_contract_document')}</p></div>
                 ) : pdfObjectUrl4 ? (
                   <div className="pdf-viewer-container border rounded-lg overflow-hidden shadow-sm">
                     <iframe
@@ -494,12 +496,12 @@ const CustomerSignaturePage = () => {
                     /> */}
                   </div>
                 ) : (
-                  <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>ไม่สามารถแสดงเอกสารสัญญาได้</p></div>
+                  <div className="text-center text-gray-400 p-10 bg-gray-100 rounded-lg"><p>{t('cannot_display_document')}</p></div>
                 )}
               </div>
             }
 
-            <button type="button" className="btn btn-primary btn-lg w-full" onClick={openModal} disabled={!pdfObjectUrl || !pdfObjectUrl2 || !pdfObjectUrl3 || isLoading}>คลิกเพื่อลงนาม</button>
+            <button type="button" className="btn btn-primary btn-lg w-full" onClick={openModal} disabled={!pdfObjectUrl || !pdfObjectUrl2 || !pdfObjectUrl3 || isLoading}>{t('click_to_sign')}</button>
           </div>
         </div>
       </div>
@@ -529,15 +531,15 @@ const CustomerSignaturePage = () => {
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95" afterEnter={handleCanvasResize}>
                 <Dialog.Panel className="panel w-full max-w-xl transform text-left transition-all shadow-xl p-6 sm:p-8">
-                  <Dialog.Title as="h3" className="text-2xl font-bold mb-2 text-center">ลงลายมือชื่อของคุณ</Dialog.Title>
+                  <Dialog.Title as="h3" className="text-2xl font-bold mb-2 text-center">{t('sign_your_signature')}</Dialog.Title>
                   <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800"><IconX className="w-6 h-6" /></button>
-                  <p className="mb-5 text-sm text-gray-500 text-center">กรุณาลงลายมือชื่อในกรอบด้านล่างนี้ให้ชัดเจน</p>
+                  <p className="mb-5 text-sm text-gray-500 text-center">{t('sign_clearly_instruction')}</p>
                   <div className="relative border-2 border-dashed rounded-lg bg-white overflow-hidden">
                     <SignatureCanvas ref={sigPad} penColor='#0000DE' canvasProps={{ className: 'w-full h-56 sigCanvas' }} />
                   </div>
                   <div className="flex justify-center items-center gap-4 mt-6">
-                    <button type="button" className="btn btn-outline-secondary" onClick={clearSignature}><IconRefresh className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> วาดใหม่</button>
-                    <button type="button" className="btn btn-primary" onClick={handleSaveSignature}>ยืนยันและส่งลายเซ็น</button>
+                    <button type="button" className="btn btn-outline-secondary" onClick={clearSignature}><IconRefresh className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> {t('redraw')}</button>
+                    <button type="button" className="btn btn-primary" onClick={handleSaveSignature}>{t('confirm_and_send_signature')}</button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

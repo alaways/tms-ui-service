@@ -27,11 +27,13 @@ import PreLoading from '../../../helpers/preLoading';
 import IconEdit from '../../../components/Icon/IconEdit';
 import { DataTable } from 'mantine-datatable';
 import themeInit from '../../../theme.init';
+import { useTranslation } from 'react-i18next';
 
 const mode = process.env.MODE || 'admin';
 
 const CloseContract = () => {
     const { ctid, uuid, inid } = useParams();
+    const { t } = useTranslation();
 
     const contract_id = ctid ? Number(ctid) : undefined;
     const installment_id = inid ? Number(inid) : undefined;
@@ -45,7 +47,7 @@ const CloseContract = () => {
             value : 'promptpay',
         },
         {
-            label : 'เงินสด',
+            label : t('cash'),
             value : 'cash',
         }
     ]);
@@ -95,13 +97,13 @@ const CloseContract = () => {
     });
 
     const breadcrumbItems = [
-        { to: '/apps/contract/list', label: 'สัญญา' },
-        { to: true, label: 'แก้ไข' },
-        { label: 'รับชำระเงิน', isCurrent: true },
+        { to: '/apps/contract/list', label: t('contract') },
+        { to: true, label: t('edit') },
+        { label: t('receive_payment'), isCurrent: true },
     ];
 
     useEffect(() => {
-        dispatch(setPageTitle('รับชำระเงิน'));
+        dispatch(setPageTitle(t('receive_payment')));
     });
 
     
@@ -169,7 +171,7 @@ const CloseContract = () => {
                 setHistory(res.data?.history)
             } else {
                 if (res.statusCode === 400 || res.code === 400) {
-                    showNotification('พบข้อผิดพลาด ไม่สามารถโหลดข้อมูลได้!', 'error');
+                    showNotification(t('error_load_data'), 'error');
                 } else {
                     setFormData({
                         ...formData,

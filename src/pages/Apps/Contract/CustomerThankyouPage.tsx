@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const ThankYouPage = () => {
-    document.title = "ขอบคุณที่ใช้บริการ";
+    const { t } = useTranslation();
+    document.title = t('thank_you_for_service');
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
@@ -10,7 +12,7 @@ const ThankYouPage = () => {
 
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-20 h-20 text-green-500 mx-auto mb-6" // ใช้สีเขียวของ Tailwind
+                    className="w-20 h-20 text-green-500 mx-auto mb-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -24,12 +26,12 @@ const ThankYouPage = () => {
 
                 <div className="space-y-4">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-                        ลงนามเรียบร้อย
+                        {t('signature_completed')}
                     </h1>
                     <p className="text-base text-gray-600 leading-relaxed">
-                        ระบบได้บันทึกลายมือชื่อของท่านเรียบร้อยแล้ว
+                        {t('signature_saved_successfully')}
                         <br />
-                        ขอบคุณที่ไว้วางใจใช้บริการกับเรา
+                        {t('thank_you_for_trust')}
                     </p>
                 </div>
             </div>

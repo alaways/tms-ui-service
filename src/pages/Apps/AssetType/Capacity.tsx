@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce'
 
 import { useDispatch } from 'react-redux'
 import { setPageTitle } from '../../../store/themeConfigSlice'
+import { useTranslation } from 'react-i18next'
 
 import { Dialog, Transition } from '@headlessui/react'
 import { Formik, Form } from 'formik'
@@ -45,10 +46,11 @@ const List = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
-    dispatch(setPageTitle('ประเภทความจุ'))
-  }, [dispatch])
+    dispatch(setPageTitle(t('asset_capacity_type')))
+  }, [dispatch, t])
 
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
@@ -73,7 +75,7 @@ const List = () => {
   const [totalItems, setTotalItems] = useState<number>(0)
 
   const SubmittedForm = Yup.object().shape({
-    name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
+    name: Yup.string().required(t('required_field')),
   })
 
   const { mutate: fetchInsuranceTypesData } = useGlobalMutation(url_api.insuranceTypesFindAll, {
@@ -198,17 +200,17 @@ const List = () => {
       <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
         <div className="flex items-center justify-between flex-wrap gap-4 mb-4.5 px-5 ">
           <h2 className="text-xl">
-            ประเภทความจุ
+            {t('asset_capacity_type')}
           </h2>
           <div className="flex sm:flex-row flex-col sm:items-center sm:gap-3 gap-4 w-full sm:w-auto">
             <div className="flex gap-3">
               <button type="button" className="btn btn-primary" onClick={() => addNewCapacity()}>
                 <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                เพิ่มความจุ
+                {t('add_capacity')}
               </button>
             </div>
             <div className="relative">
-              <input type="text" placeholder="ค้นหา" className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input type="text" placeholder={t('search_text')} className="form-input py-2 ltr:pr-11 rtl:pl-11 peer" value={search} onChange={(e) => setSearch(e.target.value)} />
               <button type="button" className="absolute ltr:right-[11px] rtl:left-[11px] top-1/2 -translate-y-1/2 peer-focus:text-primary">
                 <IconSearch className="mx-auto" />
               </button>
@@ -222,7 +224,7 @@ const List = () => {
             columns={[
               {
                 accessor: 'id',
-                title: 'ลำดับ',
+                title: t('order'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (row, index) => (
@@ -231,7 +233,7 @@ const List = () => {
               },
               {
                 accessor: 'name',
-                title: 'ชื่อความจุ',
+                title: t('capacity_name'),
                 textAlignment: 'left',
                 sortable: false,
                 render: (item) => (
@@ -242,23 +244,23 @@ const List = () => {
               },
               {
                 accessor: 'is_active',
-                title: 'เปิด/ปิด การใช้งาน',
+                title: t('active_status'),
                 textAlignment: 'center',
                 sortable: false,
                 render: (item) => (
                   <span className={`badge ${item?.is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                    {item?.is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+                    {item?.is_active ? t('open') : t('close')}
                   </span>
                 ),
               },
               {
                 accessor: 'action',
-                title: 'Actions',
+                title: t('actions'),
                 sortable: false,
                 textAlignment: 'center',
                 render: (item) => (
                   <div className="flex gap-4 items-center w-max mx-auto">
-                    <Tippy content="แก้ไข" theme="Primary">
+                    <Tippy content={t('edit')} theme="Primary">
                       <a className="flex hover:text-info cursor-pointer" onClick={() => { addNewCapacity(item) }} >
                         <IconEdit className="w-4.5 h-4.5" />
                       </a>
@@ -278,7 +280,7 @@ const List = () => {
               setPageSize(p)
             }}
             paginationText={({ from, to, totalRecords }) => (
-              `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+              `${t('showing')} ${from} ${t('to')} ${to} ${t('of')} ${totalRecords} ${t('total_pages')}`
             )}
           />
         </div>
@@ -294,32 +296,32 @@ const List = () => {
                     <button type="button" className="absolute top-4 ltr:right-4 rtl:left-4 text-gray-400 hover:text-gray-800 dark:hover:text-gray-600 outline-none" onClick={() => setActionModal(false)}>
                       <IconX />
                     </button>
-                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{formData.id ? 'แก้ไข' : 'เพิ่ม'}</div>
+                    <div className="text-lg font-medium bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]">{formData.id ? t('edit') : t('add')}</div>
                     <div className="p-5">
                       <Formik initialValues={formData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedForm}>
                         {(props) => (
                           <Form className="space-y-5 dark:text-white custom-select">
                             <InputField
-                              label="ชื่อความจุ"
+                              label={t('capacity_name')}
                               name="name"
                               type="text"
-                              placeholder="กรุณาใส่ข้อมูล"
+                              placeholder={t('please_enter_info')}
                             />
                             <SelectField
-                              label="สถานะ*"
+                              label={t('status') + '*'}
                               id="is_active"
                               name="is_active"
                               options={[
                                 {
                                   value: true,
-                                  label: 'เปิด',
+                                  label: t('open'),
                                 },
                                 {
                                   value: false,
-                                  label: 'ปิด',
+                                  label: t('close'),
                                 },
                               ]}
-                              placeholder="กรุณาเลือก"
+                              placeholder={t('please_select')}
                               onChange={(e: any) => {
                                 props.setFieldValue('is_active', e.value)
                               }}
@@ -327,10 +329,10 @@ const List = () => {
                             />
                             <div className="flex justify-end items-center mt-8">
                               <button type="button" className="btn btn-outline-danger" onClick={() => setActionModal(false)}>
-                                ยกเลิก
+                                {t('cancel')}
                               </button>
                               <button type="submit" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                {formData.id ? 'บันทึก' : 'เพิ่ม'}
+                                {formData.id ? t('save') : t('add')}
                               </button>
                             </div>
                           </Form>

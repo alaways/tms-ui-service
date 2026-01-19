@@ -1,4 +1,5 @@
 import { Field, ErrorMessage, useField } from 'formik';
+import { useTranslation } from 'react-i18next';
 import IconCopy from '../Icon/IconCopy';
 import { showNotification } from '../../helpers/showNotification';
 
@@ -22,13 +23,14 @@ const withInputField =
     ({ label, name, placeholder, require = false, hidden = false, row, ...props }: InputFieldProps) => {
         const [field, meta] = useField(name);
         const hasError = meta.touched && meta.error;
+        const { t } = useTranslation();
 
         const copyValue = () => {
             const textToCopy = field.value;
 
             if (textToCopy) {
                 navigator.clipboard.writeText(textToCopy);
-                showNotification('copy ข้อความแล้ว', 'success');
+                showNotification(t('copied_text'), 'success');
             }
         };
 
@@ -52,7 +54,7 @@ const withInputField =
                             }  text-white h-full`}
                         >
                             {props.loading && <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>}
-                            สร้างลิ้งค์
+                            {t('generate_link')}
                         </button>
                         <span className="pl-2 text-black overflow-hidden whitespace-nowrap" title={typeof field.value === 'string' ? field.value : undefined}>
                             {field.value ? field.value[0]?.file?.name || field.value : '-'}
