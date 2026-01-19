@@ -1638,5 +1638,8 @@
     "report_remark": "หมายเหตุ",
     "report_payment_proof": "หลักฐานการโอนเงิน",
     "report_cancel": "ยกเลิก",
-    "report_save": "บันทึก"
+    "report_save": "บันทึก",
+    "remaining_payment_to_shop": "Remaining Payment to Shop",
+    "contract_count_label": "Contract Count",
+    "finance_invoice_title": "Payment Invoice"
 }
