@@ -18,7 +18,6 @@ import IconOpenBook from '../../../components/Icon/IconOpenBook'
 import { useGlobalChatMutation } from '../../../helpers/globalApi'
 import PreLoading from '../../../helpers/preLoading'
 import IconChecks from '../../../components/Icon/IconChecks'
-import { log } from 'console'
 
 const mode = process.env.MODE || 'admin'
 
@@ -121,6 +120,7 @@ const List = () => {
       data: {
         page: 1,
         page_size: pageSize,
+        contract_hire_type_id: 1
       },
     })
   }, [pageSize])
@@ -142,7 +142,7 @@ const List = () => {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
     myHeaders.append('Authorization', `Bearer ${token}`)
-    const raw = JSON.stringify({...filterParams,page:1,page_size:999999,format:'excel'});
+    const raw = JSON.stringify({...filterParams,page:1,page_size:999999,format:'excel',contract_hire_type_id: 1});
     const requestOptions: any = {
       method: 'POST',
       headers: myHeaders,
@@ -189,6 +189,7 @@ const List = () => {
         ...filterParams,
         page: page,
         page_size: pageSize,
+        contract_hire_type_id: 1
       },
     })
   }, [page])
@@ -231,7 +232,7 @@ const List = () => {
           <div className="flex items-center gap-2">
             <button className="btn btn-primary gap-2" onClick={goAdd}>
               <IconPlus />
-              เพิ่มสัญญา
+              เพิ่มสัญญาเช่าซื้อ
             </button>
           </div>
         </div>
@@ -267,7 +268,8 @@ const List = () => {
                   status_type: values.status_type?.value?.status_type || 'contract',
                   id_business_unit: values.id_business_unit.value?.id || '',
                   contract_type_id: values.contract_type_id?.value,
-                  is_locked: values.is_locked.value
+                  is_locked: values.is_locked.value,
+                  contract_hire_type_id: 1
                 },
               })
               setFilterParams({
@@ -298,7 +300,8 @@ const List = () => {
                   page_size: pageSize,
                   contract_date: '',
                   contract_end_date: '',
-                  is_locked: 'all'
+                  is_locked: 'all',
+                  contract_hire_type_id: 1
                   // approved_at: '',
                 },
               })
@@ -611,6 +614,17 @@ const List = () => {
                     render: (item:any) => (
                         <span className={`${item?.e_contract_status ? 'badge-outline-success' : 'badge-outline-danger'}`}>
                             {item?.e_contract_status ? <IconChecks className="w-6 h-6" /> : ''}
+                        </span>
+                    ),
+                },
+                {
+                    accessor: 'recive_product_status',
+                    title: 'ยืนยันรับสินค้า',
+                    textAlignment: 'center',
+                    sortable: false,
+                    render: (item:any) => (
+                        <span className={`${item?.recive_product_status ? 'badge-outline-success' : 'badge-outline-danger'}`}>
+                            {item?.recive_product_status ? <IconChecks className="w-6 h-6" /> : ''}
                         </span>
                     ),
                 },

@@ -519,6 +519,16 @@ const Add = () => {
     title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
     name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
     phone_number: Yup.string().length(10, 'กรุณาใส่ข้อมูลให้ครบ 10 เลข'),
+    phone_number_ref: Yup.string().nullable().when([], {
+        is: () => true, then: (schema) => schema.test(
+          'len-if-not-empty',
+          'กรุณาใส่ข้อมูลให้ครบ 10 เลข',
+          (value) => {
+            if (!value) return true                // ว่างได้
+            return value.length === 10             // ถ้ามีค่า ต้อง 10 ตัว
+          }
+        ),
+      }),
     id_shop: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
     citizen_id: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').length(13, 'กรุณาใส่ข้อมูลให้ครบ 13 หลัก'),
     email: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').matches(/^[A-Za-z0-9@._]+$/,'กรุณาใช้ตัวอักษรภาษาอังกฤษ ตัวเลข เครื่องหมายมหัพภาค(.) _ และ @ เท่านั้น').email('กรุณาใส่อีเมลที่ถูกต้อง'),

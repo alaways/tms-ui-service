@@ -58,6 +58,7 @@ const Report = () => {
 
   const role = storedUser ? JSON.parse(storedUser).role : null
   const token = storedUser ? JSON.parse(storedUser).access_token : null
+  const id_bu = storedUser ? JSON.parse(storedUser)?.id_business_unit : null
 
   const dataStoredShop: any = useSelector((state: IRootState) => state.dataStore.shop)
 
@@ -137,7 +138,9 @@ const Report = () => {
           label: item.name,
         }))
       );
-
+      // if(role == 'business_unit'){
+      //   setDefaultFormData((prev:any) => ({...prev,id_business_unit:res.data[0].id}))
+      // }
     },
     onError: () => {
       console.error('Failed to fetch status data')
@@ -194,17 +197,18 @@ const Report = () => {
           const commission = commissionLists.find((value) => value.id === item.id)
           return {
             reference: item.reference,
-            contract_date: convertDateDbToClient(commission?.contract_date),
+            credit_code: item?.contract?.credit?.code,
+            contract_date: convertDateDbToClient(item?.contract_date),
             approved_at: convertDateDbToClient(item?.contract_approved_date),
-            asset_name: commission?.asset?.name || '0',
-            asset_price: numberWithCommas(commission?.price || '0'),
-            down_payment: numberWithCommas(commission?.down_payment || '0'),
-            principle: numberWithCommas(commission?.principle || '0'),
-            commission: numberWithCommas(commission?.commission || '0'),
+            asset_name: item?.asset?.name || '0',
+            asset_price: numberWithCommas(item?.price || '0'),
+            down_payment: numberWithCommas(item?.down_payment || '0'),
+            principle: numberWithCommas(item?.principle || '0'),
+            commission: numberWithCommas(item?.commission || '0'),
             benefit: numberWithCommas(item?.benefit || '0'),
-            amount: numberWithCommas(commission?.amount || '0'),
-            fee: numberWithCommas(commission?.fee || '0'),
-            total: numberWithCommas(commission?.total || '-'),
+            amount: numberWithCommas(item?.amount || '0'),
+            fee: numberWithCommas(item?.fee || '0'),
+            total: numberWithCommas(item?.total || '-'),
           }
         }),
         { header: shop_report_csv.map((col: any) => col.id) }
@@ -284,7 +288,15 @@ const Report = () => {
   
     setPrevPageSize(pageSize);
   }, [shopData, page, pageSize]);
-  
+
+  useEffect(() => {
+    if(id_bu){
+      setDefaultFormData((prev:any) => ({
+        ...prev,
+        id_business_unit: id_bu
+      }))
+    }
+  },[id_bu])
 
   return (
     <>
@@ -389,7 +401,7 @@ const Report = () => {
                   const endAt = isRangeArray
                     ? moment.tz(values.end_at[0], 'Asia/Bangkok').format('YYYY-MM-DD')
                     : moment.tz(values.end_at, 'Asia/Bangkok').format('YYYY-MM-DD');
-
+                  console.log(values)
                   setDefaultFormData({
                     id_shop: shopData.uuid,
                     id_business_unit: values.id_business_unit,
@@ -432,7 +444,7 @@ const Report = () => {
               }}
               enableReinitialize
             >
-              {({ setFieldValue, handleReset }) => (
+              {({values, setFieldValue, handleReset }) => (
                 <Form className="flex items-center gap-2">
                   <DatePicker
                     label="วันที่เริ่ม"
@@ -451,12 +463,25 @@ const Report = () => {
                   {role === "business_unit" ? (<div>
                     <label>หน่วยธุรกิจ</label>
                     <Select
-                      defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
-                      value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value.id }}
+                      // defaultValue={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value }}
+                      // value={businessUnit.length === 0 ? null : { label: businessUnit[0].label, value: businessUnit[0].value }}
                       placeholder="เลือก หน่วยธุรกิจ"
                       className="pr-1 z-10 w-[200px]"
-                      options={businessUnit.map((item: any) => ({ label: item.label, value: item.value.id }))}
+                      options={businessUnit.map((item: any) => ({ label: item.label, value: item.value }))}
+                      onChange={(e:any) => setFieldValue('id_business_unit',e.value)}
                       isDisabled={true}
+                      name='id_business_unit'
+                      id='id_business_unit'
+                      value={
+                        values.id_business_unit
+                          ? businessUnit
+                              .map((item: any) => ({
+                                label: item.label,
+                                value: item.value,
+                              }))
+                              .find((opt:any) => opt.value === values.id_business_unit)
+                          : null
+                      }
                     />
                   </div>) : (
                     <SelectField
@@ -517,6 +542,17 @@ const Report = () => {
                         <a className="flex cursor-pointer active" onClick={() => goPreview(item)}>
                           {item.reference}
                         </a>
+                      </div>
+                    ),
+                  },
+                  {
+                    accessor: 'credit_id',
+                    title: 'สถานะสัญญา',
+                    textAlignment: 'center',
+                    sortable: false,
+                    render: (item) => (
+                      <div className="flex justify-center text-center font-normal">
+                        {item.contract.credit.code}
                       </div>
                     ),
                   },

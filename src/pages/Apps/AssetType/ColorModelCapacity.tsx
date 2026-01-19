@@ -77,7 +77,7 @@ const ColorModelCapacity = () => {
 
   const [currentSettingType, setCurrentSettingType] = useState(settingType[0])
   const [isShowSettingMenu, setIsShowSettingMenu] = useState(false)
-
+  
   const [assetsNamesLists, setAssetsNamesLists] = useState<AssetsNames[]>([])
   const [formDataNames, setFormDataNames] = useState<any>(defaultsForm)
 
@@ -98,6 +98,81 @@ const ColorModelCapacity = () => {
   const [selectAssetsNames, setSelectAssetsNames] = useState<any>([])
   const [assetsNames, setAssetsNames] = useState<any>([])
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null) // New state for selected asset ID
+
+  const column = [
+    {
+      accessor: 'id',
+      title: 'ลำดับ',
+      sortable: false,
+      render: (row: AssetRecord, index: number) => (
+        <div>{index + 1}</div>
+      ),
+    },
+    ...(currentSettingType.id === 2 || currentSettingType.id === 3
+      ? [
+        {
+          accessor: 'asset_name',
+          title: 'ชื่อสินทรัพย์',
+          sortable: false,
+          render: ({ asset_name }: { asset_name: { name: string } }) => (
+            <div className="flex items-center font-normal">
+              <div>{asset_name ? asset_name.name : '-'}</div>
+            </div>
+          ),
+        },
+      ]
+      : []),
+    {
+      accessor: 'name',
+      title: currentSettingType.id === 1 ? 'ชื่อสินทรัพย์' : (currentSettingType.id === 2 ? 'สี' : (currentSettingType.id === 3 ? 'รุ่น' : 'ความจุ')),
+      sortable: false,
+      render: ({ name }: { name: string }) => (
+        <div className="flex items-center font-normal">
+          <div>{name}</div>
+        </div>
+      ),
+    },
+    ...(currentSettingType.id == 1 ? [{
+      accessor: 'commission',
+      title: 'commission',
+      sortable: false,
+      render: ({ commission }: { commission: string }) => (
+        <div className="flex items-center font-normal">
+          <div>{commission} %</div>
+        </div>
+      ),
+    }] : []),
+    {
+      accessor: 'is_active',
+      title: 'เปิดปิดการใช้งาน',
+      sortable: false,
+      render: ({ is_active }: { is_active: boolean }) => (
+        <span className={`badge ${is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
+          {is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
+        </span>
+      ),
+    },
+    {
+      accessor: 'action',
+      title: 'Actions',
+      sortable: false,
+      textAlignment: 'center',
+      render: (item: any) => (
+        <div className="flex gap-4 items-center w-max mx-auto">
+          <Tippy content="แก้ไข" theme="Primary">
+            <a className="flex hover:text-info cursor-pointer" onClick={() => addEditData(item)}>
+              <IconEdit className="w-4.5 h-4.5" />
+            </a>
+          </Tippy>
+          <Tippy content="ลบ" theme="Primary">
+            <a className="flex hover:text-danger" onClick={(e) => confirmDelete(item)}>
+              <IconTrashLines />
+            </a>
+          </Tippy>
+        </div>
+      ),
+    },
+  ]
 
   const { mutate: fetchNameData } = useGlobalMutation(url_api.nameFindAll, {
     onSuccess: (res: any) => {
@@ -297,7 +372,7 @@ const ColorModelCapacity = () => {
 
   const submitForm = useCallback(
     (values: any) => {
-      const data = { ...values, active: values.is_active }
+      const data = { ...values, active: values.is_active,price: +values.price,commission: +values.commission }
       if (values.id) {
         assetUpdate({ data, id: values.id })
       } else {
@@ -428,70 +503,7 @@ const ColorModelCapacity = () => {
               <DataTable
                 className="whitespace-nowrap table-hover invoice-table"
                 records={currentSettingType.id === 1 ? (assetsNamesLists as AssetRecord[]) : currentSettingType.id === 2 ? (assetsColorsLists as AssetRecord[]) : currentSettingType.id === 3 ? (assetsModelsLists as AssetRecord[]) : (assetsCapacitysLists as AssetRecord[])}
-                columns={[
-                  {
-                    accessor: 'id',
-                    title: 'ลำดับ',
-                    sortable: false,
-                    render: (row: AssetRecord, index: number) => (
-                      <div>{index + 1}</div>
-                    ),
-                  },
-                  ...(currentSettingType.id === 2 || currentSettingType.id === 3
-                    ? [
-                      {
-                        accessor: 'asset_name',
-                        title: 'ชื่อสินทรัพย์',
-                        sortable: false,
-                        render: ({ asset_name }: { asset_name: { name: string } }) => (
-                          <div className="flex items-center font-normal">
-                            <div>{asset_name ? asset_name.name : '-'}</div>
-                          </div>
-                        ),
-                      },
-                    ]
-                    : []),
-                  {
-                    accessor: 'name',
-                    title: currentSettingType.id === 1 ? 'ชื่อสินทรัพย์' : (currentSettingType.id === 2 ? 'สี' : (currentSettingType.id === 3 ? 'รุ่น' : 'ความจุ')),
-                    sortable: false,
-                    render: ({ name }: { name: string }) => (
-                      <div className="flex items-center font-normal">
-                        <div>{name}</div>
-                      </div>
-                    ),
-                  },
-                  {
-                    accessor: 'is_active',
-                    title: 'เปิดปิดการใช้งาน',
-                    sortable: false,
-                    render: ({ is_active }: { is_active: boolean }) => (
-                      <span className={`badge ${is_active ? 'badge-outline-success' : 'badge-outline-danger'}`}>
-                        {is_active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
-                      </span>
-                    ),
-                  },
-                  {
-                    accessor: 'action',
-                    title: 'Actions',
-                    sortable: false,
-                    textAlignment: 'center',
-                    render: (item: any) => (
-                      <div className="flex gap-4 items-center w-max mx-auto">
-                        <Tippy content="แก้ไข" theme="Primary">
-                          <a className="flex hover:text-info cursor-pointer" onClick={() => addEditData(item) }>
-                            <IconEdit className="w-4.5 h-4.5" />
-                          </a>
-                        </Tippy>
-                        <Tippy content="ลบ" theme="Primary">
-                          <a className="flex hover:text-danger" onClick={(e) => confirmDelete(item)}>
-                            <IconTrashLines />
-                          </a>
-                        </Tippy>
-                      </div>
-                    ),
-                  },
-                ]}
+                columns={column}
                 highlightOnHover
                 totalRecords={totalItems}
                 recordsPerPage={pageSize}
@@ -552,6 +564,60 @@ const ColorModelCapacity = () => {
                             type="text"
                             placeholder="กรุณาใส่ข้อมูล"
                           />
+                          {currentSettingType.id == 1 && (
+                            <>
+                              <InputField
+                                require={true}
+                                label="ราคา"
+                                name="price"
+                                type="text"
+                                placeholder="กรุณาใส่ข้อมูล"
+                                onChange={(e:any) => {
+                                  if(e.target.value == ''){
+                                    props.setFieldValue('price',0)
+                                    return
+                                  }
+                                  props.setFieldValue('price',e.target.value)
+                                }}
+                                onKeyPress={(e:any) => {
+                                  if(props.values.price === 0){
+                                    e.preventDefault()
+                                    props.setFieldValue('price',e.key)
+                                  }
+                                  if (!/[0-9]/.test(e.key)) {
+                                    e.preventDefault()
+                                  }
+                                }}
+                              />
+                              <InputField
+                                require={true}
+                                label="commission"
+                                name="commission"
+                                type="text"
+                                placeholder="กรุณาใส่ข้อมูล"
+                                onChange={(e:any) => {
+                                  if(e.target.value == ''){
+                                    props.setFieldValue('commission',0)
+                                    return
+                                  }
+                                  props.setFieldValue('commission',e.target.value)
+                                }}
+                                onKeyPress={(e:any) => {
+                                  if(props.values.commission === 0){
+                                    e.preventDefault()
+                                    props.setFieldValue('commission',e.key)
+                                  }
+                                  if(e.key === '.' && props.values.commission.includes('.')){
+                                    e.preventDefault()
+                                    return
+                                  }
+                                  if (!/[0-9.]/.test(e.key)) {
+                                    e.preventDefault()
+                                  }
+                                }}
+                              />
+                            </>
+                          )}
                           <SelectField
                             require={true}
                             label="สถานะ"

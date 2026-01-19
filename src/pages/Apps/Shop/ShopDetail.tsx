@@ -174,16 +174,6 @@ const ShopDetail = () => {
                         )}
                       </Tab>
                       
-                      {!themeInit.features?.shop_user &&
-                        <Tab as={Fragment}>
-                        {({ selected }) => (
-                          <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black ` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
-                            บัญชีผู้ใช้งาน
-                          </button>
-                        )}
-                       </Tab>
-                      }
-
                       <Tab as={Fragment}>
                         {({ selected }) => (
                           <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black ` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
@@ -192,15 +182,14 @@ const ShopDetail = () => {
                         )}
                       </Tab>
 
-                      {themeInit.features?.shop_user &&
-                        <Tab as={Fragment}>
-                          {({ selected }) => (
-                            <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
-                              พนักงาน
-                            </button>
-                          )}
-                        </Tab>
-                      }
+                      <Tab as={Fragment}>
+                        {({ selected }) => (
+                          <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
+                            พนักงาน
+                          </button>
+                        )}
+                      </Tab>
+                    
 
                     </Tab.List>
                     <Tab.Panels>
@@ -347,18 +336,6 @@ const ShopDetail = () => {
                         </div>
                       </Tab.Panel>
 
-                      {!themeInit.features?.shop_user &&
-                      <Tab.Panel>
-                        <div className="input-flex-row pt-2">
-                          <InputField
-                            label="ชื่อผู้ใช้งาน"
-                            name="username"
-                            type="text"
-                            disabled={true}
-                          />
-                        </div>
-                      </Tab.Panel>
-                      }
                       <Tab.Panel>
                         <div className="mt-5 pt-2 panel p-0 border-0 overflow-hidden">
                           <div className="table-responsive">
@@ -389,11 +366,11 @@ const ShopDetail = () => {
                           </div>
                         </div>
                       </Tab.Panel>
-                      {themeInit.features?.shop_user &&
-                        <Tab.Panel>
-                          <List />
-                        </Tab.Panel>
-                      }
+                    
+                      <Tab.Panel>
+                        <List />
+                      </Tab.Panel>
+                     
                     </Tab.Panels>
                   </Tab.Group>
                 </div>

@@ -135,7 +135,7 @@ const Edit = () => {
           title: 'PIN ต้องมีความยาว 6 ตัวเท่านั้น',
           padding: '10px 20px',
         })
-        return false
+        return
     }
     employeeUpdate({ 
       data: cleanedEvent, 
@@ -173,12 +173,13 @@ const Edit = () => {
                     onChange={(e: any) => handleChangeSelect(props, e, 'title')}
                     isSearchable={false}
                     require={true}
+                    disabled={!['A','B'].includes(access_level) && userUUID != id}
                   />
-                  <InputField label="ชื่อพนักงาน" name="name" type="text" placeholder="กรุณาใส่ข้อมูล" require={true} />
+                  <InputField label="ชื่อพนักงาน" name="name" type="text" placeholder="กรุณาใส่ข้อมูล" require={true} disabled={!['A','B'].includes(access_level) && userUUID != id}/>
                 </div>
                 <div className="input-flex-row">
-                  <InputField label="Line ID" name="line_id" type="text" placeholder="กรุณาใส่ข้อมูล" />
-                  <InputField label="Email" name="email" type="text" placeholder="กรุณาใส่ข้อมูล" require={true} />
+                  <InputField label="Line ID" name="line_id" type="text" placeholder="กรุณาใส่ข้อมูล" disabled={!['A','B'].includes(access_level) && userUUID != id}/>
+                  <InputField label="Email" name="email" type="text" placeholder="กรุณาใส่ข้อมูล" require={true} disabled={!['A','B'].includes(access_level) && userUUID != id}/>
                 </div>
                 <div className="input-flex-row">
                   <SelectField
@@ -190,6 +191,7 @@ const Edit = () => {
                     onChange={(e: any) => handleChangeSelect(props, e, 'role')}
                     isSearchable={false}
                     require={true}
+                    disabled={!['A','B'].includes(access_level) && userUUID != id}
                   />
                   <SelectField
                     label="ระดับสิทธิ"
@@ -200,6 +202,7 @@ const Edit = () => {
                     onChange={(e: any) => handleChangeSelect(props, e, 'access_level')}
                     isSearchable={false}
                     require={true}
+                    disabled={!['A','B'].includes(access_level)}
                   />
                 </div>
 
@@ -215,6 +218,7 @@ const Edit = () => {
                       }
                     }}
                     require={true}
+                    disabled={!['A','B'].includes(access_level) && userUUID != id}
                   />
                   {
                     role === 'admin' && (
@@ -229,6 +233,7 @@ const Edit = () => {
                         onChange={(e: any) => {
                           handleChangeSelect(props, e, 'id_business_unit')
                         }}
+                        disabled={!['A','B'].includes(access_level) && userUUID != id}
                       />
                     )
                   }
@@ -255,8 +260,8 @@ const Edit = () => {
                 )}
                 
                 <div className="input-flex-row">
-                  <InputField label="รหัสผ่าน" name="password" type="password" require={true} />
-                  <InputField label="ยืนยันรหัสผ่าน" name="password_repeat" type="password" require={true} />
+                  <InputField label="รหัสผ่าน" name="password" type="password" require={true} disabled={!['A','B'].includes(access_level) && userUUID != id}/>
+                  <InputField label="ยืนยันรหัสผ่าน" name="password_repeat" type="password" require={true} disabled={!['A','B'].includes(access_level) && userUUID != id}/>
                 </div>
                 {enabledPin && (
                     <>
@@ -277,9 +282,9 @@ const Edit = () => {
                     </>
                     
                 )}
-                <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
+                {(['A','B'].includes(access_level) ||  (['C','D'].includes(access_level) && userUUID == id)) && <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                   บันทึก
-                </button>
+                </button>}
               </Form>
             )}
           </Formik>

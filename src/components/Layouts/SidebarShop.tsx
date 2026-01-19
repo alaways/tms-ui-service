@@ -191,7 +191,7 @@ const SidebarShop = () => {
                       <div className="flex items-center">
                         <IconNotesEdit fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('สัญญา')}
+                          {t('สัญญาเช่าซื้อ')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'contract' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -227,6 +227,57 @@ const SidebarShop = () => {
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-cancel" className={currentSubMenu === '/apps/contract/list-cancel' ? 'active' : ''}>
+                            {t('สัญญาที่ยกเลิก')}
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </AnimateHeight>
+                  </li>
+                </ul>
+              </li>
+              <li className="nav-item">
+                <ul>
+                  <li className="menu nav-item">
+                    <button type="button" className={`${currentMenu === 'contract-lease' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('contract-lease')}>
+                      <div className="flex items-center">
+                        <IconNotesEdit fill={true} className="group-hover:!text-primary shrink-0" />
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+                          {t('สัญญาเช่าทรัพย์')}
+                        </span>
+                      </div>
+                      <div className={currentMenu !== 'contract-lease' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                        <IconCaretDown />
+                      </div>
+                    </button>
+                    <AnimateHeight duration={300} height={currentMenu === 'contract-lease' ? 'auto' : 0}>
+                      <ul className="sub-menu text-gray-500">
+                        <li>
+                          <NavLink to="/apps/contract-lease/list" className={currentSubMenu === '/apps/contract-lease/list' ? 'active' : ''}>
+                            {t('รายการสัญญา')}
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-credit" className={currentSubMenu === '/apps/contract-lease/list-credit' ? 'active' : ''}>
+                            {t('สัญญาที่อนุมัติแล้ว')}
+                          </NavLink>
+                        </li>
+                        {themeInit?.features?.contract_refinance && <li>
+                          <NavLink to="/apps/contract-lease/list-refinance" className={currentSubMenu === '/apps/contract-lease/list-refinance' ? 'active' : ''}>
+                            {t('สัญญารีไฟแนนซ์')}
+                          </NavLink>
+                        </li>}
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-wait" className={currentSubMenu === '/apps/contract-lease/list-wait' ? 'active' : ''}>
+                            {t('สัญญาที่รอสิ้นสุด')}
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-complete" className={currentSubMenu === '/apps/contract-lease/list-complete' ? 'active' : ''}>
+                            {t('สัญญาที่สิ้นสุดแล้ว')}
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-cancel" className={currentSubMenu === '/apps/contract-lease/list-cancel' ? 'active' : ''}>
                             {t('สัญญาที่ยกเลิก')}
                           </NavLink>
                         </li>

@@ -69,8 +69,6 @@ const List = () => {
        is_active:item?.is_active
     })
     setActionModal(true)
-    // dispatch(setEmployee(item))
-    // navigate('/apps/employee/preview/' + item.id)
   }
 
   type filterParams = {
@@ -109,11 +107,9 @@ const List = () => {
   }, [page, pageSize])
 
   useEffect(() => {
-    //fetchShopUser({data: {id_shop:id,page:1, page_size: pageSize}})
   }, [pageSize])
 
   useEffect(() => {
-   // fetchShopUser({data: {id_shop:id,page:page, page_size: pageSize,...filter}})
   }, [page])
     
   const [actionModal, setActionModal] = useState(false)
@@ -181,16 +177,7 @@ const List = () => {
         }
       },
   })
-  // const accessLevel = accessLevelTypes.reduce((currentValue: any, nowValue: any) => {
-  //   currentValue[`${nowValue.value}`] = nowValue.label
-  //   return currentValue
-  // }, {})
-
-  // const roleName = roleTypes.reduce((currentValue: any, nowValue: any) => {
-  //   currentValue[`${nowValue.value}`] = nowValue.label
-  //   return currentValue
-  // }, {})
-
+  
   return (
     <div className="panel px-0 border-white-light dark:border-[#1b2e4b]">
       {(isLoading || isLoadingCreate || isLoadingUpdate) && <PreLoading />}
@@ -269,6 +256,16 @@ const List = () => {
                 textAlignment: 'center',
                 render: (row, index) => (
                   <div>{index + 1}</div>
+                ),
+              },
+              {
+                accessor: 'username',
+                title: 'ชื่อผู้ใช้งาน',
+                sortable: false,
+                render: (item) => (
+                  <div className="flex items-center justify-start font-normal">
+                    <div>{item.username}</div>
+                  </div>
                 ),
               },
               {

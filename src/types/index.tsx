@@ -242,7 +242,8 @@ export interface Contract extends IdentifyFields, CommonModelFields {
   tracking_fee?: number | null;
   fee?: number;
   is_locked?: boolean;
-  is_refinance?:any
+  is_refinance?:any;
+  is_asset_commission?:boolean
 }
 
 export interface Installments extends IdentifyFields, CommonModelFields {

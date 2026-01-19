@@ -2,7 +2,7 @@ import { PropsWithChildren, Suspense, useEffect, useState } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { IRootState } from '../../store'
-import { setCreditLevel, setProvinces } from '../../store/dataStore'
+import { setAssetStatus, setCreditLevel, setProvinces } from '../../store/dataStore'
 import { toggleSidebar } from '../../store/themeConfigSlice'
 
 import { url_api } from '../../services/endpoints'
@@ -18,6 +18,7 @@ import SidebarBusiness from './SidebarBusiness'
 
 import Footer from './Footer'
 import CookiePolicy from './CookiePolicy'
+import TocPopup from '../../pages/Apps/BusinessUnit/TOC/TocPopup'
 
 const mode = process.env.MODE || 'admin'
 
@@ -50,26 +51,45 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     }
   }
 
-  const { mutate: fetchProvincesData } = useGlobalMutation(url_api.provincesFindAll, {
-    onSuccess: (res: any) => {
-      if (res.message) {
-        const provinces = res.data.map((item: any) => ({
-          value: item.id,
-          label: item.name_th,
-        }))
-        localStorage.setItem('provinces', JSON.stringify(provinces))
-        dispatch(setProvinces(provinces))
-      }
-    },
-  })
+  const { mutate: fetchProvincesData} = useGlobalMutation(url_api.provincesFindAll, {
+        onSuccess: (res: any) => {
+           if (res.message) {
+              const provinces = res.data.map((item: any) => ({
+                value: item.id,
+                label: item.name_th,
+              }))
+              
+              localStorage.setItem('provinces', JSON.stringify(provinces))
 
-  const { mutate: fetchMasterCustomerCredit } = useGlobalMutation(url_api.masterCustomerCredit, {
+              dispatch(setProvinces(provinces))
+            }
+        },
+  });
+
+
+  const { mutate: fetchMasseterAssetStatus } = useGlobalMutation(url_api.masterAssetStatus, {
     onSuccess: (res: any) => {
-      if (res.message) {
+      if (res?.message) {
         const data = res.data.map((item: any) => ({
           value: item?.value,
           label: item.label,
         }))
+        
+        localStorage.setItem('asset_status', JSON.stringify(data))
+        dispatch(setAssetStatus(data))
+      }
+    }
+  })
+
+
+  const { mutate: fetchMasterCustomerCredit } = useGlobalMutation(url_api.masterCustomerCredit, {
+    onSuccess: (res: any) => {
+      if (res?.message) {
+        const data = res.data.map((item: any) => ({
+          value: item?.value,
+          label: item.label,
+        }))
+        
         localStorage.setItem('customer_credit_level', JSON.stringify(data))
         dispatch(setCreditLevel(data))
       }
@@ -91,6 +111,16 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
     } else {
       fetchMasterCustomerCredit({})
     }
+
+
+    const localAS = localStorage.getItem('asset_status')
+    if (localAS) {
+      const data = JSON.parse(localAS)
+      dispatch(setAssetStatus(data))
+    } else {
+      fetchMasseterAssetStatus({})
+    }
+
     window.addEventListener('scroll', onScrollHandler)
     const screenLoader = document.getElementsByClassName('screen_loader')
     if (screenLoader?.length) {
@@ -169,6 +199,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
             {/* END CONTENT AREA */}
             {/* BEGIN FOOTER */}
             <Footer />
+            <TocPopup />
             <CookiePolicy />
             {/* END FOOTER */}
             <Portals />

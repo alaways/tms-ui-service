@@ -1,40 +1,27 @@
 import { useState, useEffect, useCallback, Fragment } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-
 import * as Yup from 'yup'
-
 import Swal from 'sweetalert2'
 import Tippy from '@tippyjs/react'
-
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api'
 import { googleApiKey, defaultCenter, toastAlert } from '../../../helpers/constant'
-
 import { useDispatch, useSelector } from 'react-redux'
 import { IRootState } from '../../../store'
 import { setPageAction } from '../../../store/pageStore'
 import { setPageTitle, setSidebarActive } from '../../../store/themeConfigSlice'
-
 import { NUMBER_REGEX } from '../../../helpers/regex'
-
 import { Form, Formik } from 'formik'
 import { Tab, Dialog, Transition } from '@headlessui/react'
-
 import InputField from '../../../components/HOC/InputField'
 import SelectField from '../../../components/HOC/SelectField'
-
 import { Shop } from '../../../types/index'
-
 import { useDistrictMutation, useSubDistrictMutation } from '../../../services/mutations/useProvincesMutation'
-import { useShopUpdateMutation, useShopFindMutation } from '../../../services/mutations/useShopMutation'
-
 import Breadcrumbs from '../../../helpers/breadcrumbs'
 import PreLoading from '../../../helpers/preLoading'
-
 import IconX from '../../../components/Icon/IconX'
 import IconEdit from '../../../components/Icon/IconEdit'
 import IconTrashLines from '../../../components/Icon/IconTrashLines'
 import IconCheck from '../../../components/Icon/IconCheck'
-
 import 'tippy.js/dist/tippy.css'
 import { formatBankAccountNumber } from '../../../helpers/formatNumeric'
 import themeInit from '../../../theme.init'
@@ -54,12 +41,9 @@ const mode = process.env.MODE || 'admin'
 const Edit = () => {
 
   const { id } = useParams()
-
   const toast = Swal.mixin(toastAlert)
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const storedUser = localStorage.getItem(mode)
   const role = storedUser ? JSON.parse(storedUser).role : null
   const adminEmail = storedUser ? JSON.parse(storedUser).email : null
@@ -67,9 +51,7 @@ const Edit = () => {
   if (adminEmail == "dev@tplus.co.th" || adminEmail == "admin258@tplus.co.th") {
     adminRoot = true;
   }
-  // 
   const [actionModal, setActionModal] = useState(false)
-
   if (role !== 'admin' && role !== 'business_unit') {
     navigate('/')
   }
@@ -80,12 +62,10 @@ const Edit = () => {
   })
 
   const pageAction = useSelector((state: IRootState) => state.pageStore.pageAction) !== 'edit'
-
   const breadcrumbItems = [
     { to: '/apps/shop/list', label: 'ร้านค้า' },
     { label: pageAction ? 'ข้อมูล' : 'แก้ไข', isCurrent: true },
   ]
-
   const [defaultForm, setDefaultFormData] = useState<Shop>({
     username: '',
     password: '',
@@ -112,13 +92,9 @@ const Edit = () => {
   })
 
   const [marker, setMarker] = useState<any>(defaultCenter)
-
   const dataStoredProvinces = useSelector((state: IRootState) => state.dataStore.provinces)
-  const dataStoredShop = useSelector((state: IRootState) => state.dataStore.shop)
-
   const [districtIdList, setDistrictIdList] = useState<any>([])
   const [subDistrictIdList, setSubDistrictIdList] = useState<any>([])
-
   const [shopFormData, setShopFormData] = useState<Shop>(defaultForm)
   const [bankFormData, setBankFormData] = useState<any>(defaultBankForm)
   const [bankList, setBankList] = useState<any>([])
@@ -128,7 +104,7 @@ const Edit = () => {
     googleMapsApiKey: googleApiKey,
   })
 
-  const { mutate: fetchShopData, isLoading: isShopLoading, isError } = useShopFindMutation({
+  const { mutate: fetchShopData,isLoading: isShopLoading, } = useGlobalMutation(url_api.shopFind+id, {
     onSuccess: (res: any) => {
       const setFormValue = res.data
       setFormValue.password = ''
@@ -136,7 +112,7 @@ const Edit = () => {
       setBankList(setFormValue?.shop_banks ?? [])
       getDistrict({ id: setFormValue?.id_province, type: 'id_province' })
       getSubDistrict({ id: setFormValue?.id_district, type: 'id_district' })
-      setShopFormData((prev) => ({ ...prev, ...setFormValue, id: dataStoredShop.id }))
+      setShopFormData((prev) => ({ ...prev, ...setFormValue, id:id }))
       if (setFormValue.latitude && setFormValue.longitude) {
         setMarker({
           lat: parseFloat(setFormValue.latitude),
@@ -146,7 +122,7 @@ const Edit = () => {
     },
   })
 
-  const { mutate: fetchShopDataBank } = useShopFindMutation({
+  const { mutate: fetchShopDataBank,isLoading:isLoadingBank } = useGlobalMutation(url_api.shopFind+id, {
     onSuccess: (res: any) => {
       const setFormValue = res.data
       setBankList(setFormValue?.shop_banks ?? [])
@@ -188,7 +164,8 @@ const Edit = () => {
     onError: (err: any) => { },
   })
 
-  const { mutate: shopUpdate, isLoading } = useShopUpdateMutation({
+
+  const { mutate: shopUpdate,isLoading } = useGlobalMutation(url_api.shopUpdate+id, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
@@ -207,6 +184,7 @@ const Edit = () => {
     },
   })
 
+
   const { mutate: bankFindAll } = useGlobalMutation(url_api.bankFindAll, {
     onSuccess: (res: any) => {
       setMasterDataBankList(
@@ -219,7 +197,7 @@ const Edit = () => {
   })
 
 
-  const { mutate: ShopAddBank } = useGlobalMutation(url_api.shopAddBank, {
+  const { mutate: ShopAddBank,isLoading:isLoadingAddBank } = useGlobalMutation(url_api.shopAddBank, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
@@ -227,7 +205,7 @@ const Edit = () => {
           title: 'เพิ่มสำเร็จ',
           padding: '10px 20px',
         })
-        fetchShopDataBank({ data: { id: dataStoredShop.id } })
+        fetchShopDataBank({})
       } else {
         toast.fire({
           icon: 'error',
@@ -239,7 +217,7 @@ const Edit = () => {
   })
 
 
-  const { mutate: ShopUpdateBank } = useGlobalMutation(url_api.shopUpdateBank, {
+  const { mutate: ShopUpdateBank,isLoading:isLoadingUpdateBank } = useGlobalMutation(url_api.shopUpdateBank, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
@@ -247,7 +225,7 @@ const Edit = () => {
           title: 'แก้ไขสำเร็จ',
           padding: '10px 20px',
         })
-        fetchShopDataBank({ data: { id: dataStoredShop.id } })
+        fetchShopDataBank({})
       } else {
         toast.fire({
           icon: 'error',
@@ -258,7 +236,7 @@ const Edit = () => {
     },
   })
 
-  const { mutate: DeleteBank } = useGlobalMutation(url_api.shopDeleteBank, {
+  const { mutate: DeleteBank,isLoading:isLoadingDelBank} = useGlobalMutation(url_api.shopDeleteBank, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
@@ -266,7 +244,7 @@ const Edit = () => {
           title: 'ลบสำเร็จ',
           padding: '10px 20px',
         })
-        fetchShopDataBank({ data: { id: dataStoredShop.id } })
+        fetchShopDataBank({})
       } else {
         toast.fire({
           icon: 'error',
@@ -279,11 +257,7 @@ const Edit = () => {
 
   useEffect(() => {
     bankFindAll({ data: { page: 1, pageSize: -1 } })
-    fetchShopData({
-      data: {
-        id: id || dataStoredShop.id
-      }
-    })
+    fetchShopData({data: {}})
   }, [])
 
   const handleChangeSelect = (props: any, event: any, name: any) => {
@@ -312,7 +286,6 @@ const Edit = () => {
       if (!isLoading) {
         shopUpdate({
           data: event,
-          tax_id: event.tax_id,
         })
       }
     },
@@ -326,7 +299,7 @@ const Edit = () => {
           data: {
             id: event.id,
             id_bank: event.id_bank,
-            id_shop: dataStoredShop.id,
+            id_shop: id,
             bank_account_name: event.bank_account_name,
             bank_account_number: event.bank_account_number,
             is_main_account: event.is_main_account || false,
@@ -337,7 +310,7 @@ const Edit = () => {
         ShopAddBank({
           data: {
             id_bank: event.id_bank,
-            id_shop: dataStoredShop.id,
+            id_shop: id,
             bank_account_name: event.bank_account_name,
             bank_account_number: event.bank_account_number,
             is_main_account: event.is_main_account || false,
@@ -347,7 +320,7 @@ const Edit = () => {
       }
       setActionModal(false)
     },
-    [ShopUpdateBank, ShopAddBank, dataStoredShop]
+    [ShopUpdateBank, ShopAddBank]
   )
 
   const handleMapClick = (props: any, event: any) => {
@@ -386,16 +359,13 @@ const Edit = () => {
   }
 
   const goReport = () => {
-    navigate('/apps/shop/report/' + dataStoredShop.id)
+    navigate('/apps/shop/report/' + id)
   }
 
-  const goActiveCreateCustomer = () => {
-
-  }
 
   return (
     <>
-      {(!isLoaded || isShopLoading || isError) && <PreLoading />}
+      {(!isLoaded || isShopLoading || isLoadingAddBank || isLoadingUpdateBank || isLoadingDelBank || isLoadingBank) && <PreLoading />}
       <div className="flex items-center justify-between flex-wrap">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex">
@@ -431,7 +401,7 @@ const Edit = () => {
                     </button>
                   )}
                 </Tab>
-                {!themeInit.features?.shop_user &&
+                
                 <Tab as={Fragment}>
                   {({ selected }) => (
                     <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
@@ -439,7 +409,7 @@ const Edit = () => {
                     </button>
                   )}
                 </Tab>
-                }
+              
                 <Tab as={Fragment}>
                   {({ selected }) => (
                     <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
@@ -447,15 +417,15 @@ const Edit = () => {
                     </button>
                   )}
                 </Tab>
-                {themeInit.features?.shop_user &&
-                  <Tab as={Fragment}>
-                    {({ selected }) => (
-                      <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
-                        พนักงาน
-                      </button>
-                    )}
-                  </Tab>
-                }
+               
+                <Tab as={Fragment}>
+                  {({ selected }) => (
+                    <button className={`${selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black` : ''} dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}>
+                      พนักงาน
+                    </button>
+                  )}
+                </Tab>
+                
               </Tab.List>
               <Tab.Panels>
                 <Tab.Panel>
@@ -605,10 +575,7 @@ const Edit = () => {
                               disabled
                             />
                           </div>
-                          {/* <a className={`hover:text-info cursor-pointer btn ${shopFormData.is_create_customer ? 'btn-danger' : 'btn-success'} mr-1`} onClick={() => goActiveCreateCustomer()}>
-            <IconLock className="w-4.5 h-4.5" /> &nbsp;
-            {  shopFormData.is_create_customer ? 'ปิดการสร้างลูกค้า' : 'เปิดการสร้างลูกค้า' } 
-          </a> */}
+
                           <div className="input-flex-row">
                             <SelectField
                               require={true}
@@ -676,7 +643,6 @@ const Edit = () => {
                   </Formik>
                 </Tab.Panel>
 
-                {!themeInit.features?.shop_user &&
                 <Tab.Panel>
                   <Formik initialValues={shopFormData} onSubmit={submitForm} enableReinitialize autoComplete="off" validationSchema={SubmittedPasswordForm}>
                     {(props) => (
@@ -721,7 +687,7 @@ const Edit = () => {
 
 
                 </Tab.Panel>
-                }
+               
                 <Tab.Panel>
                   <div className="mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md">
                     <div className="p-5">
@@ -801,11 +767,11 @@ const Edit = () => {
                     </div>
                   </div>
                 </Tab.Panel>
-                {themeInit.features?.shop_user &&
-                  <Tab.Panel>
-                    <List />
-                  </Tab.Panel>
-                }
+              
+                <Tab.Panel>
+                  <List />
+                </Tab.Panel>
+                
               </Tab.Panels>
             </Tab.Group>
           </div>

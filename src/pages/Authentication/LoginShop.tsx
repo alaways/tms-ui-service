@@ -20,6 +20,8 @@ const LoginShop: React.FC = () => {
 
   useEffect(() => {
     dispatch(setPageTitle('เข้าสู่ระบบ'))
+    localStorage.removeItem('asset_status')
+    localStorage.removeItem('customer_credit_level')
   }, [dispatch])
 
   const [formData, setFormData] = useState({

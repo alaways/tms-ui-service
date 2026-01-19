@@ -84,7 +84,11 @@ const SearchContract = () => {
     
 
     const goEdit = (item: any) => {
-        open('/apps/contract/' + item.id + '/' + item.uuid, '_blank');
+        if(item.contract_hire_type_id == 2){
+            open('/apps/contract-lease/' + item.id + '/' + item.uuid, '_blank');
+        }else if(item.contract_hire_type_id == 1){
+            open('/apps/contract/' + item.id + '/' + item.uuid, '_blank');
+        }
     };
 
     const column: any = [

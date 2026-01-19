@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import themeInit from '../theme.init';
 import path from 'path';
 const Index = lazy(() => import('../pages/Index'));
+const Blank = lazy(() => import('../pages/Blank'));
 const Dashboard= lazy(() => import('../pages/Apps/Dashboard/Dashboard'))
 const DashboardContract = lazy(() => import('../pages/Apps/Dashboard/DashboardContract'))
 const DashboardCEOPV = lazy(() => import('../pages/Apps/DashboardCEO/IndexPV'))
@@ -127,8 +128,13 @@ const CustomerList = lazy(() => import('../pages/Apps/Customer/List'));
 const CustomerAdd = lazy(() => import('../pages/Apps/Customer/AddV2'));
 const CustomerAddV2 = lazy(() => import('../pages/Apps/Customer/AddV2'));
 const CustomerEdit = lazy(() => import('../pages/Apps/Customer/Edit'));
+const CustomerHistoryView = lazy(() => import('../pages/Apps/Customer/HistoryCustomer/Preview'));
+
 const CustomerCredit = lazy(() => import('../pages/Apps/Customer/ListCredit'));
 const CustomerCreditPreview = lazy(() => import('../pages/Apps/Customer/CreditCustomer/Preview'))
+const CustomerPrescreen = lazy(() => import('../pages/Apps/Customer/Prescreen'))
+const CustomerPrescreenAdd = lazy(() => import('../pages/Apps/Customer/AddBySelf'))
+const CustomerPrescreenThankyou = lazy(() => import('../pages/Apps/Customer/CustomerPrescreenThankyouPage'))
 
 const CustomerPaymentList = lazy(() => import('../pages/Apps/CustomerPayment/Dashboard'));
 const CustomerPaymentInvoice = lazy(() => import('../pages/Apps/CustomerPayment/Invoice'));
@@ -158,7 +164,7 @@ const BusinessUnitSetting = lazy(() => import('../pages/Apps/BusinessUnit/Settin
 const InsuranceTypeList = lazy(() => import('../pages/Apps/InsuranceType/List'));
 const ShopGroupList = lazy(() => import('../pages/Apps/ShopGroup/List'));
 const ShopGroupListBu = lazy(() => import('../pages/Apps/ShopGroup/ListBu'));
-const ShopBuInterestRate = lazy(() => import('../pages/Apps/ShopGroup/ShopBuInterestRate'));
+const BuInfomation = lazy(() => import('../pages/Apps/BusinessUnit/BuInfomation'));
 const InterestRateList = lazy(() => import('../pages/Apps/InterestRate/List'));
 
 const EmployeeList = lazy(() => import('../pages/Apps/Employee/List'));
@@ -179,11 +185,19 @@ const ContractPayment = lazy(() => import('../pages/Apps/Contract/Payment'));
 const CloseContract = lazy(() => import('../pages/Apps/Contract/CloseContract'));
 const ContractType = lazy(() => import('../pages/Apps/ContractType/List'));
 
+const ContractLeaseList = lazy(() => import('../pages/Apps/ContractLease/List'));
+const ContractLeaseListCredit = lazy(() => import('../pages/Apps/ContractLease/ListCredit'));
+const ContractLeaseListComplete = lazy(() => import('../pages/Apps/ContractLease/ListComplete'));
+const ContractLeaseListCancel = lazy(() => import('../pages/Apps/ContractLease/ListCancel'));
+const ContractLeaseListWait = lazy(() => import('../pages/Apps/ContractLease/ListWait'));
+const ContractLeaseAddEdit = lazy(() => import('../pages/Apps/ContractLease/AddEdit'));
+
 const ContractSignPreview = lazy(() => import('../pages/Apps/Contract/ContractSignPreview'));
 const CustomerSignaturePage = lazy(() => import('../pages/Apps/Contract/CustomerSignaturePage'));
 const CustomerErrorPage = lazy(() => import('../pages/Apps/Contract/CustomerErrorPage'));
 const CustomerThankyouPage = lazy(() => import('../pages/Apps/Contract/CustomerThankyouPage'));
 const ConfigInfo = lazy(() => import('../pages/Apps/ConfigInfo'));
+const ContractAddReceiveProduct = lazy(() => import('../pages/Apps/Contract/ReceiveProduct/Add'))
 
 const PayToShop = lazy(() => import('../pages/Apps/Report/PayToShop'));
 const AccountCreditor = lazy(() => import('../pages/Apps/Report/AccountCreditor'));
@@ -259,8 +273,13 @@ const leasingRoutes = [
     { path: '/apps/customer/add', element: <CustomerAdd /> },
     { path: '/apps/customer/add-v2', element: <CustomerAddV2 /> },
     { path: '/apps/customer/edit/:id?', element: <CustomerEdit /> },
+    { path: '/apps/customer/history/:uuid/:id', element: <CustomerHistoryView /> },
     { path: '/apps/customer/credit/:id?', element: <CustomerCredit /> },
     { path: '/apps/customer/credit-level/:id', element: <CustomerCreditPreview /> },
+    { path: '/apps/customer/pre-screen/:id', element: <CustomerPrescreen /> ,layout:"blank"},
+    { path: '/apps/customer/pre-screen/:id/step-2', element: <CustomerPrescreenAdd /> ,layout:"blank"},
+    { path: '/apps/customer/pre-screen/thankyou', element: <CustomerPrescreenThankyou /> ,layout:"blank"},
+
     { path: '/apps/asset/list', element: <AssetList /> },
     { path: '/apps/asset/add', element: <AssetAdd /> },
     { path: '/apps/asset/view/:id?/:shop_id?', element: <AssetEdit /> },
@@ -278,7 +297,7 @@ const leasingRoutes = [
     { path: '/apps/interest-rate/list', element: <InterestRateList /> },
     { path: '/apps/shop-group/list', element: <ShopGroupList /> },
     { path: '/apps/shop-group/list-bu/:buid?/:id?', element: <ShopGroupListBu /> },
-    { path: '/apps/shop-group/shop-bu-interestrate/:id?', element: <ShopBuInterestRate /> },
+    { path: '/apps/shop-group/shop-bu-interestrate/:id?', element: <BuInfomation /> },
     { path: '/apps/employee/list', element: <EmployeeList /> },
     { path: '/apps/employee/add', element: <EmployeeAdd /> },
     { path: '/apps/employee/edit/:id?', element: <EmployeeEdit /> },
@@ -292,6 +311,14 @@ const leasingRoutes = [
     { path: '/apps/contract/:id?/:uuid?', element: <ContractAddEdit /> },
     { path: '/apps/contract/payment/:ctid?/:uuid?/:inid?', element: <ContractPayment /> },
     { path: '/apps/contract/close-contract/:ctid?/:uuid?', element: <CloseContract /> },
+    { path: '/apps/contract/receive-product/:id', element: <ContractAddReceiveProduct /> ,layout:"blank"},
+
+    { path: '/apps/contract-lease/list', element: <ContractLeaseList /> },
+    { path: '/apps/contract-lease/list-credit', element: <ContractLeaseListCredit /> },
+    { path: '/apps/contract-lease/list-cancel', element: <ContractLeaseListCancel /> },
+    { path: '/apps/contract-lease/list-complete', element: <ContractLeaseListComplete /> },
+    { path: '/apps/contract-lease/list-wait', element: <ContractLeaseListWait /> },
+    { path: '/apps/contract-lease/:id?/:uuid?', element: <ContractLeaseAddEdit /> },
     
     { path: '/apps/contract/signature-preview/:uuid?', element: <ContractSignPreview /> },
     { path: '/apps/contract-type/list', element: <ContractType /> },
@@ -353,6 +380,7 @@ const routes = [
     ...leasingRoutes,
     // dashboard
     { path: '/', element: <Index /> },
+    { path: '/blank', element: <Blank/>},
     { path: '/apps/maintenence', element: <MaintenenceApps />, layout: 'blank' },
     { path: '/menu', element: <MenuSystem />, layout: 'blank' },
     { path: '/dashboard' ,element : <Dashboard/>},

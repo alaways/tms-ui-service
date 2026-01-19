@@ -46,17 +46,15 @@ const defaultTheme: ThemeType = {
     contract_issuer: false,  // ไม่ได้ใช้ใน TMS
     payment_transfer: false,
     contract_refinance: false,  // ปิดใช้งานก่อน
-    signature_online: true, // ปิดบน prod
-    shop_user:true,
+    signature_online: true,
     singature_rc_shop:true,
     commission_type:true,
     pdf_pay:true, 
     pdf_receipts:true,
     pdf_close:true,
     pdf_return:true,
-    customer_close_contract:true, // ปิดบน prod
+    customer_close_contract:true,
     e_sign_status:true,
-    boardCast: true,
     permissions: false, // ปิดบน prod
   },
   

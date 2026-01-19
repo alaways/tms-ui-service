@@ -121,7 +121,7 @@ const ListCancel = () => {
     const myHeaders = new Headers()
     myHeaders.append('Content-Type', 'application/json')
     myHeaders.append('Authorization', `Bearer ${token}`)
-    const raw = JSON.stringify({...filterValues,page:1,page_size:999999,format:'excel'});
+    const raw = JSON.stringify({...filterValues,page:1,page_size:999999,format:'excel',contract_hire_type_id: 1});
     const requestOptions: any = {
       method: 'POST',
       headers: myHeaders,
@@ -175,7 +175,8 @@ const ListCancel = () => {
       query: filters.query,
       status_type: filters?.status_code?.value?.status_type ? filters?.status_code?.value?.status_type : 'contract',
       status_code: filters?.status_code?.value?.status_code ? filters?.status_code?.value?.status_code : '',
-      id_business_unit: filters?.id_business_unit?.value?.id || ''
+      id_business_unit: filters?.id_business_unit?.value?.id || '',
+      contract_hire_type_id: 1
     }
     fetchContractData({
       data: params,
@@ -184,7 +185,7 @@ const ListCancel = () => {
   }
 
   useEffect(() => {
-    fetchContractData({data:{...filterValues,page:page,page_size:pageSize}})
+    fetchContractData({data:{...filterValues,page:page,page_size:pageSize,contract_hire_type_id: 1}})
   }, [page, pageSize])
 
   return (

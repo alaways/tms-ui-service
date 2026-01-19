@@ -119,20 +119,7 @@ const SidebarBusiness = () => {
                 <IconMinus className="w-4 h-5 flex-none hidden" />
                 <span>{t('leasing apps')}</span>
               </h2>
-              <li className="nav-item">
-                <NavLink to="/" className="group" onClick={() => {
-                  dispatch(setSidebarActive(['', '/']))
-                  setCurrentMenu('')
-                  setCurrentSubMenu('/')
-                }}>
-                  <div className="flex items-center">
-                    <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
-                    <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                      {t('Dashboard')}
-                    </span>
-                  </div>
-                </NavLink>
-              </li>
+              
               {(access_level == 'A' || access_level == 'B') && (
                 <>
                   <li className='nav-item'>
@@ -140,35 +127,9 @@ const SidebarBusiness = () => {
                       toggleMenu('dashboard-v2')
                     }}>
                       <div className="flex items-center">
-                        <IconTrendingUp className="group-hover:!text-primary shrink-0" />
+                        <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
                           {t('Dashboard V2')}
-                        </span>
-                      </div>
-                    </NavLink>
-                  </li>
-                    
-                  <li className="nav-item">
-                    <NavLink to="/dashboard-ceo-income" className="group" onClick={() => {
-                      toggleMenu('dashboard-ceo-income')
-                    }}>
-                      <div className="flex items-center">
-                        <IconTrendingUp className="group-hover:!text-primary shrink-0" />
-                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('รายงาน')}
-                        </span>
-                      </div>
-                    </NavLink>
-                  </li>
-                  
-                  <li className="nav-item">
-                    <NavLink to="/dashboard-ceo-pv" className="group" onClick={() => {
-                      toggleMenu('dashboard-ceo-pv')
-                    }}>
-                      <div className="flex items-center">
-                        <IconTrendingUp className="group-hover:!text-primary shrink-0" />
-                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('Dashboard CEO PV')}
                         </span>
                       </div>
                     </NavLink>
@@ -278,7 +239,7 @@ const SidebarBusiness = () => {
                       <div className="flex items-center">
                         <IconNotesEdit fill={true} className="group-hover:!text-primary shrink-0" />
                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
-                          {t('สัญญา')}
+                          {t('สัญญาเช่าซื้อ')}
                         </span>
                       </div>
                       <div className={currentMenu !== 'contract' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -314,6 +275,57 @@ const SidebarBusiness = () => {
                         </li>
                         <li>
                           <NavLink to="/apps/contract/list-cancel" className={currentSubMenu === '/apps/contract/list-cancel' ? 'active' : ''}>
+                            {t('สัญญาที่ยกเลิก')}
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </AnimateHeight>
+                  </li>
+                </ul>
+              </li>
+              <li className="nav-item">
+                <ul>
+                  <li className="menu nav-item">
+                    <button type="button" className={`${currentMenu === 'contract-lease' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('contract-lease')}>
+                      <div className="flex items-center">
+                        <IconNotesEdit fill={true} className="group-hover:!text-primary shrink-0" />
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+                          {t('สัญญาเช่าทรัพย์')}
+                        </span>
+                      </div>
+                      <div className={currentMenu !== 'contract-lease' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                        <IconCaretDown />
+                      </div>
+                    </button>
+                    <AnimateHeight duration={300} height={currentMenu === 'contract-lease' ? 'auto' : 0}>
+                      <ul className="sub-menu text-gray-500">
+                        <li>
+                          <NavLink to="/apps/contract-lease/list" className={currentSubMenu === '/apps/contract-lease/list' ? 'active' : ''}>
+                            {t('รายการสัญญา')}
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-credit" className={currentSubMenu === '/apps/contract-lease/list-credit' ? 'active' : ''}>
+                            {t('สัญญาที่อนุมัติแล้ว')}
+                          </NavLink>
+                        </li>
+                        {themeInit?.features?.contract_refinance && <li>
+                          <NavLink to="/apps/contract-lease/list-refinance" className={currentSubMenu === '/apps/contract-lease/list-refinance' ? 'active' : ''}>
+                            {t('สัญญารีไฟแนนซ์')}
+                          </NavLink>
+                        </li>}
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-wait" className={currentSubMenu === '/apps/contract-lease/list-wait' ? 'active' : ''}>
+                            {t('สัญญาที่รอสิ้นสุด')}
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-complete" className={currentSubMenu === '/apps/contract-lease/list-complete' ? 'active' : ''}>
+                            {t('สัญญาที่สิ้นสุดแล้ว')}
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/apps/contract-lease/list-cancel" className={currentSubMenu === '/apps/contract-lease/list-cancel' ? 'active' : ''}>
                             {t('สัญญาที่ยกเลิก')}
                           </NavLink>
                         </li>
@@ -469,6 +481,49 @@ const SidebarBusiness = () => {
                   </div>
                 </NavLink>
               </li>
+              {(access_level == 'A' || access_level == 'B') && (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/" className="group" onClick={() => {
+                      dispatch(setSidebarActive(['', '/']))
+                      setCurrentMenu('')
+                      setCurrentSubMenu('/')
+                    }}>
+                      <div className="flex items-center">
+                        <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+                          {t('Dashboard')}
+                        </span>
+                      </div>
+                    </NavLink>
+                  </li>
+                   <li className="nav-item">
+                    <NavLink to="/dashboard-ceo-income" className="group" onClick={() => {
+                      toggleMenu('dashboard-ceo-income')
+                    }}>
+                      <div className="flex items-center">
+                        <IconTrendingUp className="group-hover:!text-primary shrink-0" />
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+                          {t('รายงาน')}
+                        </span>
+                      </div>
+                    </NavLink>
+                  </li>
+                  
+                  <li className="nav-item">
+                    <NavLink to="/dashboard-ceo-pv" className="group" onClick={() => {
+                      toggleMenu('dashboard-ceo-pv')
+                    }}>
+                      <div className="flex items-center">
+                        <IconTrendingUp className="group-hover:!text-primary shrink-0" />
+                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+                          {t('Dashboard CEO PV')}
+                        </span>
+                      </div>
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </PerfectScrollbar>
         </div>

@@ -128,9 +128,9 @@ const ContractSignPreview = () => {
         }
         let signatureUrl
         if (webUrl) {
-          signatureUrl = `${webUrl}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}?business_unit=${contractData?.reference?.slice(0,3)}`
+          signatureUrl = `${webUrl}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}&business_unit=${contractData?.reference?.slice(0,3)}`
         } else {
-          signatureUrl = `${window.location.origin}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}?business_unit==${contractData?.reference?.slice(0,3)}`
+          signatureUrl = `${window.location.origin}/contract/signature/${res.data.token}?openExternalBrowser=1${typeUrl}&business_unit==${contractData?.reference?.slice(0,3)}`
         }
         setGenerateDataLink(signatureUrl)
         toast.fire({ icon: 'success', title: 'สร้างลิงก์สำหรับลูกค้าแล้ว!' })

@@ -29,6 +29,27 @@ export function useUploadMutation(options?: UseShopMutationOptions) {
   )
 }
 
+export function useUploadCustomerMutation(options?: UseShopMutationOptions) {
+  return useMutation<any,any,any>(
+    async (values:any) => {
+      const userStore = localStorage.getItem(mode)
+      const parsedUserStore = userStore ? JSON.parse(userStore) : null
+      let data = new FormData()
+      data.append('file', values.data.file)
+      data.append('type', values.data.type)
+      let config: any = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        headers: {
+          Authorization: `Bearer ${parsedUserStore?.access_token}`,
+        },
+      }
+      return await axios.post(process.env.BACKEND_URL + url_api.uploadFileByCustomer, data, config).then((res: any) => res.data)
+    },
+    options
+  )
+}
+
 export function useUploadSignMutation(options?: UseShopMutationOptions) {
 
   return useMutation<any, any, any>(
@@ -67,6 +88,29 @@ export function useOCRMutation(options?: any) {
         },
       }
       return await axios.post(process.env.BACKEND_URL + url_api.ocr, data, config).then((res: any) => res.data)
+    },
+    options
+  )
+}
+
+export function useUploadPreScreenMutation(options?: UseShopMutationOptions) {
+
+  return useMutation<any, any, any>(
+    async (values: any) => {
+      const userStore = localStorage.getItem(mode)
+      const parsedUserStore = userStore ? JSON.parse(userStore) : null
+      let data = new FormData()
+      data.append('file', values.data.file)
+      data.append('type', values.data.type)
+      data.append('ref', values.data.ref)
+      let config: any = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        headers: {
+          Authorization: `Bearer ${parsedUserStore?.access_token}`,
+        },
+      }
+      return await axios.post(process.env.BACKEND_URL + url_api.uploadPreScreenfile, data, config).then((res: any) => res.data)
     },
     options
   )

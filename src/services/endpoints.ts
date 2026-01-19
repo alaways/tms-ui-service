@@ -11,11 +11,15 @@ export const default_url_api = {
 
   uploadfile: '/storage/upload',
   uploadSignfile: '/storage/upload-sign',
+  uploadPreScreenfile: '/storage/upload-prescreen',
+  uploadFileByCustomer: '/storage/upload-customer',
 
   assetFindAll: '/asset/find-all',
   assetCreate: '/asset/create',
   assetFind: '/asset/find/',
+  assetFindLog: '/asset/find-log/',
   assetUpdate: '/asset/update/',
+  assetUpdateStatus: '/asset/update-status/',
   assetColorFindAll: '/asset/get-colors',
   assetModelFindAll: '/asset/get-models',
   assetNameFindAll: '/asset/get-names',
@@ -74,13 +78,18 @@ export const default_url_api = {
   customerFind: '/customer/find/',
   customerUpdate: '/customer/update/',
   customerSearch: '/customer/search',
+  customerSearchSelf: '/customer/search-self',
   customerMemoAdd: '/customer/memo/add',
   customerMemoFindAll: '/customer/memo/history',
   customerSearchContains: '/customer/search-contains',
   customerContractOfferExport: '/contract/export-excel-offers',
-
+  customerCreatePrescreen : '/customer/create-prescreen',
+  customerCreateLinkPreScreen : '/customer/create-link-prescreen',
+  customerPreScreenInfo :'/customer/get-prescreen-info',
+  customerPreScreenUpdate :'/customer/prescreen-update/',
+  findallHistoryCustomer:'/customer/find-all-history',
+  findoneHistoryCustomer:'/customer/find-one-history',
   contractFindAll: '/contract/find-all',
-
   contractApprovedFindAll: '/contract/find-all-approved',
   contractApprovedFindAllV2: '/contract/find-all-approvedv2',
   contractRefinanceFindAll: '/contract/find-all-refinance',
@@ -206,6 +215,7 @@ export const default_url_api = {
   contractRequestToPayDATA: '/contract/get-data-request-topay/',
   contractCloseToPDF: '/contract/generate-close-contract/',
   contractReturnReceiptToPDF: '/contract/generate-return-receipt/',
+  contractHandOverReceiptPdf: '/contract/generate-handover-receipt/',
 
   createLinkSignature: '/contract/create-sign-link/',
   getSignPdf: '/contract/get-pdf-sign/',
@@ -215,6 +225,7 @@ export const default_url_api = {
 
   getSignInfo: '/contract/get-pdf-info/',
   SignPdf: '/contract/sign-pdf',
+  deleteSignPdf: '/contract/delete-sign-pdf/',
 
   bankFindAll: '/bank/find-all',
   ocr: '/storage/analyze',
@@ -260,6 +271,10 @@ export const default_url_api = {
   providerPayload: '/business-unit/provider_applock/payload',
   providerUpdate: '/business-unit/provider_applock/update',
   providerList: '/business-unit/provider_applock',
+
+  buMessageGet: '/business-unit/line-message/get-data',
+  buMessageUpdate: '/business-unit/line-message/update',
+
   updateCreateCustomer: '/shop/update-create-customer',
   clearAllCache: '/admin/clear-all-cache',
   clearToken: '/admin/clear-token',
@@ -292,6 +307,7 @@ export const default_url_api = {
   announceShopGetData: '/admin/announce/shop-get-data',
 
   masterCustomerCredit: '/master/customer-credit',
+  masterAssetStatus: '/master/asset-status',
   dashboardRepord: '/admin/dashboard-report',
 
   changeAssetShop: '/asset/change-asset-shop',
@@ -319,6 +335,16 @@ export const default_url_api = {
 
   lineBoardCastOne:'/customer/line/boardcast-one',
   customerSearchProfile: '/customer/search-profile',
+
+  receiveProductCreateGenerate: '/contract-receive-product/generate',
+  receiveProductFindoneGenerate: '/contract-receive-product/get-infomation/',
+  receiveProductCreate: '/contract-receive-product/update-contract-receipt-product',
+  receiveProductDelete: '/contract-receive-product/delete',
+
+  shopGetToc: '/shop/toc/get-bu-toc',
+  shopAcceptToc : '/shop/toc/save-accept',
+  buGetTocSetting: '/business-unit/toc/get-confog',
+  buUpdateTocSetting: '/business-unit/toc/update-confog',
 }
 
 export const url_api = {

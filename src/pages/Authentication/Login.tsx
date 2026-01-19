@@ -20,6 +20,8 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     dispatch(setPageTitle('เข้าสู่ระบบ'))
+    localStorage.removeItem('asset_status')
+    localStorage.removeItem('customer_credit_level')
   }, [dispatch])
 
   const [formData, setFormData] = useState({
@@ -60,7 +62,7 @@ const Login: React.FC = () => {
           localStorage.removeItem('password')
           localStorage.removeItem('rememberMe')
         }
-        navigate('/')
+        (userData.access_level == "A" || userData.access_level == "B") ? navigate('/dashboard-v2') : navigate('/blank')
       } else {
         const toast = Swal.mixin(toastAlert)
         toast.fire({

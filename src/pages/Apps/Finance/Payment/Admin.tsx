@@ -58,6 +58,7 @@ const PaymentHistory = () => {
     start_at?:string | null
     end_at?:string | null
     id_business_unit?: number | null
+    search_type?:string
     query?:string
     status?:string
     payment_method?:string | null
@@ -67,6 +68,7 @@ const PaymentHistory = () => {
     start_at: "",
     end_at: "",
     id_business_unit: null,
+    search_type:'contract_reference',
     query: '',
     status: '',
     payment_method:'',
@@ -142,6 +144,7 @@ const PaymentHistory = () => {
         start_at:values.date_at ? values.date_at[0] : null,
         end_at:values.date_at ? values.date_at[1] : null,
         id_business_unit:values.id_business_unit,
+        search_type:values.search_type,
         query:values.query,
         status:values.status,
         payment_method:values.payment_method,
@@ -314,6 +317,7 @@ const PaymentHistory = () => {
         start_at:values.date_at ? values.date_at[0] : null,
         end_at:values.date_at ? values.date_at[1] : null,
         id_business_unit:values.id_business_unit,
+        search_type:values.search_type,
         query:values.query,
         status:values.status,
         payment_method:values.payment_method,
@@ -414,6 +418,7 @@ const PaymentHistory = () => {
                 start_at: "",
                 end_at: "",
                 id_business_unit: null,
+                search_type:'contract_reference',
                 query: '',
                 status: '',
                 payment_method:'',
@@ -424,74 +429,89 @@ const PaymentHistory = () => {
             }}
           >
             {({ setFieldValue, handleReset, values }) => (
-              <Form className="flex flex-col flex-auto gap-2">
-                <div className='flex flex-col sm:flex-row md:flex-row gap-5'>
-                  <div className="flex-1 z-10">
-                    <SelectField
-                      id='id_business_unit'
-                      label='หน่วยธุรกิจ'
-                      name='id_business_unit'
-                      placeholder='เลือกหน่วยธุรกิจ'
-                      options={businessUnit}
-                    />
-                  </div>
-                  <div className="flex-1 z-10">
-                    <SelectField
-                      id='status'
-                      label='สถานะการชำระเงิน'
-                      name='status'
-                      placeholder='กรุณาเลือก'
-                      options={statusPaymentType}
-                    />
-                  </div>
-                  <div className="flex-1 z-10">
-                    <SelectField
-                      id='payment_method'
-                      label='ช่องทางชำระเงิน'
-                      name='payment_method'
-                      placeholder='กรุณาเลือก'
-                      options={paymentMethod}
-                    />
-                  </div>
+             <Form className="flex flex-col flex-auto gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
+                  <SelectField
+                    zIndex="z-7"
+                    id="id_business_unit"
+                    label="หน่วยธุรกิจ"
+                    name="id_business_unit"
+                    placeholder="เลือกหน่วยธุรกิจ"
+                    options={businessUnit}
+                  />
+
+                  <SelectField
+                    zIndex="z-6"
+                    id="status"
+                    label="สถานะการชำระเงิน"
+                    name="status"
+                    placeholder="กรุณาเลือก"
+                    options={statusPaymentType}
+                  />
+
+                  <SelectField
+                    zIndex="z-5"
+                    id="payment_method"
+                    label="ช่องทางชำระเงิน"
+                    name="payment_method"
+                    placeholder="กรุณาเลือก"
+                    options={paymentMethod}
+                  />
+                  <SelectField
+                    zIndex="z-4"
+                    id="status_code"
+                    label="สถานะดำเนินการ"
+                    name="status_code"
+                    placeholder="เลือกสถานะ"
+                    options={status}
+                    isSearchable={true}
+                  />
                 </div>
 
-                <div className='flex flex-col sm:flex-row md:flex-row gap-5'>
-                <SelectField id="status_code" label="สถานะดำเนินการ" name="status_code" placeholder="เลือก สถานะ" options={status} isSearchable={true} />
-                <DateRangeAntd label="วันที่ชำระ" name="date_at" />
-                  {/* <DatePicker
-                    label="วันที่เริ่ม"
-                    name="start_at"
-                    onChange={(value: any) => {
-                      setFieldValue('start_at', convertDateClientToDb(value))
-                    }} 
-                  />
-                  <DatePicker
-                    label="วันที่สิ้นสุด"
-                    name="end_at"
-                    onChange={(value: any) => {
-                      setFieldValue('end_at', convertDateClientToDb(value))
-                    }}
-                  /> */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
+
+
+                  <DateRangeAntd label="วันที่ชำระ" name="date_at" />
+
                   <InputField label="ค้นหา" placeholder="ค้นหา" name="query" type="text" />
-                  <button type="submit" className="btn btn-primary gap-2 mt-5">
-                    ค้นหา
-                  </button>
-                  <button
-                    type="reset"
-                    className="btn btn-info gap-2 mt-5"
-                    onClick={() => {
-                      handleReset()
-                    }}
-                  >
-                    ล้างค่า
-                  </button>
-                  <div className="flex flex-col pt-5">
-                    <button type="button" className="btn btn-success gap-2 w-full h-[40px]" onClick={() => handleExport(`payment_history_${new Date().toLocaleString()}`, values)}>
+
+                  <SelectField
+                    zIndex="z-3"
+                    id="search_type"
+                    label="ประเภทการค้นหา"
+                    name="search_type"
+                    placeholder="ประเภทการค้นหา"
+                    options={[
+                      { value: "contract_reference", label: "เลขที่สัญญา" },
+                      { value: "payment_reference", label: "เลขที่อ้างอิง" },
+                    ]}
+                  />
+
+                  <div className="flex flex-wrap gap-2">
+                    <button type="submit" className="btn btn-primary flex-1">
+                      ค้นหา
+                    </button>
+                    <button
+                      type="reset"
+                      className="btn btn-info flex-1"
+                      onClick={() => location.reload()}
+                    >
+                      ล้างค่า
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-success flex-1"
+                      onClick={() =>
+                        handleExport(`payment_history_${new Date().toLocaleString()}`, values)
+                      }
+                    >
                       Export
                     </button>
                   </div>
                 </div>
               </Form>
+
+
             )}
           </Formik>
         </div>
@@ -728,7 +748,7 @@ const PaymentHistory = () => {
                 setPageSize(p)
               }}
               paginationText={({ from, to, totalRecords }) => (
-                `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                `โชว์ ${from} ถึง ${to-1} ของ ${totalRecords} หน้าทั้งหมด`
               )}
             />
           )}

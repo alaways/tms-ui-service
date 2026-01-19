@@ -23,6 +23,25 @@ if (hostname.includes('asormoneyphone.com')) {
   };
 }
 
+if (hostname.includes('tunderfin.co.th')) {
+  override = {
+    name: "Tunder Fine",
+    color: {
+      themePrimary: "#ffc107",
+    },
+    link: {
+      privacy_url: "https://tunderfin.co.th/privacy-policy",
+    },
+    logo: {
+      AdminLogo: "/assets/images/tunder/logo.png",
+      BussinessLogo: "/assets/images/tunder/logo.png",
+      ShopLogo: "/assets/images/tunder/logo.png",
+      CustomerLogo: "/assets/images/tunder/logo.png",
+    },
+    favicon: "/assets/images/tunder/favicon.png",
+  };
+}
+
 if (hostname.includes('shop-rnp')) {
   override = {
     ...override,

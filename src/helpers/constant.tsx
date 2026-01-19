@@ -613,6 +613,10 @@ export const shop_report_csv = [
     id: 'reference',
     displayName: 'เลขที่สัญญา',
   },
+   {
+    id: 'credit_code',
+    displayName: 'สถานะสัญญา',
+  },
   {
     id: 'contract_date',
     displayName: 'วันที่ทำสัญญา',

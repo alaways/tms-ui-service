@@ -787,7 +787,7 @@ const ShopReportPV = () => {
                                 rowClassName={(item:any) =>
                                     item.isTotal ? '!bg-white font-bold text-black' : ''
                                 }
-                                paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`}
+                                paginationText={({ from, to, totalRecords }) => `โชว์ ${from} ถึง ${to-1} ของ ${totalRecords} หน้าทั้งหมด`}
                             />
                         )}
                     </div>

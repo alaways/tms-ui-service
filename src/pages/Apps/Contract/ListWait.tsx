@@ -70,6 +70,7 @@ const ListWait = () => {
                 approved_end_at: values?.approved_at[1],
             }),
             is_completed:values?.is_completed,
+            contract_hire_type_id: 1
         };
           delete params?.contract_close_date
          setFilterValues(params);
@@ -127,7 +128,7 @@ const ListWait = () => {
         const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         myHeaders.append('Authorization', `Bearer ${token}`);
-        const raw = JSON.stringify({...filterValues,page:1,page_size:999999,format:'excel'});
+        const raw = JSON.stringify({...filterValues,page:1,page_size:999999,format:'excel',contract_hire_type_id: 1});
         const requestOptions: any = {
             method: 'POST',
             headers: myHeaders,
@@ -409,7 +410,7 @@ const ListWait = () => {
     }, []);
 
     useEffect(() => {
-        fetchContractData({ data: { ...filterValues, page: page, page_size: pageSize } });
+        fetchContractData({ data: { ...filterValues, page: page, page_size: pageSize,contract_hire_type_id: 1 } });
     }, [page, pageSize]);
 
     useEffect(() => {

@@ -9,7 +9,6 @@ import { setPageTitle, setSidebarActive } from '../../../store/themeConfigSlice'
 import { Customer } from '../../../types/index'
 import { useUploadMutation, useOCRMutation } from '../../../services/mutations/useUploadMutation'
 import { useDistrictMutation, useSubDistrictMutation } from '../../../services/mutations/useProvincesMutation'
-import { useCustomerUpdateMutation, useCustomerFindMutation } from '../../../services/mutations/useCustomerMutation'
 import { Form, Formik, FormikProps } from 'formik'
 import InputField from '../../../components/HOC/InputField'
 import SelectField from '../../../components/HOC/SelectField'
@@ -28,6 +27,7 @@ import List from './CreditCustomer/List'
 import ListNoteCustomer from './NoteCustomer/List'
 import themeConfig from '../../../theme.config'
 import CameraOCR from '../../../components/CameraOCR'
+import ListHistoryCustomer from './HistoryCustomer/List'
 
 const mode = process.env.MODE || 'admin'
 
@@ -46,6 +46,7 @@ const Edit = () => {
   })
 
   const pageAction = useSelector((state: IRootState) => state.pageStore.pageAction) !== 'edit'
+  const [isEdit,setIsEdit] = useState(false)
   const [tabIndex, setTabIndex] = useState<number>(0)
 
   const dataStoredProvinces = useSelector((state: IRootState) => state.dataStore.provinces)
@@ -55,11 +56,11 @@ const Edit = () => {
 
   const breadcrumbItems = [
     { to: '/apps/customer/list', label: 'ลูกค้า' },
-    { label: pageAction ? 'ข้อมูล' : 'แก้ไข', isCurrent: true },
+    { label: !isEdit ? 'ข้อมูล' : 'แก้ไข', isCurrent: true },
   ]
 
   // shop - only view
-  if (role != 'admin' && role !== 'business_unit' && pageAction === false) {
+  if (role != 'admin' && role !== 'business_unit' && isEdit === true) {
     navigate('/')
   }
 
@@ -72,8 +73,6 @@ const Edit = () => {
     onImgChange([data])
     setIsCameraOcr(false)
   }
-
-  const dataStoredCustomer = useSelector((state: IRootState) => state.dataStore.customer)
 
   const [districtIdList, setDistrictIdList] = useState<any>([])
   const [districtCurrentList, setDistrictCurrentList] = useState<any>([])
@@ -129,14 +128,12 @@ const Edit = () => {
     province: '',
     zip_code: '',
   })
-
+  const [masterAssetStatus,setMasterAssetStatus] = useState([])
   const [citizenImageFile, setCitizenImageFile] = useState<any>([])
   const [verificationImageFile, setVerificationImageFile] = useState<any>([])
-
-  const [isLoadding, setIsLoadding] = useState(false)
   const [actionModal, setActionModal] = useState(false)
   const [actionModal2, setActionModal2] = useState(false)
-  const { mutate: fetchCustomerData, isLoading: isCustomerLoading } = useCustomerFindMutation({
+  const { mutate: fetchCustomerData, isLoading: isCustomerLoading } = useGlobalMutation(url_api.customerFind+id, {
     onSuccess: (res: any) => {
       const setFormValue = res.data
       getDistrict({ id: setFormValue?.id_province, type: 'id_province' })
@@ -157,11 +154,7 @@ const Edit = () => {
   })
 
   useEffect(() => {
-    fetchCustomerData({
-      data: {
-        id: id || dataStoredCustomer.id
-      }
-    })
+    fetchCustomerData({})
   }, [])
 
   const handleChangeSelect = (props: any, event: any, name: any) => {
@@ -279,7 +272,8 @@ const Edit = () => {
     },
   })
 
-  const { mutate: customerUpdate, isLoading } = useCustomerUpdateMutation({
+
+  const { mutate: customerUpdate,isLoading } = useGlobalMutation(url_api.customerUpdate+id, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
@@ -290,7 +284,6 @@ const Edit = () => {
         setTimeout(() => {
            location.reload(); 
         }, 500);
-       // navigate('/apps/customer/list')
       } else {
         toast.fire({
           icon: 'warning',
@@ -446,13 +439,11 @@ const Edit = () => {
   }
 
   const onImgAnalisy = async () => {
-    setIsLoadding(true)
     await uploadOCR({
       data: {
         image: citizenImageFile[0].file
       }
     })
-    setIsLoadding(false)
     setActionModal(true)
   }
 
@@ -472,8 +463,18 @@ const Edit = () => {
     title: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
     name: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
     phone_number: Yup.string().length(10, 'กรุณาใส่ข้อมูลให้ครบ 10 เลข'),
+    phone_number_ref: Yup.string().nullable().when([], {
+      is: () => true, then: (schema) => schema.test(
+        'len-if-not-empty',
+        'กรุณาใส่ข้อมูลให้ครบ 10 เลข',
+        (value) => {
+          if (!value) return true                // ว่างได้
+          return value.length === 10             // ถ้ามีค่า ต้อง 10 ตัว
+        }
+      ),
+    }),
     citizen_id: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').length(13, 'กรุณาใส่ข้อมูลให้ครบ 13 หลัก'),
-    email: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').matches(/^[A-Za-z0-9@._]+$/,'กรุณาใช้ตัวอักษรภาษาอังกฤษ ตัวเลข เครื่องหมายมหัพภาค(.) _ และ @ เท่านั้น').email('กรุณาใส่อีเมลที่ถูกต้อง'),
+    email: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ').matches(/^[A-Za-z0-9@._]+$/, 'กรุณาใช้ตัวอักษรภาษาอังกฤษ ตัวเลข เครื่องหมายมหัพภาค(.) _ และ @ เท่านั้น').email('กรุณาใส่อีเมลที่ถูกต้อง'),
     address: Yup.string().required('กรุณาใส่ข้อมูลให้ครบ'),
     id_province: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
     id_district: Yup.string().nullable().required('กรุณาใส่ข้อมูลให้ครบ'),
@@ -498,7 +499,7 @@ const Edit = () => {
               label="รหัสบัตรประชาชน"
               name="citizen_id"
               type="text"
-              disabled={pageAction}
+              disabled={!isEdit}
               onKeyPress={(e: any) => {
                 if (!/[0-9]/.test(e.key)) {
                   e.preventDefault()
@@ -522,14 +523,14 @@ const Edit = () => {
             placeholder="กรุณาเลือก"
             onChange={(e: any) => handleChangeSelect(props, e, 'title')}
             isSearchable={false}
-            disabled={pageAction}
+            disabled={!isEdit}
           />
           <InputField
             require={true}
             label="ชื่อ-นามสกุล"
             name="name"
             type="text"
-            disabled={pageAction}
+            disabled={!isEdit}
           />
         </div>
         <div className="input-flex-row">
@@ -544,7 +545,7 @@ const Edit = () => {
                 e.preventDefault()
               }
             }}
-            disabled={pageAction}
+            disabled={!isEdit}
           />
           <InputField
             require={true}
@@ -557,7 +558,7 @@ const Edit = () => {
                 e.preventDefault()
               }
             }}
-            disabled={pageAction}
+            disabled={!isEdit}
           />
         </div>
         <div className="input-flex-row">
@@ -565,13 +566,13 @@ const Edit = () => {
             label="Facebook ID"
             name="facebook_id"
             type="text"
-            disabled={pageAction}
+            disabled={!isEdit}
           />
           <InputField
             label="Line ID"
             name="line_id"
             type="text"
-            disabled={pageAction}
+            disabled={!isEdit}
           />
         </div>
         <div className="input-flex-row">
@@ -579,13 +580,13 @@ const Edit = () => {
             label="Tiktok ID"
             name="tiktok_id"
             type="text"
-            disabled={pageAction}
+            disabled={!isEdit}
           />
           <InputField
             label="Instagram ID"
             name="instagram_id"
             type="text"
-            disabled={pageAction}
+            disabled={!isEdit}
           />
         </div>
         <div className="input-flex-row">
@@ -594,7 +595,7 @@ const Edit = () => {
             label="Email"
             name="email"
             type="text"
-            disabled={pageAction}
+            disabled={!isEdit}
           />
           <div className="blank-container"></div>
         </div>
@@ -614,7 +615,7 @@ const Edit = () => {
               options={creditLevelTypes}
               placeholder="กรุณาเลือก"
               isSearchable={true}
-              disabled={pageAction}
+              disabled={!isEdit}
             /> */}
             <SelectField
               require={true}
@@ -624,7 +625,7 @@ const Edit = () => {
               options={[{ label: 'เปิด', value: true }, { label: 'ปิด', value: false }]}
               placeholder="กรุณาเลือก"
               isSearchable={true}
-              disabled={pageAction}
+              disabled={!isEdit}
             />
             {/* <div className="blank-container"></div> */}
           </div>)
@@ -663,7 +664,7 @@ const Edit = () => {
                 label="ที่อยู่"
                 name="address"
                 rows="1"
-                disabled={pageAction}
+                disabled={!isEdit}
                 onChange={(e: any) => {
                   props.setFieldValue('address', e.target.value)
                   props.setFieldValue('copyAddress', false)
@@ -685,7 +686,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddressForWork', false)
                 }}
                 isSearchable={false}
-                disabled={pageAction}
+                disabled={!isEdit}
               />
               <SelectField
                 require={true}
@@ -700,7 +701,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddressForWork', false)
                 }}
                 isSearchable={false}
-                disabled={districtIdList.length === 0 || pageAction}
+                disabled={districtIdList.length === 0 || !isEdit}
               />
             </div>
             <div className="input-flex-row">
@@ -717,7 +718,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddressForWork', false)
                 }}
                 isSearchable={false}
-                disabled={subDistrictIdList.length === 0 || pageAction}
+                disabled={subDistrictIdList.length === 0 || !isEdit}
               />
               <InputField
                 label="รหัสไปรษณีย์"
@@ -733,7 +734,7 @@ const Edit = () => {
             name="copyAddress"
             label="ใช้ที่อยู่เดียวกับบัตรประชาชน"
             onCheck={(e: any) => handleCheck(props, e)}
-            disabled={pageAction}
+            disabled={!isEdit}
           /> */}
           <br />
         </label> 
@@ -750,7 +751,7 @@ const Edit = () => {
                 label="ที่อยู่"
                 name="current_address"
                 rows="1"
-                disabled={pageAction}
+                disabled={!isEdit}
                 onChange={(e: any) => {
                   props.setFieldValue('copyAddress', false)
                   props.setFieldValue('current_address', e.target.value)
@@ -770,7 +771,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddress', false)
                 }}
                 isSearchable={false}
-                disabled={pageAction}
+                disabled={!isEdit}
               />
               <SelectField
                 require={true}
@@ -784,7 +785,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddress', false)
                 }}
                 isSearchable={false}
-                disabled={districtCurrentList.length === 0 || pageAction}
+                disabled={districtCurrentList.length === 0 || !isEdit}
               />
             </div>
             <div className="input-flex-row">
@@ -800,7 +801,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddress', false)
                 }}
                 isSearchable={false}
-                disabled={subDistrictCurrentList.length === 0 || pageAction}
+                disabled={subDistrictCurrentList.length === 0 || !isEdit}
               />
               <InputField
                 label="รหัสไปรษณีย์"
@@ -816,7 +817,7 @@ const Edit = () => {
             name="copyAddressForWork"
             label="ใช้ที่อยู่เดียวกับบัตรประชาชน"
             onCheck={(e: any) => handleCheckForWork(props, e)}
-            disabled={pageAction}
+            disabled={!isEdit}
           /> */ }
           <br />
         </label>
@@ -833,7 +834,7 @@ const Edit = () => {
                 label="ที่อยู่"
                 name="work_address"
                 rows="1"
-                disabled={pageAction}
+                disabled={!isEdit}
                 onChange={(e: any) => {
                   props.setFieldValue('copyAddressForWork', false)
                   props.setFieldValue('work_address', e.target.value)
@@ -853,7 +854,7 @@ const Edit = () => {
                   props.setFieldValue('copyAddressForWork', false)
                 }}
                 isSearchable={false}
-                disabled={pageAction}
+                disabled={!isEdit}
               />
               <SelectField
                 require={true}
@@ -867,7 +868,7 @@ const Edit = () => {
                   handleChangeSelect(props, e, 'work_id_district')
                 }}
                 isSearchable={false}
-                disabled={districtWorkList.length === 0 || pageAction}
+                disabled={districtWorkList.length === 0 || !isEdit}
               />
             </div>
             <div className="input-flex-row">
@@ -883,7 +884,7 @@ const Edit = () => {
                   handleChangeSelect(props, e, 'work_id_subdistrict')
                 }}
                 isSearchable={false}
-                disabled={subDistrictWorkList.length === 0 || pageAction}
+                disabled={subDistrictWorkList.length === 0 || !isEdit}
               />
               <InputField
                 label="รหัสไปรษณีย์"
@@ -926,7 +927,7 @@ const Edit = () => {
             <ImageUploading value={citizenImageFile} onChange={onImgChange}>
               {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                 <div className="upload__image-wrapper">
-                  {!pageAction && (
+                  {isEdit && (
                     <>
                       <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
                       เลือกไฟล์...
@@ -945,7 +946,7 @@ const Edit = () => {
                       <img src={image.dataURL} alt="img" className={!pageAction ? 'm-auto mt-10' : 'm-auto'} />
                     </div>
                   ))}
-                  {!pageAction && imageList.length > 0 && <button type="button" className="btn btn-success mt-2 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]" onClick={onImgAnalisy}>
+                  {isEdit && imageList.length > 0 && <button type="button" className="btn btn-success mt-2 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]" onClick={onImgAnalisy}>
                     ตรวจสอบบัตรประชาชน
                   </button>}
                 </div>
@@ -959,7 +960,7 @@ const Edit = () => {
           <div className="custom-file-container" data-upload-id="myFirstImage">
             <div className="label-container">
               <label>รูปยืนยันบุคคล <span className="text-rose-600">*</span></label>
-              {!pageAction && (
+              {isEdit && (
                 <button
                   type="button"
                   className="custom-file-container__image-clear"
@@ -978,7 +979,7 @@ const Edit = () => {
             <ImageUploading value={verificationImageFile} onChange={onImgChange2}>
               {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
                 <div className="upload__image-wrapper">
-                  {!pageAction && (
+                  {isEdit && (
                     <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
                       เลือกไฟล์...
                     </button>
@@ -986,7 +987,7 @@ const Edit = () => {
                   &nbsp;
                   {imageList.map((image, index) => (
                     <div key={index} className="custom-file-container__image-preview relative">
-                      <img src={image.dataURL} alt="img" className={!pageAction ? 'm-auto mt-10' : 'm-auto'} />
+                      <img src={image.dataURL} alt="img" className={isEdit ? 'm-auto mt-10' : 'm-auto'} />
                     </div>
                   ))}
                 </div>
@@ -1000,7 +1001,8 @@ const Edit = () => {
   }
 
   const goEdit = () => {
-    dispatch(setPageAction('edit'))
+    // dispatch(setPageAction('edit'))
+    setIsEdit(true)
     setTabIndex(0)
   }
 
@@ -1021,7 +1023,7 @@ const Edit = () => {
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex">
           {
-            (pageAction && role !== 'shop') && (
+            (role !== 'shop') && (
               <>
                 <a className="cursor-pointer btn btn-warning mr-1" onClick={() => checkProfile()}>
                    ตรวจสอบเครดิต
@@ -1035,12 +1037,17 @@ const Edit = () => {
                   <IconEdit className="w-4.5 h-4.5" /> &nbsp;
                   แก้ไข
                 </a>
+                :
+                <a className="cursor-pointer btn btn-danger mr-1" onClick={() => setIsEdit(false)}>
+                  ยกเลิก
+                </a>
+                
               </>
             )
           }
 
-            {
-            (pageAction && role === 'shop') && (
+          {
+            (role === 'shop') && (
               <>
                 <a className="hover:text-info cursor-pointer btn btn-primary mr-1" onClick={() => goCreditProcess()}>
                   <IconEdit className="w-4.5 h-4.5" /> &nbsp;
@@ -1077,6 +1084,18 @@ const Edit = () => {
               )}
             </Tab>
             }
+            <Tab as={Fragment}>
+              {({ selected }) => (
+                  <button
+                      onClick={() => setTabIndex(3)}
+                      className={`${
+                          selected ? `!border-white-light !border-b-white  text-themePrimary !outline-none dark:!border-[#191e3a] dark:!border-b-black ` : ''
+                      } dark:hover:border-b-black' -mb-[1px] block border border-transparent p-3.5 py-2 hover:text-themePrimary`}
+                  >
+                      ประวัติ
+                  </button>
+              )}
+            </Tab>
           </Tab.List>
           <Tab.Panels>
             <Tab.Panel>
@@ -1091,10 +1110,10 @@ const Edit = () => {
                         {personalContent(props)}
                         {uploadContent()}
                       </div>
-                      {!pageAction && (
+                      {isEdit && (
                         <button type="submit" className="btn !mt-6 w-full border-0 btn-primary">
                           {(isUpload || isLoading) && <span className="animate-spin border-2 border-white border-l-transparent rounded-full w-5 h-5 ltr:mr-4 rtl:ml-4 inline-block align-middle"></span>}
-                          {pageAction ? 'ข้อมูล' : 'แก้ไข'}
+                          แก้ไข
                         </button>
                       )}
                       {
@@ -1175,6 +1194,9 @@ const Edit = () => {
             </Tab.Panel>
             <Tab.Panel>
               <ListNoteCustomer />
+            </Tab.Panel>
+            <Tab.Panel>
+              <ListHistoryCustomer />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>

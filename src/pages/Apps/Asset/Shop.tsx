@@ -4,14 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import { IRootState } from '../../../store';
 import { Form, Formik } from 'formik';
-import IconTrashLines from '../../../components/Icon/IconTrashLines';
 import InputField from '../../../components/HOC/InputField';
 import SelectField from '../../../components/HOC/SelectField';
 import { toastAlert } from '../../../helpers/constant';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import { Assets } from '../../../types/index';
-import { useAssetAddtoShopMutation, useAssetFindMutation } from '../../../services/mutations/useAssetMutation';
 import { url_api } from '../../../services/endpoints';
 import { useGlobalMutation } from '../../../helpers/globalApi';
 
@@ -34,14 +32,7 @@ const AssetShop = () => {
     });
 
     // TODO: global mutate
-    const { mutate: fetchAssetData, isLoading: isAssetLoading } = useAssetFindMutation({
-        onSuccess: (res: any) => {
-            // if (res.code === 200 || res.statusCode === 200) {
-               // setRelationList(res.data.shop_assets);
-            // }
-        },
-    });
-    
+    const { mutate: fetchAssetData, isLoading: isAssetLoading } = useGlobalMutation(url_api.assetFind, {})
     const { mutate: fetchShopListData, isLoading: isShopListLoading } = useGlobalMutation(url_api.shopFindAll, {
             onSuccess: (res: any) => {
                 setShopList(
@@ -54,29 +45,32 @@ const AssetShop = () => {
             onError: () => {
             },
     })
-    // TODO: global mutate
-    const { mutate: assetShopCreate, isLoading } = useAssetAddtoShopMutation({
-        onSuccess: (res: any) => {
-            if (res.code === 200 || res.statusCode === 200) {
-                toast.fire({
-                    icon: 'success',
-                    title: 'บันทึกสำเร็จ',
-                    padding: '10px 20px',
-                });
-                fetchAssetData({ data: { id: dataStoredAsset.id } });
-            } else {
-                toast.fire({
-                    icon: 'warning',
-                    title: res.message,
-                    padding: '10px 20px',
-                });
-            }
-        },
-    });
+
+    const { mutate: assetShopCreate, isLoading } = useGlobalMutation(url_api.assetAddtoShop, {
+            onSuccess: (res: any) => {
+                if (res.code === 200 || res.statusCode === 200) {
+                    toast.fire({
+                        icon: 'success',
+                        title: 'บันทึกสำเร็จ',
+                        padding: '10px 20px',
+                    });
+                    fetchAssetData({ data:{}, id: dataStoredAsset.id  });
+                } else {
+                    toast.fire({
+                        icon: 'warning',
+                        title: res.message,
+                        padding: '10px 20px',
+                    });
+                }
+            },
+            onError: () => {
+            },
+    })
+
 
     useEffect(() => {
         fetchShopListData({ data: { page: 1, page_size: -1 } });
-        fetchAssetData({ data: { id: dataStoredAsset.id } });
+        fetchAssetData({ data:{},id: dataStoredAsset.id});
         // fetchShopGroupData({ data: { page: 1, pageSize: -1 } });
         // fetchBusinessUnitData({ data: { page: 1, pageSize: -1 } });
     }, []);

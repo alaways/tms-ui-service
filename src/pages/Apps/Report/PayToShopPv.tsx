@@ -625,7 +625,7 @@ const PayToShopPv = () => {
                 sortStatus={sortStatus}
                 onSortStatusChange={setSortStatus}
                 paginationText={({ from, to, totalRecords }) => (
-                  `โชว์ ${from} ถึง ${to} ของ ${totalRecords} หน้าทั้งหมด`
+                  `โชว์ ${from} ถึง ${to-1} ของ ${totalRecords} หน้าทั้งหมด`
                 )}
               />
             )}

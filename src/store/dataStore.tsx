@@ -14,6 +14,7 @@ interface AppState {
   insuranceTypes: InsuranceTypes
   provinces: Array<any>
   credit_level: Array<any>
+  asset_status: Array<any>
   businessUnits: BusinessUnits
   shopGroupBuConfig: any
 }
@@ -23,6 +24,7 @@ const mode = process.env.MODE || 'admin'
 export const initialState: AppState = {
   provinces: [],
   credit_level:[],
+  asset_status:[],
   user: {
     id: 0,
     uuid: '',
@@ -243,8 +245,13 @@ const dataStored = createSlice({
       payload = payload || state.credit_level
       state.credit_level = payload
     },
+
+    setAssetStatus(state, { payload }) {
+      payload = payload || state.asset_status
+      state.asset_status = payload
+    },
   },
 })
 
-export const { setUser, setShop, setCustomer, setAsset, setAssetImage, setAssetTypes, setContract, setInstallment, setEmployee, setInsuranceTypes, setProvinces, setBusinessUnits, setShopGroupBuConfig,setCreditLevel } = dataStored.actions
+export const { setUser, setShop, setCustomer, setAsset, setAssetImage, setAssetTypes, setContract, setInstallment, setEmployee, setInsuranceTypes, setProvinces, setBusinessUnits, setShopGroupBuConfig,setCreditLevel,setAssetStatus } = dataStored.actions
 export default dataStored.reducer

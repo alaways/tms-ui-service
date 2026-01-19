@@ -48,7 +48,7 @@ const ListCredit = () => {
     const [contractList, setContractList] = useState<Contract[]>([]);
     const [page, setPage] = useState(1);
     const [prevPageSize, setPrevPageSize] = useState(1);
-    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]); //PAGE_SIZES[0]
+    const [pageSize, setPageSize] = useState(PAGE_SIZES[0]) //PAGE_SIZES[0]
     const [totalItems, setTotalItems] = useState<number>(0);
     const [status, setStatus] = useState<any>([]);
     const [statusExcel, setStatusExcel] = useState<any>([]);
@@ -57,6 +57,8 @@ const ListCredit = () => {
         ...(statusCode !== null ? { status_code: statusCode, status_type: 'credit' } : {}),
         ...(buId !== null ? { id_business_unit: parseInt(buId) } : {}),
     });
+    const [filterParamsImport,setFilterParamsImport] = useState<any>(null)
+    const [importMode,setImportMode] = useState<boolean>(false)
 
     const [importedContracts, setImportedContracts] = useState<Contract[]>([]);
     const [selectedContracts, setSelectedContracts] = useState<Set<any>>(new Set()); // To track selected contracts
@@ -150,6 +152,8 @@ const ListCredit = () => {
         fetchContractGetStatus({ data: { is_approved: true } });
     }, []);
     useEffect(() => {
+
+        
         const isPageSizeChanged = prevPageSize !== pageSize;
 
         const queryPayload = isFileUploaded && importedContracts.length > 0
@@ -157,14 +161,19 @@ const ListCredit = () => {
                 reference: importedContracts,
                 page: isPageSizeChanged ? 1 : page,
                 page_size: pageSize,
+                contract_hire_type_id: 1
             }
             : {
                 ...filterParams,
                 page: isPageSizeChanged ? 1 : page,
                 page_size: pageSize,
+                contract_hire_type_id: 1
             };
-
-        fetchContractData({ data: queryPayload });
+        
+        if(isFileUploaded || filterParams?.id_business_unit) {
+            fetchContractData({ data: queryPayload });
+        }
+        
 
         setPrevPageSize(pageSize);
     }, [page, pageSize, isFileUploaded, importedContracts, filterParams]);
@@ -190,7 +199,7 @@ const ListCredit = () => {
         const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         myHeaders.append('Authorization', `Bearer ${token}`);
-        const raw = JSON.stringify({...filterParams,page:1,page_size:999999,format:'excel'});
+        const raw = importMode ? JSON.stringify(filterParamsImport) : JSON.stringify({...filterParams,page:1,page_size:999999,format:'excel',contract_hire_type_id: 1});
         const requestOptions: any = {
             method: 'POST',
             headers: myHeaders,
@@ -526,6 +535,17 @@ const ListCredit = () => {
                 </span>
             ),
         },
+        {
+            accessor: 'recive_product_status',
+            title: 'ยืนยันรับสินค้า',
+            textAlignment: 'center',
+            sortable: false,
+            render: (item:any) => (
+                <span className={`${item?.recive_product_status ? 'badge-outline-success' : 'badge-outline-danger'}`}>
+                    {item?.recive_product_status ? <IconChecks className="w-6 h-6" /> : ''}
+                </span>
+            ),
+        },
         //is_view 
         {
             accessor: 'action',
@@ -558,16 +578,25 @@ const ListCredit = () => {
                     const ws = wb.Sheets[wb.SheetNames[0]]; // Get the first sheet
                     const data = XLSX.utils.sheet_to_json(ws, { header: 1 }); // Extract rows as arrays
                     const references = data.map((row: any) => row[0]).filter((reference: string) => reference); // Extract references
-                 
+
                     if (references.length > 0) {
                         setImportedContracts(references);
                         setIsUploading(true);
+                        setImportMode(true)
+                        setFilterParamsImport({
+                            query: '',
+                            page: 1,
+                            page_size: 999999,
+                            reference: references,
+                            format:'excel'
+                        })
                         fetchContractData({
                             data: {
                                 query: '',
                                 page: 1,
                                 page_size: pageSize,
                                 reference: references,
+                                contract_hire_type_id: 1
                             },
                         });
                         setImportedContracts(references);
@@ -610,6 +639,7 @@ const ListCredit = () => {
                     credit_code: creditCode.trim(),
                 }
             });
+            setImportMode(false)
         } else {
             Swal.fire({
                 icon: 'warning',

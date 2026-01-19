@@ -69,8 +69,18 @@ import IconRefresh from '../../../components/Icon/IconRefresh'
 import { EditorProvider, Editor, Toolbar, BtnBold, BtnItalic, BtnUnderline, BtnNumberedList, BtnBulletList, Separator, BtnLink, BtnUndo, BtnRedo, BtnClearFormatting, BtnStyles } from 'react-simple-wysiwyg'
 import InputGenerateField from '../../../components/HOC/InputGenerateField'
 import { showNotification } from '../../../helpers/showNotification'
+import ReceiptProductPreview from './ReceiveProduct/Preview'
+import ReceiptProductPreviewNew from './ReceiveProduct/PreviewNew'
 
 const mode = process.env.MODE || 'admin'
+
+interface AdditionStatusProp {
+  status_id: boolean;
+  contract_status: boolean;
+  image_status: boolean;
+  receive_product_status: boolean;
+  verify: boolean;
+}
 
 interface ActionType {
   type: string;
@@ -100,6 +110,7 @@ const AddEdit = () => {
   const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false
 
   const { id, uuid } = useParams()
+  const [tabIndex,setTabIndex] = useState<number>(0)
   const creditLevelTypes = useSelector((state: IRootState) => state.dataStore.credit_level)
   const contract_id = id ? Number(id) : undefined
   const contract_uuid = uuid ? uuid : undefined
@@ -111,6 +122,7 @@ const AddEdit = () => {
   const storedUser = localStorage.getItem(mode)
   const id_shop = storedUser ? JSON.parse(storedUser).id : null
   const userRole = storedUser ? JSON.parse(storedUser).role : null
+  const emailStored = storedUser ? JSON.parse(storedUser).email : null
 
   const admin_business_unit_role = (userRole === 'admin' || userRole === 'business_unit')
   const pageAction = !_.isUndefined(contract_uuid) // true when have id
@@ -152,6 +164,8 @@ const AddEdit = () => {
   const [actionReportModal, setActionReportModal] = useState(false)
   const [actionRetuenModal, setActionRetuenModal] = useState(false)
   const [actionCancelEkyc,setActionCancelEkyc] = useState<boolean>(false)
+  const [actionCancelSign,setActionCancelSign] = useState<boolean>(false)
+  const [actionCancelReceiveProduct,setActionCancelReceiveProduct] = useState<boolean>(false)
 
   const [installmentDetail, setInstallmentDetail] = useState<any>({})
   const [pdfLoading, setPdfLoading] = useState(false)
@@ -227,7 +241,6 @@ const AddEdit = () => {
   const [c_ref_link, set_c_ref_link] = useState(null)
   const [isLoadingClone, setLoadingClose] = useState(false)
   const [tmpData, setTmpData] = useState<any>({})
-
   const [formDataContractStatus, setFormDataContractStatus] = useState<any>({
     note: '',
     contentStatus: null
@@ -245,6 +258,7 @@ const AddEdit = () => {
   const [focus, setFocus] = useState(false)
 
   const [state, dispatchState] = useReducer(reducer, { status: false, link: '' });
+  const [statusTabAddition,setStatusTabAddition] = useState<AdditionStatusProp>({status_id:false,contract_status:false,image_status:false,receive_product_status:false,verify:false})
 
   const openContract = (refinance_ref_link: any) => {
     open('/apps/contract/' + refinance_ref_link, '_blank')
@@ -383,6 +397,18 @@ const AddEdit = () => {
     }
   })
 
+  const checkContractStatusByTypeSignature = (contract:any) => {
+    if(contract.business_unit.signature_online_type == 1){
+      return contract.customer_signature_at ? true : false
+    }
+    if(contract.business_unit.signature_online_type == 2){
+      return contract.e_contract_status
+    }
+    if(contract.business_unit.signature_online_type == 3){
+      return contract.e_contract_status || (contract.customer_signature_at ? true : false)
+    }
+  }
+
   const { mutate: fetchContractEachTabData, isLoading: contractEachTabLoading } = useGlobalMutation(url_api.contractFindData + `${contract_uuid}/?tab=${tab}`, {
     onSuccess(res: any) {
       switch (tab) {
@@ -453,14 +479,27 @@ const AddEdit = () => {
           })
           break
         case 'additional':
+          setStatusAction(res.data.status_id)
           setFormData((prev: any) => ({
             ...prev,
             contract_images: res.data.contract_images,
             contract_pdf_url: res.data.contract_pdf_url,
             e_contract_status: res.data.e_contract_status,
             e_contract_link: res.data.e_contract_link,
-            contract_key: res.data.contract_key
+            contract_key: res.data.contract_key,
+            contract_receive_product: res.data.contract_receive_product,
+            customer: res.data.customer,
+            receive_product_link: res.data.receive_product_generates[0]?.ref ? `${process.env.WEB_CUSTOMER_URL}/apps/contract/receive-product/${res.data.receive_product_generates[0]?.ref}?openExternalBrowser=1` : null,
+            contract_signature_ref: res?.data?.contract_signature_ref ? `${process.env.WEB_CUSTOMER_URL}/contract/signature/${res?.data?.contract_signature_ref}?openExternalBrowser=1&business_unit=${prev?.reference.slice(0,3)}` : null,
+            customer_signature_at: res.data.customer_signature_at
           }))
+          setStatusTabAddition({ 
+            status_id: res.data.status_id >= 4 ? true : false, 
+            contract_status: checkContractStatusByTypeSignature(res.data),
+            receive_product_status: res.data.recive_product_status, 
+            image_status: res.data.contract_images.length > 0 ? true : false,
+            verify: res.data.customer.otp_verify
+          })
           if (res.data?.contract_pdf_url) {
             setContractFile(res.data?.contract_pdf_url)
           }
@@ -506,7 +545,7 @@ const AddEdit = () => {
       }
     },
   })
-
+  
   const { mutate: fetchContractPDF } = useGlobalBlobMutation(url_api.contractCleanPDF + contract_uuid, {
     onSuccess: (res: any) => {
       const blob = new Blob([res], { type: 'application/pdf' })
@@ -577,6 +616,27 @@ const AddEdit = () => {
       const link = document.createElement('a')
       link.href = url
       link.download = `${formData?.reference}_goods_receipt_${moment().utc().format('DD-MM-yyyy')}.pdf`
+      link.target = '_blank'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url)
+      }, 100)
+      setPdfLoading(false)
+    },
+    onError: (error: any) => {
+      setPdfLoading(false)
+    },
+  })
+
+  const { mutate: fetchHandoverReceiptPdf } = useGlobalBlobMutation(url_api.contractHandOverReceiptPdf + contract_uuid, {
+    onSuccess: (res: any) => {
+      const blob = new Blob([res], { type: 'application/pdf' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${formData?.reference}_handover_receipt_${moment().utc().format('DD-MM-yyyy')}.pdf`
       link.target = '_blank'
       document.body.appendChild(link)
       link.click()
@@ -1104,6 +1164,7 @@ const AddEdit = () => {
           padding: '10px 20px',
         })
         setTab('contract')
+        setTabIndex(0)
         fetchContractEachTabData({})
       } else {
         toast.fire({
@@ -1244,12 +1305,12 @@ const AddEdit = () => {
       })
   }
 
-  const { mutate: contractUpDoc, isLoading: isLoadingUpDoc } = useGlobalMutation(url_api.contractUpDocV2, {
+  const { mutateAsync: contractUpDoc, isLoading: isLoadingUpDoc } = useGlobalMutation(url_api.contractUpDocV2, {
     onSuccess: (res: any) => {
       if (res.statusCode === 200 || res.code === 200) {
         toast.fire({
           icon: 'success',
-          title: 'อัพโหลดเสร็จสิน',
+          title: 'อัพโหลดเสร็จสิ้น',
           padding: '10px 20px',
         })
 
@@ -1441,8 +1502,6 @@ const AddEdit = () => {
       }
     })
 
-
-
     if (uploadPromises.length > 0) {
       const results = await Promise.all(uploadPromises)
       if (results[0]?.data?.file_name) {
@@ -1492,17 +1551,97 @@ const AddEdit = () => {
       }
     }
     if (param?.contract_pdf_url) {
-      contractUpDoc({ data: { id_contract: contract_uuid, ...param } })
-    }
-
-    if (mode == 'admin' && statusAction == 5) {
+      await contractUpDoc({ data: { id_contract: contract_uuid, ...param } })
+    }else {
       toast.fire({
         icon: 'success',
         title: 'บันทึกสำเร็จ',
         padding: '10px 20px',
       })
+    }
+    await fetchContractEachTabData({})
+
+    // if (mode == 'admin' && statusAction == 5) {
+    //   toast.fire({
+    //     icon: 'success',
+    //     title: 'บันทึกสำเร็จ',
+    //     padding: '10px 20px',
+    //   })
+    // } else {
+    //   const statusContract = await contractUpdateStatusV2({ data: { id_contract: contract_uuid, status_id: 4, memo: formData.memo } })
+    // }
+  }
+
+  const onSubmitContractImage = async() => {
+    const uploadPromises: any[] = []
+    let param: any = {}
+
+    images.forEach((item: any) => {
+      if (_.isUndefined(item?.id)) {
+        uploadPromises.push(uploadFile({ data: { file: item.file, type: 'contract' } }))
+      }
+    })
+    if (uploadPromises.length > 0) {
+      const results = await Promise.all(uploadPromises)
+
+      const addContractImg: any[] = []
+      results.map((image:any) => {
+         addContractImg.push(
+          addContractImage({
+            data: {
+              id_contract: contract_id,
+              name: image?.data?.file_name,
+              image_url: image?.data?.file_name,
+              extension: 'extension',
+              size: image?.data?.size,
+              type: 'image',
+            },
+          })
+        )
+      })
+
+      if (addContractImg.length > 0) {
+        await Promise.all(addContractImg)
+        toast.fire({
+          icon: 'success',
+          title: 'บันทึกสำเร็จ',
+          padding: '10px 20px',
+        })
+        fetchContractEachTabData({})
+      }
+    }
+  }
+
+  const onSubmitContractPdf = async () => {
+    const uploadPromises: any[] = []
+    let param: any = {}
+
+    if (contractFile) {
+      if (!contractFile.toString().includes('http')) {
+        uploadPromises.push(uploadFile({ data: { file: contractFile, type: 'contract' } }))
+      } else {
+        uploadPromises.push(Promise.resolve({}))
+      }
     } else {
-      const statusContract = await contractUpdateStatusV2({ data: { id_contract: contract_uuid, status_id: 4, memo: formData.memo } })
+      uploadPromises.push(Promise.resolve({}))
+      param.contract_pdf_url = null
+    }
+
+    if (uploadPromises.length > 0) {
+      const results = await Promise.all(uploadPromises)
+      if (results[0]?.data?.file_name) {
+        param.contract_pdf_url = results[0]?.data?.file_name
+      }
+    }
+
+    if (param?.contract_pdf_url) {
+      await contractUpDoc({ data: { id_contract: contract_uuid, ...param } })
+    }else {
+      toast.fire({
+        icon: 'success',
+        title: 'บันทึกสำเร็จ',
+        padding: '10px 20px',
+      })
     }
   }
 
@@ -1611,6 +1750,7 @@ const AddEdit = () => {
             price: +event.price,
             down_payment: +event.down_payment,
             price_total: event.ins_amount * event.ins_period + parseInt(event.down_payment),
+            contract_hire_type_id: 1
           }
           //refinance_ref
           // ไม่ต้องส่งข้อมูลที่ไม่จำเป็น
@@ -1650,7 +1790,8 @@ const AddEdit = () => {
             data: {
               id_contract: contract_uuid,
               credit_id: findStatusId?.data?.id,
-              note: event.note
+              note: event.note,
+              triggerAssetStatus:true,
             }
           })
         }
@@ -1761,7 +1902,6 @@ const AddEdit = () => {
             data: item,
           }))
         )
-
         if (formData?.is_refinance) {
           props.setFieldValue('commission', event.data.commission || 0)
           props.setFieldValue('penalty_fee', event.data.penalty_fee || 0)
@@ -1774,6 +1914,7 @@ const AddEdit = () => {
           props.setFieldValue('condition_contract', event.data.condition_contract)
           props.setFieldValue('commission_type', event.data.commission_type)
           props.setFieldValue('down_payment_rate', 0.2)
+          props.setFieldValue('is_asset_commission', event.data.is_asset_commission)
           fetchContractRate({
             data: {
               id_shop: props.values.id_shop,
@@ -1805,6 +1946,7 @@ const AddEdit = () => {
             props.setFieldValue('fee', event.data.fee || 0)
             props.setFieldValue('condition_contract', event.data.condition_contract)
             props.setFieldValue('commission_type', event.data.commission_type)
+            props.setFieldValue('is_asset_commission', event.data.is_asset_commission)
 
           }
           fetchContractRate({
@@ -1828,6 +1970,9 @@ const AddEdit = () => {
         setAssetDetail(event.data)
         props.setFieldValue('price', event.data.price || 0)
         props.setFieldValue('principle', event.data.price || 0)
+        if((event.data.commission > 0 && event.data.commission != undefined) && !props.values.is_asset_commission){
+          props.setFieldValue('commission', event.data.commission || 0)
+        }
         break
       case 'ins_period':
         if (contractRate) {
@@ -1980,27 +2125,145 @@ const AddEdit = () => {
     // })
   }
 
+  const statusEvidence = () => {
+    const status = [{name:"ลงนามออนไลน์",status: statusTabAddition?.contract_status},{name:"รูปภาพประกอบสัญญา",status:statusTabAddition.image_status},{name:"ยืนยันรับสินค้า",status:statusTabAddition.receive_product_status},{name:"ยืนยันตัวตน",status:statusTabAddition.verify},{name:"ส่งอนุมัติสัญญา",status:statusTabAddition.status_id}]
+    return (
+      <div className='flex gap-4 py-6 text-sm'>
+        {status?.map((item:any) => (
+          <div className='flex-1 flex flex-col items-center gap-1'>
+            <p>{item.name}</p>
+            <div className="h-2 w-full bg-gray-500 rounded-xl overflow-hidden">
+              <div
+                className="
+                  h-full 
+                  bg-[#19d20c] 
+                  rounded-xl 
+                  animate-slideRight
+                  duration-500
+                "
+                style={{
+                  width: item.status ? "100%" :"0%", // ถ้าจะทำ progress ค่อยเปลี่ยนเป็น %
+                }}
+              ></div>
+          </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  
   const uploadContent = () => {
     const fileType = getFileType(JSON.stringify(contractFile))
 
     return (
       <>
+        <Formik initialValues={formData} onSubmit={() => { }} enableReinitialize>
+          {(props) => {
+            return <Form>
+              {themeInit.features.e_sign_status && (formData?.business_unit?.signature_online_type == 2 || formData?.business_unit?.signature_online_type == 3) && contract_uuid && (statusAction === 3 || statusAction === 4 || statusAction === 5) && (
+                <div className="mb-4">
+                  {state.status &&
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => updateContractEsign({data:{uuid:uuid,e_contract_status:true}})} type="button" className="btn bg-orange-500 text-white shadow-lg hover:shadow-none max-w-40">อัพเดตสถานะ KYC</button>
+                    </div>
+                  }
+                  {props.values.customer_signature_at && (
+                    <div className="flex justify-end gap-2">
+                      {props.values.status_id != 5 && <button
+                        type="button"
+                        onClick={() => setActionCancelSign(true)}
+                        className="btn bg-red-600 text-white shadow-lg hover:shadow-none max-w-50"
+                      >
+                        ยกเลิกลงนามออนไลน์
+                      </button>}
+                    </div>
+                  )}
+                  {props.values.e_contract_status &&
+                    <div className="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          downloadContractEsign();
+                        }}
+                        className="btn btn-primary max-w-40"
+                      >
+                        ดาวน์โหลด e-sign
+                      </button>
+                      {props.values.status_id != 5 && <button
+                        type="button"
+                        onClick={() => setActionCancelEkyc(true)}
+                        className="btn bg-red-600 text-white shadow-lg hover:shadow-none max-w-40"
+                      >
+                        ยกเลิก e-sign
+                      </button>}
+                    </div>
+                  }
+                  <div className="flex flex-col gap-2">
+                    <InputGenerateField
+                      onGenerate={async () => {
+                        await createEkycGetContract({ data: { uuid: formData.uuid } });
+                      }}
+                      loading={isLoadingGetContract}
+                      showStatus={props.values.e_contract_status}
+                      label="1. ลงนามสัญญา EKYC"
+                      name="e_contract_link"
+                      className="form-textarea ltr:rounded-l-none rtl:rounded-r-none resize-none"
+                      disabled={true}
+                      copy={true}
+                    />
+                  </div>
+                </div>
+              )}
+              {[1,3].includes(formData?.business_unit?.signature_online_type) && (
+                <div className='mb-4'>
+                  <div className="flex flex-col gap-2">
+                    <InputGenerateField
+                      onGenerate={async () => {
+                        await generateLink({ data: { id_contract: uuid } })
+                      }}
+                      loading={isGeneratingLink}
+                      showStatus={props.values.customer_signature_at}
+                      label={`${formData?.business_unit?.signature_online_type == 1 ? '1.': ' '} ลงนามออนไลน์`}
+                      name="contract_signature_ref"
+                      className="form-textarea ltr:rounded-l-none rtl:rounded-r-none resize-none"
+                      disabled={true}
+                      copy={true}
+                    />
+                  </div>
+                </div>
+              )}
+            </Form>
+          }}
+        </Formik>
         <div className="upload-container">
           <div className="custom-file-container" data-upload-id="contractDoc">
             <div className="label-container">
-              <p>1. สัญญา อัพโหลดได้ทั้ง pdf และ รูปภาพ </p>
-              {(statusAction === 3 || (statusAction === 4 && admin_business_unit_role)) && (
-                <button
-                  type="button"
-                  className="custom-file-container__image-clear"
-                  title="Clear Image"
-                  onClick={() => {
-                    setContractFile(null)
-                  }}
-                >
-                  x
-                </button>
-              )}
+              <p>1.1 แนบสัญญา อัพโหลดได้ทั้ง pdf และ รูปภาพ </p>
+              <div className="flex gap-2">
+                
+                {(statusAction === 3 || (statusAction === 4 && admin_business_unit_role)) && (
+                  <>
+                  <button
+                    type="button"
+                    onClick={onSubmitContractPdf}
+                    className="flex justify-center items-center gap-2 min-w-20 px-4 py-1 rounded-md text-white bg-success"
+                  >
+                    <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="#ffffff" d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 237.3C544 220.3 537.3 204 525.3 192L448 114.7C436 102.7 419.7 96 402.7 96L160 96zM192 192C192 174.3 206.3 160 224 160L384 160C401.7 160 416 174.3 416 192L416 256C416 273.7 401.7 288 384 288L224 288C206.3 288 192 273.7 192 256L192 192zM320 352C355.3 352 384 380.7 384 416C384 451.3 355.3 480 320 480C284.7 480 256 451.3 256 416C256 380.7 284.7 352 320 352z"/></svg>
+                    <p>บันทึก</p>
+                  </button>
+                  <button
+                    type="button"
+                    className="custom-file-container__image-clear"
+                    title="Clear Image"
+                    onClick={() => {
+                      setContractFile(null)
+                    }}
+                  >
+                    x
+                  </button>
+                  </>
+                )}
+              </div>
             </div>
             <p className="custom-file-container__custom-file hidden"></p>
             {(statusAction === 3 || (statusAction === 4 && admin_business_unit_role)) && <input type="file" className="" onChange={onContractFileChange} />}
@@ -2032,18 +2295,31 @@ const AddEdit = () => {
             <div className="custom-file-container" data-upload-id="firstImage">
               <div className="label-container">
                 <p>2. รูปภาพประกอบสัญญา </p>
-                {(statusAction === 3 || (statusAction === 4 && admin_business_unit_role)) && (
-                  <button
-                    type="button"
-                    className="custom-file-container__image-clear"
-                    title="Clear Image"
-                    onClick={() => {
-                      setImages([])
-                    }}
-                  >
-                    ×
-                  </button>
-                )}
+                <div className="flex gap-2">
+
+                  {(statusAction === 3 || (statusAction === 4 && admin_business_unit_role) || (statusAction === 5 && admin_business_unit_role)) && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={onSubmitContractImage}
+                        className="flex justify-center items-center gap-2 min-w-20 px-4 py-1 rounded-md text-white bg-success"
+                      >
+                        <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="#ffffff" d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 237.3C544 220.3 537.3 204 525.3 192L448 114.7C436 102.7 419.7 96 402.7 96L160 96zM192 192C192 174.3 206.3 160 224 160L384 160C401.7 160 416 174.3 416 192L416 256C416 273.7 401.7 288 384 288L224 288C206.3 288 192 273.7 192 256L192 192zM320 352C355.3 352 384 380.7 384 416C384 451.3 355.3 480 320 480C284.7 480 256 451.3 256 416C256 380.7 284.7 352 320 352z"/></svg>
+                        <p>บันทึก</p>
+                      </button>
+                      <button
+                        type="button"
+                        className="custom-file-container__image-clear"
+                        title="Clear Image"
+                        onClick={() => {
+                          setImages([])
+                        }}
+                      >
+                        ×
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
               <div></div>
 
@@ -2064,7 +2340,7 @@ const AddEdit = () => {
                         <button className="custom-file-container__custom-file__custom-file-control" onClick={onImageUpload} type="button">
                           เลือกไฟล์...
                         </button>
-                        <div className="grid gap-4 sm:grid-cols-3 grid-cols-1 pt-[70px]">
+                        <div className="grid gap-4 sm:grid-cols-3 grid-cols-1 pt-[50px]">
                           {imageList.map((image, index) => (
                             <div key={index} className="custom-file-container__image-preview relative">
                               {((statusAction === 3 && image?.id === undefined) || (statusAction === 4 && image?.id === undefined) || (statusAction === 5 && image?.id === undefined)) && (
@@ -2124,13 +2400,14 @@ const AddEdit = () => {
                     )}
                   </ImageUploading>
                 )}
-
-
               </div>
             </div>
           </div>
         </div>
         <hr className="border-white-light dark:border-[#1b2e4b] my-6 w-full" />
+        <ReceiptProductPreviewNew formData={formData} reference={formData?.reference} image_url={formData?.contract_receive_product?.image_url} created_at={formData?.contract_receive_product?.created_at} customer_name={formData?.customer?.name} contract_receive_product={formData?.contract_receive_product} onSubmit={async() => await createGenerateReceiveProduct({data:{id_contract: uuid}})} onCancel={() => setActionCancelReceiveProduct(true)}/>
+
+        {/* <hr className="border-white-light dark:border-[#1b2e4b] my-6 w-full" />
         <div className="flex flex-col mt-6 gap-4">
           <div className="upload-container w-full">
             <div className="custom-file-container">
@@ -2225,7 +2502,7 @@ const AddEdit = () => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <Transition appear show={isModalRCOpen} as={Fragment}>
           <Dialog as="div" open={isModalRCOpen} onClose={closeModal} className="relative z-50">
             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
@@ -2251,21 +2528,35 @@ const AddEdit = () => {
             </div>
           </Dialog>
         </Transition>
-
-
-        {(statusAction === 4 || statusAction === 5) && admin_business_unit_role && !lockUpdate && (
+        {/* {(statusAction === 4 || statusAction === 5) && admin_business_unit_role && !lockUpdate && (
           <button
             type="button"
-            className="btn !mt-6 w-full border-0 btn-primary"
+            className="btn !mt-16 w-full border-0 btn-primary"
             onClick={() => {
               upLoadDoc()
             }}
           >
             อัพเดทไฟล์สัญญา
           </button>
+        )} */}
+        {((statusAction === 3 && ((statusTabAddition.contract_status && statusTabAddition.image_status )) || emailStored == 'dev@tplus.co.th')) && (
+          <div className='flex gap-4 justify-center mt-12'>
+            {/* <button type="button"
+              className="btn !mt-6 w-1/2 md:w-1/4 border-0 btn-primary"
+              onClick={() => upLoadDoc()}
+            >แก้ไขไฟล์สัญญา</button> */}
+            <button
+              type="button"
+              className="btn !mt-6 w-1/2 md:w-1/4 border-0 btn-secondary"
+              onClick={async () => {
+                await onSubmitContractImage()
+                await contractUpdateStatusV2({ data: { id_contract: contract_uuid, status_id: 4, memo: formData.memo } })
+              }}
+            >
+              ส่งอนุมัติสัญญา
+            </button>
+          </div>
         )}
-
-
       </>
     )
   }
@@ -2310,60 +2601,60 @@ const AddEdit = () => {
     return (
       <div className="flex flex-col items-center">
         <div className="relative z-[1] flex-1 mt-4 w-[60vw] wizard-menu">
-          <div className={`${className} bg-[#19d20c] w-[15%] h-1 absolute ltr:left-0 rtl:right-0 top-[30px] m-auto -z-[1] transition-[width]`}></div>
+          <div className={`${className}  ${formData.contract_hire_type_id == 1 ? "bg-[#19d20c]"  : "bg-blue-700"} w-[15%] h-1 absolute ltr:left-0 rtl:right-0 top-[30px] m-auto -z-[1] transition-[width]`}></div>
           <ul className="mb-5 grid grid-cols-5">
             <li className="mx-auto flex flex-col items-center">
               <div
-                className={`${statusAction >= 1 ? '!border-[#19d20c] !bg-[#19d20c] text-white' : ''
+                className={`${statusAction >= 1 ? ` text-white ${formData.contract_hire_type_id == 1 ? "!border-[#19d20c] !bg-[#19d20c]"  : "!border-blue-700 !bg-blue-700"}` : ''
                   } border-[3px] border-[#f3f2ee] bg-white dark:bg-[#253b5c] dark:border-[#1b2e4b] flex justify-center items-center w-16 h-16 rounded-full`}
               >
                 <IconChecks />
               </div>
-              <p className={`${statusAction >= 1 ? 'text-[#19d20c] ' : ''}text-center block mt-2`}>
+              <p className={`${statusAction >= 1 ?` ${formData.contract_hire_type_id == 1 ? "text-[#19d20c]" :"text-blue-700"}` : ''} text-center block mt-2`}>
                 ร่าง<span className="wizard-isMobile">สัญญา</span>
               </p>
             </li>
             <li className="mx-auto flex flex-col items-center">
               <div
-                className={`${statusAction >= 2 ? '!border-[#19d20c] !bg-[#19d20c] text-white' : ''
+                className={`${statusAction >= 2 ? `${formData.contract_hire_type_id == 1 ? "!border-[#19d20c] !bg-[#19d20c]"  : "!border-blue-700 !bg-blue-700"} text-white` : ''
                   } border-[3px] border-[#f3f2ee] bg-white dark:bg-[#253b5c] dark:border-[#1b2e4b] flex justify-center items-center w-16 h-16 rounded-full`}
               >
                 <IconChecks />
               </div>
-              <p className={`${statusAction >= 2 ? 'text-[#19d20c] ' : ''}text-center block mt-2`}>
+              <p className={`${statusAction >= 2 ? ` ${formData.contract_hire_type_id == 1 ? "text-[#19d20c]" :"text-blue-700"}` : ''} text-center block mt-2`}>
                 <span className="wizard-isMobile">อยู่ระหว่างการ</span>พิจารณา
               </p>
             </li>
             <li className="mx-auto flex flex-col items-center">
               <div
-                className={`${statusAction >= 3 ? '!border-[#19d20c] !bg-[#19d20c] text-white' : ''
+                className={`${statusAction >= 3 ? `${formData.contract_hire_type_id == 1 ? "!border-[#19d20c] !bg-[#19d20c]"  : "!border-blue-700 !bg-blue-700"} text-white` : ''
                   } border-[3px] border-[#f3f2ee] bg-white dark:bg-[#253b5c] dark:border-[#1b2e4b] flex justify-center items-center w-16 h-16 rounded-full`}
               >
                 <IconChecks />
               </div>
-              <p className={`${statusAction >= 3 ? 'text-[#19d20c] ' : ''}text-center block mt-2`}>
+              <p className={`${statusAction >= 3 ? ` ${formData.contract_hire_type_id == 1 ? "text-[#19d20c]" :"text-blue-700"}` : ''} text-center block mt-2`}>
                 อนุมัติร่าง<span className="wizard-isMobile">สัญญา</span>
               </p>
             </li>
             <li className="mx-auto flex flex-col items-center">
               <div
-                className={`${statusAction >= 4 ? '!border-[#19d20c] !bg-[#19d20c] text-white' : ''
+                className={`${statusAction >= 4 ? `${formData.contract_hire_type_id == 1 ? "!border-[#19d20c] !bg-[#19d20c]"  : "!border-blue-700 !bg-blue-700"} text-white` : ''
                   } border-[3px] border-[#f3f2ee] bg-white dark:bg-[#253b5c] dark:border-[#1b2e4b] flex justify-center items-center w-16 h-16 rounded-full`}
               >
                 <IconChecks />
               </div>
-              <p className={`${statusAction >= 4 ? 'text-[#19d20c] ' : ''}text-center block mt-2`}>
+              <p className={`${statusAction >= 4 ? ` ${formData.contract_hire_type_id == 1 ? "text-[#19d20c]" :"text-blue-700"}` : ''} text-center block mt-2`}>
                 รออนุมัติ<span className="wizard-isMobile">สัญญา</span>
               </p>
             </li>
             <li className="mx-auto flex flex-col items-center">
               <div
-                className={`${statusAction >= 5 ? '!border-[#19d20c] !bg-[#19d20c] text-white' : ''
+                className={`${statusAction >= 5 ? `${formData.contract_hire_type_id == 1 ? "!border-[#19d20c] !bg-[#19d20c]"  : "!border-blue-700 !bg-blue-700"} text-white` : ''
                   } border-[3px] border-[#f3f2ee] bg-white dark:bg-[#253b5c] dark:border-[#1b2e4b] flex justify-center items-center w-16 h-16 rounded-full`}
               >
                 <IconChecks />
               </div>
-              <p className={`${statusAction >= 5 ? 'text-[#19d20c] ' : ''}text-center block mt-2`}>
+              <p className={`${statusAction >= 5 ? ` ${formData.contract_hire_type_id == 1 ? "text-[#19d20c]" :"text-blue-700"}` : ''} text-center block mt-2`}>
                 อนุมัติ<span className="wizard-isMobile">สัญญา</span>
               </p>
             </li>
@@ -2474,21 +2765,33 @@ const AddEdit = () => {
     })
   }
 
+  const { mutateAsync: generateLink, isLoading: isGeneratingLink } = useGlobalMutation(url_api.createLinkSignature, {
+    onSuccess: (res: any) => {
+      if (res.data?.token) {
+        toast.fire({ icon: 'success', title: 'สร้างลิงก์สำหรับลูกค้าแล้ว!' })
+        fetchContractEachTabData({});
+      } else {
+        toast.fire({ icon: 'error', title: res.data?.message || 'ไม่สามารถสร้างลิงก์ได้' })
+      }
+    },
+    onError: (error: any) => toast.fire({ icon: 'error', title: 'เกิดข้อผิดพลาดในการสร้างลิงก์' }),
+  })
+
   const { mutateAsync: createEkycGetContract, isLoading: isLoadingGetContract } = useGlobalErrorMutation(url_api.ekycCreateContact, {
-        onSuccess: (res: any) => {
-            if (res.statusCode == 200) {
-                showNotification('สร้างลิงค์หนังสือลูกค้าสำเร็จ', 'success');
-                fetchContractEachTabData({});
-            }
-        },
-        onError: (err: any) => {
-            toast.fire({
-                icon: 'error',
-                title: err.message,
-                padding: '10px 20px',
-            });
-        },
-    });
+      onSuccess: (res: any) => {
+          if (res.statusCode == 200) {
+              showNotification('สร้างลิงค์หนังสือลูกค้าสำเร็จ', 'success');
+              fetchContractEachTabData({});
+          }
+      },
+      onError: (err: any) => {
+          toast.fire({
+              icon: 'error',
+              title: err.message,
+              padding: '10px 20px',
+          });
+      },
+  });
 
   const {mutateAsync: updateContractEsign} = useGlobalErrorMutation(url_api.ekycUpdateContract,{
     onSuccess: (res:any) => {
@@ -2562,6 +2865,48 @@ const AddEdit = () => {
     }
   })
 
+  const {mutateAsync: cancelSignPdf} = useGlobalMutation(`${url_api.deleteSignPdf}${uuid}`, {
+    onSuccess: (res:any) => {
+      if(res.statusCode == 200){
+        setActionCancelSign(false)
+        showNotification('ยกเลิกลงนามออนไลน์  สัญญานี้สำเร็จ', 'success');
+        fetchContractEachTabData({})
+      }
+    },
+    onError: (err:any) => {
+       showNotification(err?.message, 'error')
+    }
+  })
+
+  const { mutateAsync: createGenerateReceiveProduct, isLoading: isLoadingReceiveGenerate } = useGlobalErrorMutation(url_api.receiveProductCreateGenerate, {
+    onSuccess: (res: any) => {
+        if (res.statusCode == 200) {
+            showNotification('สร้างลิงค์รับสินค้าลูกค้าสำเร็จ', 'success');
+            fetchContractEachTabData({});
+        }
+    },
+    onError: (err: any) => {
+        toast.fire({
+            icon: 'error',
+            title: err.message,
+            padding: '10px 20px',
+        });
+    },
+  });
+
+  const {mutateAsync: deleteReceiveProduct} = useGlobalMutation(url_api.receiveProductDelete,{
+      onSuccess:(res:any) => {
+        if (res.statusCode == 200){
+          showNotification('ลบข้อมูลรับสินค้าลูกค้าสำเร็จ', 'success');
+          setActionCancelReceiveProduct(false)
+          fetchContractEachTabData({});
+        }
+      },
+      onError:(err:any) => {
+          showNotification(err.message,'error')
+      }
+  })
+
   return (
     <>
       <div className="flex flex-col gap-2.5 pb-[80px]">
@@ -2587,7 +2932,7 @@ const AddEdit = () => {
           ) : null
         })()}
         <div className="panel flex-1">
-          <Tab.Group>
+          <Tab.Group selectedIndex={tabIndex} onChange={(index) => setTabIndex(index)}>
             <Tab.List className="mt-3 flex flex-wrap border-b border-white-light dark:border-[#191e3a]">
               <Tab as={Fragment}>
                 {({ selected }) => (
@@ -2841,7 +3186,7 @@ const AddEdit = () => {
                                       ดาวน์โหลดใบเสร็จรับเงิน
                                     </button>
                                   </li>
-                                  {themeInit.features?.signature_online && formData?.business_unit?.signature_online_type == 1 && ![2, 3, 4, 11, 16, 17, 18, 19, 34, 39].includes(formData?.credit?.id) && (
+                                  {themeInit.features?.signature_online && (formData?.business_unit?.signature_online_type == 1 || formData?.business_unit?.signature_online_type == 3) && ![2, 3, 4, 11, 16, 17, 18, 19, 34, 39].includes(formData?.credit?.id) && (
                                     <li>
                                       <button
                                         type="button"
@@ -2883,12 +3228,24 @@ const AddEdit = () => {
                                       </button>
                                     </li>
                                   )}
+                                  {[5,6,7,8].includes(statusAction) && <li>
+                                    <button type="button" onClick={() => { setPdfLoading(true); if (!pdfLoading) { fetchHandoverReceiptPdf({}) } }}>
+                                      ใบรับฝากเครื่อง / ส่งมอบสินค้า
+                                    </button>
+                                  </li>}
                                 </ul>
                               </Dropdown>
                             </div>
                           </div>
                         )}
                         {/* สัญญานี้ลงนามออนไลน์แล้ว */}
+                        {formData?.contract_receive_product && (
+                          <div className="inline-flex float-right" style={{ marginRight: 10 }}>
+                            <span style={{ marginTop: 0, padding: 10 }} className={`badge ${formData?.contract_receive_product ? 'badge-outline-primary' : 'badge-outline-danger'}`}>
+                              {formData?.contract_receive_product ? 'สัญญานี้ยืนยันรับสินค้าแล้ว' : ''}
+                            </span>
+                          </div>
+                        )}
                         {formData?.customer_signature_at && (
                           <div className="inline-flex float-right" style={{ marginRight: 10 }}>
                             <span style={{ marginTop: 0, padding: 10 }} className={`badge ${formData?.customer_signature_at ? 'badge-outline-success' : 'badge-outline-danger'}`}>
@@ -2905,8 +3262,8 @@ const AddEdit = () => {
                         )}
                         {/* หนังสือสัญญาเช่าซื้อ */}
                         <Form className="space-y-5 dark:text-white custom-select mt-5">
-                          <div className="text-4xl pt-4 font-semibold text-center text-themePrimary">
-                            หนังสือสัญญาเช่าซื้อ
+                          <div className={`text-4xl pt-4 font-semibold text-center ${props.values.contract_hire_type_id == 2 ? 'text-blue-700' : 'text-themePrimary'} `}>
+                            {props.values.contract_hire_type_id == 2 ? `หนังสือสัญญาเช่าทรัพย์` : "หนังสือสัญญาเช่าซื้อ"}
                           </div>
                           <div className="flex flex-row w-full gap-5">
                             <SelectField
@@ -3403,7 +3760,7 @@ const AddEdit = () => {
                                   <div className="flex-auto w-[100%] lg:w-[70%] lg:pl-5">
                                     <div className="mt-3 grid grid-cols-10 justify-items-start content-center">
                                       <div className="col-span-12 grid gap-1 pb-4">
-                                        <p className="text-lg">
+                                        <p className="text-lg flex gap-14">
                                           <a
                                             key="id_customer"
                                             href={`/apps/asset/view/${assetDetail?.id}/${shopDetail?.id}`}
@@ -3413,6 +3770,7 @@ const AddEdit = () => {
                                           >
                                             {assetDetail?.name || '-'}
                                           </a>
+                                          {assetDetail.over_price && <p className='text-red-500 font-semibold'>Overprice</p>}
                                         </p>
                                       </div>
                                       <div className="col-span-2 grid gap-1">
@@ -3854,7 +4212,7 @@ const AddEdit = () => {
                                           {statusAction === 2 ? 'ยกเลิกร่างสัญญา' : 'ยกเลิกร่างสัญญาที่อนุมัติแล้ว'}
                                         </button>
                                       )}
-                                      {((statusAction < 5) && (statusAction !== 1) && (statusAction !== 0)) && !lockUpdate && (
+                                      {(((statusAction < 5) && (statusAction !== 1) && (statusAction !== 0)) || (statusAction === 5 && emailStored === 'dev@tplus.co.th')) && !lockUpdate && (
                                         <button
                                           type="button"
                                           className="btn !mt-6 w-full border-0 btn-dark max-w-[200px]"
@@ -3877,6 +4235,31 @@ const AddEdit = () => {
                                           }}
                                         >
                                           ส่งกลับร่างสัญญา
+                                        </button>
+                                      )}
+                                      {([6,7,8].includes(statusAction) && emailStored == "dev@tplus.co.th") && (
+                                        <button
+                                          type="button"
+                                          className="btn !mt-6 w-full border-0 btn-danger max-w-[200px]"
+                                          onClick={() => {
+                                            Swal.fire({
+                                              title: 'ยืนยันการอัพเดทสถานะ',
+                                              text: 'คุณต้องการส่งสัญญากลับสถานะร่างสัญญาใช่หรือไม่?',
+                                              icon: 'warning',
+                                              showCancelButton: true,
+                                              confirmButtonColor: themeInit.color.themePrimary,
+                                              cancelButtonColor: '#d33',
+                                              confirmButtonText: 'ยืนยัน',
+                                              cancelButtonText: 'ยกเลิก',
+                                              reverseButtons: true,
+                                            }).then((result) => {
+                                              if (result.isConfirmed) {
+                                                handleContractUpdateStatus(props, 1)
+                                              }
+                                            })
+                                          }}
+                                        >
+                                          ย้อนกลับการยกเลิก
                                         </button>
                                       )}
                                       {(statusAction === 2 || statusAction === 4) && !lockUpdate && (
@@ -4033,23 +4416,13 @@ const AddEdit = () => {
                           แจ้งเตือน! อัปโหลดหลักฐานประกอบสัญญาเมื่อผ่านการอนุมัติร่างสัญญาแล้ว เมื่ออัปโหลดแล้วจะไม่สามารถแก้ไขได้ โปรดตรวจสอบก่อนดำเนินการ
                         </div>
                       </div>
+                      {statusEvidence()}
                       <div className="mt-6">{uploadContent()}</div>
-                      {statusAction === 3 && (
-                        <button
-                          type="button"
-                          className="btn !mt-6 w-full border-0 btn-primary"
-                          onClick={() => {
-                            upLoadDoc()
-                          }}
-                        >
-                          ส่งอนุมัติสัญญา
-                        </button>
-                      )}
-                      <hr className="border-white-light dark:border-[#1b2e4b] my-10 w-full" />
+                      {/* <hr className="border-white-light dark:border-[#1b2e4b] my-10 w-full" />
                       <Formik initialValues={formData} onSubmit={() => { }} enableReinitialize>
                         {(props) => {
                           return <Form>
-                            {themeInit.features.e_sign_status && formData?.business_unit?.signature_online_type == 2 && contract_uuid && (statusAction === 3 || statusAction === 4 || statusAction === 5) && (
+                            {themeInit.features.e_sign_status && (formData?.business_unit?.signature_online_type == 2 || formData?.business_unit?.signature_online_type == 3) && contract_uuid && (statusAction === 3 || statusAction === 4 || statusAction === 5) && (
                               <div className="!mt-6 border border-white-light dark:border-[#1b2e4b] group rounded-md pt-5 z-[-1]">
                                 <div className="border-b border-white-light dark:border-[#1b2e4b] p-5 pt-0 flex justify-center">
                                   <span className="bg-white dark:bg-black dark:text-white-light inline-block px-3 h-[20px] lg:h-[20px] rounded flex justify-center items-center text-lg font-semibold -mt-[10px] ">
@@ -4102,6 +4475,7 @@ const AddEdit = () => {
                           </Form>
                         }}
                       </Formik>
+                      <ReceiptProductPreview formData={formData} reference={formData?.reference} image_url={formData?.contract_receive_product?.image_url} created_at={formData?.contract_receive_product?.created_at} customer_name={formData?.customer?.name} contract_receive_product={formData?.contract_receive_product} onSubmit={async() => await createGenerateReceiveProduct({data:{id_contract: uuid}})}/> */}
                     </>
                   ) : null}
                 </div>
@@ -4262,7 +4636,7 @@ const AddEdit = () => {
                                 สถานะสัญญา {formData?.credit?.name}
                               </div>
                             </div>
-                            {![2, 3, 4, 11, 16, 17, 18, 19, 34, 39].includes(formData?.credit?.id) && (
+                            {(![2, 3, 4, 11, 16, 17, 18, 19, 34, 39].includes(formData?.credit?.id) || emailStored == 'dev@tplus.co.th') && (
                               <div>
                                 <div className="flex-1 text-lg font-semibold mt-5">
                                   <SelectField
@@ -4828,6 +5202,60 @@ const AddEdit = () => {
                       <div className='mt-4 flex gap-4'>
                         <button type='button' onClick={() => setActionCancelEkyc(false)} className="btn shadow-lg">ยกเลิก</button>
                         <button type='button' onClick={async() => await cancelEkyc({})} className="btn bg-red-600 text-white shadow-lg hover:shadow-none max-w-40">ตกลง</button>
+                      </div>
+                    </div>
+                   
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+        <Transition appear show={actionCancelSign} as={Fragment}>
+          <Dialog as="div" open={actionCancelSign} onClose={() => setActionCancelSign(false)} className="relative z-[52]">
+            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+              <div className="fixed inset-0 bg-[black]/60" />
+            </Transition.Child>
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center px-4 py-8">
+                <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95" >
+                  <Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-xl text-black dark:text-white-dark">
+                    <button type="button" className="absolute top-4 ltr:right-4 rtl:left-4 text-gray-400 hover:text-gray-800 dark:hover:text-gray-600 outline-none" onClick={() => { setActionCancelSign(false) }}>
+                      <IconX />
+                    </button>
+                    <div className="flex flex-col items-center justify-center py-6 px-8">
+                      <h1 className='text-2xl font-bold'>ยกเลิกสัญญาลงนามออนไลน์</h1>
+                      <p className='text-red-500'>ต้องการยกเลิกสัญญา ใช่หรือไม่</p>
+                      <div className='mt-4 flex gap-4'>
+                        <button type='button' onClick={() => setActionCancelSign(false)} className="btn shadow-lg">ยกเลิก</button>
+                        <button type='button' onClick={async() => await cancelSignPdf({})} className="btn bg-red-600 text-white shadow-lg hover:shadow-none max-w-40">ตกลง</button>
+                      </div>
+                    </div>
+                   
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </Dialog>
+        </Transition>
+        <Transition appear show={actionCancelReceiveProduct} as={Fragment}>
+          <Dialog as="div" open={actionCancelReceiveProduct} onClose={() => setActionCancelReceiveProduct(false)} className="relative z-[52]">
+            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+              <div className="fixed inset-0 bg-[black]/60" />
+            </Transition.Child>
+            <div className="fixed inset-0 overflow-y-auto">
+              <div className="flex min-h-full items-center justify-center px-4 py-8">
+                <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95" >
+                  <Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-xl text-black dark:text-white-dark">
+                    <button type="button" className="absolute top-4 ltr:right-4 rtl:left-4 text-gray-400 hover:text-gray-800 dark:hover:text-gray-600 outline-none" onClick={() => { setActionCancelReceiveProduct(false) }}>
+                      <IconX />
+                    </button>
+                    <div className="flex flex-col items-center justify-center py-6 px-8">
+                      <h1 className='text-2xl font-bold'>ยกเลิกยืนยันรับสินค้า</h1>
+                      <p className='text-red-500'>ต้องการยกเลิกยืนยันรับสินค้าลูกค้า ใช่หรือไม่</p>
+                      <div className='mt-4 flex gap-4'>
+                        <button type='button' onClick={() => setActionCancelReceiveProduct(false)} className="btn shadow-lg">ยกเลิก</button>
+                        <button type='button' onClick={async() => await deleteReceiveProduct({data: {id_contract: Number(id)}})} className="btn bg-red-600 text-white shadow-lg hover:shadow-none max-w-40">ตกลง</button>
                       </div>
                     </div>
                    

@@ -194,10 +194,10 @@ const List = () => {
       <div className="invoice-table ">
         <div className="mb-4.5 px-5 flex md:items-center md:flex-row flex-col gap-5">
           <div className="flex items-center gap-2">
-            <Link to="/apps/employee/add" className="btn btn-primary gap-2">
+            {['A','B'].includes(access_level) && <Link to="/apps/employee/add" className="btn btn-primary gap-2">
               <IconPlus />
               เพิ่มพนักงาน
-            </Link>
+            </Link>}
             {(access_level == 'A' || access_level == 'B') && (
               <button type='button' className="btn btn-success gap-2" onClick={() => { setActionModal(true)}} disabled={selectedRecords?.length > 0 ? false : true}>
                 ปรับปรุง เปิด-ปิดใช้งาน

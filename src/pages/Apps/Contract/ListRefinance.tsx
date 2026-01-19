@@ -147,13 +147,15 @@ const ListRefinance = () => {
                     reference: importedContracts,
                     page: isPageSizeChanged ? 1 : page,
                     page_size: pageSize,
-                    status_id: contractStatusId
+                    status_id: contractStatusId,
+                    contract_hire_type_id: 1
                 }
                 : {
                     ...filterParams,
                     page: isPageSizeChanged ? 1 : page,
                     page_size: pageSize,
-                    status_id: contractStatusId
+                    status_id: contractStatusId,
+                    contract_hire_type_id: 1
                 };
 
         fetchContractData({ data: queryPayload });
@@ -257,6 +259,7 @@ const ListRefinance = () => {
                 status_code: values?.status_code || '',
                 status_type: 'credit',
                 id_business_unit: values?.id_business_unit || '',
+                contract_hire_type_id: 1
             });
             const headers = columns_csv.map(col => col.id);
             const headerDisplayNames = columns_csv.map(col => col.displayName || col.id);
@@ -545,6 +548,7 @@ const ListRefinance = () => {
                                 page: 1,
                                 page_size: pageSize,
                                 reference: references,
+                                contract_hire_type_id: 1
                             },
                         });
                         setImportedContracts(references);
@@ -655,6 +659,7 @@ const ListRefinance = () => {
             status_code: '',
             ...(role !== 'business_unit' ? { id_business_unit: '' } : {}),
             is_locked: 'all',
+            contract_hire_type_id: 1
         };
 
         setFilterParams(resetParams);
